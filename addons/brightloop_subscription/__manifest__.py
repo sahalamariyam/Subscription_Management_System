@@ -25,6 +25,7 @@ Key Features:
         'base',
         'mail',
         'portal',
+        'account',
         'brightloop_core',
     ],
     'data': [

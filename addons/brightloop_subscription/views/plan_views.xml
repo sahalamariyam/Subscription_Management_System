@@ -39,6 +39,7 @@
                         <group string="Commercial Terms">
                             <field name="billing_price"/>
                             <field name="billing_interval"/>
+                            <field name="billing_interval_count"/>
                             <field name="minimum_quantity"/>
                             <field name="active" invisible="1"/>
                         </group>

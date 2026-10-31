@@ -92,15 +92,46 @@ stateDiagram-v2
 
 ### Integration with Member 3 (`brightloop_billing`):
 Member 3's recurring billing cron queries:
+### Integration with Member 3 (`brightloop_billing`):
+Member 3's recurring billing engine uses dedicated ORM service methods exposed on `brightloop.subscription`:
+
+1. **Retrieving Subscriptions Due for Billing:**
 ```python
-due_subscriptions = self.env['brightloop.subscription'].search([
-    ('status', '=', 'active'),
-    ('is_paused', '=', False),
-    ('next_billing_date', '<=', fields.Date.today()),
-])
+# Member 3 calls this method to retrieve active subscriptions due on or before target date
+due_subscriptions = self.env['brightloop.subscription']._get_subscriptions_due_for_billing(billing_date)
 ```
-* **Accessible Fields:** `subscription_number`, `partner_id`, `plan_id`, `plan_id.billing_interval`, `next_billing_date`, and `line_ids` (`product_id`, `quantity`, `unit_price`, `tax_id`, `amount_subtotal`).
-* **Post-Billing Callback:** Member 3 calls `subscription.action_advance_billing_date()` to increment `next_billing_date` for the subsequent cycle.
+* **Accessible Fields on Subscription:**
+  - `id`: Internal identifier
+  - `partner_id` / `customer_id`: Customer partner reference
+  - `status` / `state`: Subscription lifecycle status (returns canonical `'active'`)
+  - `start_date`: Start date of subscription
+  - `next_billing_date`: Due billing date
+  - `billing_interval`: Daily, weekly, monthly, yearly
+  - `billing_interval_count`: Multiplier count (e.g. 1 month, 3 months)
+  - `billing_anchor_day`: Preserved day-of-month anchor (e.g. 31)
+  - `company_id`: Operating entity reference
+
+2. **Accessible Line Items on Subscription Lines (`line_ids`):**
+  - `product_id`: Product reference (`brightloop.product`)
+  - `variant_id`: Product variant reference (`brightloop.product.variant`)
+  - `quantity`: Float quantity
+  - `original_unit_price`: Base price before recurring discounts
+  - `unit_price`: Agreed recurring unit price
+  - `discount`: Agreed recurring discount percentage (%)
+  - `discount_amount`: Agreed recurring fixed discount amount
+  - `discount_id`: Discount rule reference code
+  - `tax_id`: Tax reference code (e.g. `'GST_18'`)
+  - `tax_ids`: Many2many reference to `account.tax` for Odoo accounting invoice lines
+
+3. **Schedule Advancement Callback:**
+```python
+# Member 3 calls this after successfully generating invoice and BillingJob
+subscription._update_next_billing_date()
+```
+* Advances `next_billing_date` by the configured `billing_interval` and `billing_interval_count`, while preserving the calendar anchor day (e.g. January 31 → February 28 → March 31).
+
+4. **Duplicate Billing Prevention:**
+* Handled exclusively by Member 3's `BillingJob` model and idempotency keys; `brightloop_subscription` does not independently generate invoices or alter financial balances.
 
 ### Integration with Member 4 (`brightloop_finance`):
 * **Model:** `brightloop.subscription`

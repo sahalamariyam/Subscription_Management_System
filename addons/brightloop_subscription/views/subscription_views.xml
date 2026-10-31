@@ -75,6 +75,7 @@
                             <field name="partner_id" readonly="status in ('confirmed', 'active', 'closed')"/>
                             <field name="plan_id" readonly="status in ('confirmed', 'active', 'closed')"/>
                             <field name="template_id" readonly="status != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <field name="is_paused" invisible="1"/>
                         </group>
                         <group string="Schedule &amp; Billing">
@@ -82,6 +83,8 @@
                             <field name="start_date" readonly="status == 'closed'"/>
                             <field name="expiry_date" readonly="status == 'closed'"/>
                             <field name="next_billing_date" readonly="status == 'closed'"/>
+                            <field name="billing_interval"/>
+                            <field name="billing_interval_count"/>
                             <field name="renewal_count" invisible="renewal_count == 0"/>
                         </group>
                     </group>
@@ -101,7 +104,9 @@
                                     <field name="name"/>
                                     <field name="quantity"/>
                                     <field name="unit_price"/>
-                                    <field name="tax_id"/>
+                                    <field name="discount"/>
+                                    <field name="discount_id" optional="hide"/>
+                                    <field name="tax_id" optional="show"/>
                                     <field name="amount_subtotal" readonly="1"/>
                                 </list>
                             </field>

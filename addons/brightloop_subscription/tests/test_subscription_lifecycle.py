@@ -242,3 +242,71 @@ class TestBrightloopSubscriptionLifecycle(common.TransactionCase):
         self.Subscription._cron_auto_close_subscriptions()
         self.assertEqual(sub.status, SUBSCRIPTION_STATUS_CLOSED)
         self.assertEqual(sub.closure_reason, 'expired')
+
+    def test_member_3_get_subscriptions_due_for_billing(self):
+        """Member 3 can query due active subscriptions via _get_subscriptions_due_for_billing."""
+        sub = self._create_standard_subscription()
+        sub.action_send_quotation()
+        sub.action_confirm()
+        sub.action_activate()
+
+        # Target date matching next billing date
+        due_subs = self.Subscription._get_subscriptions_due_for_billing(sub.next_billing_date)
+        self.assertIn(sub, due_subs)
+
+        # Before next billing date should not include it
+        before_date = sub.next_billing_date - relativedelta(days=5)
+        early_subs = self.Subscription._get_subscriptions_due_for_billing(before_date)
+        self.assertNotIn(sub, early_subs)
+
+        # Paused subscription should not be returned for billing
+        sub.action_pause()
+        paused_due_subs = self.Subscription._get_subscriptions_due_for_billing(sub.next_billing_date)
+        self.assertNotIn(sub, paused_due_subs)
+
+    def test_member_3_state_and_company_fields(self):
+        """Verify state alias and company_id exist on subscription."""
+        sub = self._create_standard_subscription()
+        sub.action_send_quotation()
+        sub.action_confirm()
+        sub.action_activate()
+
+        self.assertEqual(sub.state, SUBSCRIPTION_STATUS_ACTIVE)
+        self.assertEqual(sub.state, sub.status)
+        self.assertTrue(sub.company_id)
+        self.assertEqual(sub.billing_interval, 'monthly')
+        self.assertEqual(sub.billing_interval_count, 1)
+
+    def test_subscription_line_discounts_and_anchor_day(self):
+        """Verify discount percentage, discount amount, and anchor day."""
+        sub = self.Subscription.create({
+            'partner_id': self.customer.id,
+            'plan_id': self.plan.id,
+            'status': SUBSCRIPTION_STATUS_DRAFT,
+            'line_ids': [
+                (0, 0, {
+                    'product_id': self.product.id,
+                    'quantity': 2.0,
+                    'unit_price': 1000.0,
+                    'discount': 10.0,  # 10% discount
+                    'discount_amount': 50.0,  # 50 flat discount
+                    'discount_id': 'DISC_SUMMER_10',
+                    'tax_id': 'GST_18',
+                })
+            ]
+        })
+        line = sub.line_ids[0]
+        # subtotal: (2 * 1000) * 0.9 - 50 = 1800 - 50 = 1750.0
+        self.assertEqual(line.amount_subtotal, 1750.0)
+
+        sub.action_send_quotation()
+        sub.action_confirm()
+        sub.action_activate()
+
+        # Anchor day recorded
+        self.assertEqual(sub.billing_anchor_day, sub.start_date.day)
+
+        # Advance billing date via Member 3 callback
+        old_billing_date = sub.next_billing_date
+        sub._update_next_billing_date()
+        self.assertEqual(sub.next_billing_date, old_billing_date + relativedelta(months=1))

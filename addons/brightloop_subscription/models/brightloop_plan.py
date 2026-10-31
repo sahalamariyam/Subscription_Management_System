@@ -14,6 +14,7 @@ Implements:
   * allow_renewal: Permission to renew subscriptions.
 """
 
+import calendar
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
@@ -53,6 +54,13 @@ class BrightloopPlan(models.Model):
         required=True,
         tracking=True,
         help="Recurring billing cadence: Daily, Weekly, Monthly, or Yearly",
+    )
+    billing_interval_count = fields.Integer(
+        string='Billing Interval Count',
+        default=1,
+        required=True,
+        tracking=True,
+        help="Number of billing intervals per cycle (e.g. 1 for every month, 3 for quarterly)",
     )
     minimum_quantity = fields.Integer(
         string='Minimum Quantity',
@@ -116,6 +124,12 @@ class BrightloopPlan(models.Model):
             if plan.billing_price < 0.0:
                 raise ValidationError(_("Billing price cannot be negative."))
 
+    @api.constrains('billing_interval_count')
+    def _check_billing_interval_count(self):
+        for plan in self:
+            if plan.billing_interval_count < 1:
+                raise ValidationError(_("Billing interval count must be at least 1."))
+
     @api.constrains('minimum_quantity')
     def _check_minimum_quantity(self):
         for plan in self:
@@ -141,21 +155,33 @@ class BrightloopPlan(models.Model):
             return False
         return self.active
 
-    def compute_next_billing_date(self, current_date):
+    def compute_next_billing_date(self, current_date, interval_count=None, anchor_day=None):
         """
         Compute the next billing date based on the plan's billing interval.
         Canonical intervals: daily, weekly, monthly, yearly.
+        Supports configurable interval counts and billing anchor day preservation
+        (e.g. Jan 31 -> Feb 28 -> Mar 31).
         """
         self.ensure_one()
         if not current_date:
             return False
 
+        count = interval_count or self.billing_interval_count or 1
+
         if self.billing_interval == BILLING_INTERVAL_DAILY:
-            return current_date + relativedelta(days=1)
+            return current_date + relativedelta(days=count)
         elif self.billing_interval == BILLING_INTERVAL_WEEKLY:
-            return current_date + relativedelta(weeks=1)
+            return current_date + relativedelta(weeks=count)
         elif self.billing_interval == BILLING_INTERVAL_MONTHLY:
-            return current_date + relativedelta(months=1)
+            next_date = current_date + relativedelta(months=count)
+            if anchor_day:
+                max_day = calendar.monthrange(next_date.year, next_date.month)[1]
+                next_date = next_date.replace(day=min(anchor_day, max_day))
+            return next_date
         elif self.billing_interval == BILLING_INTERVAL_YEARLY:
-            return current_date + relativedelta(years=1)
-        return current_date + relativedelta(months=1)
+            next_date = current_date + relativedelta(years=count)
+            if anchor_day:
+                max_day = calendar.monthrange(next_date.year, next_date.month)[1]
+                next_date = next_date.replace(day=min(anchor_day, max_day))
+            return next_date
+        return current_date + relativedelta(months=count)

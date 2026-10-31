@@ -27,6 +27,7 @@ from odoo.addons.brightloop_core.models.shared_constants import (
     SUBSCRIPTION_STATUS_ACTIVE,
     SUBSCRIPTION_STATUS_CLOSED,
     SUBSCRIPTION_STATUS_SELECTION,
+    BILLING_INTERVAL_SELECTION,
 )
 
 
@@ -78,8 +79,17 @@ class BrightloopSubscription(models.Model):
         help="Source template used to generate this quote",
     )
 
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.company,
+        index=True,
+        help="Operating entity / company reference",
+    )
+
     # =========================================================================
-    # Lifecycle Status
+    # Lifecycle Status & Member 3 State Compatibility
     # =========================================================================
     status = fields.Selection(
         selection=SUBSCRIPTION_STATUS_SELECTION,
@@ -89,9 +99,18 @@ class BrightloopSubscription(models.Model):
         tracking=True,
         help="Canonical lifecycle: Draft -> Quotation -> Confirmed -> Active -> Closed",
     )
+    # Direct alias for Member 3 billing engine compatibility
+    state = fields.Selection(
+        selection=SUBSCRIPTION_STATUS_SELECTION,
+        string='State',
+        related='status',
+        store=True,
+        readonly=True,
+        help="State alias for Member 3 recurring billing engine",
+    )
 
     # =========================================================================
-    # Dates & Terms
+    # Dates, Terms & Schedule Details (Member 3 Contracts)
     # =========================================================================
     valid_until = fields.Date(
         string='Valid Until',
@@ -113,6 +132,26 @@ class BrightloopSubscription(models.Model):
         index=True,
         tracking=True,
         help="Due date for next recurring invoice generation (queried by Member 3)",
+    )
+    billing_interval = fields.Selection(
+        selection=BILLING_INTERVAL_SELECTION,
+        string='Billing Interval',
+        related='plan_id.billing_interval',
+        store=True,
+        readonly=True,
+        help="Billing cadence (Daily, Weekly, Monthly, Yearly)",
+    )
+    billing_interval_count = fields.Integer(
+        string='Billing Interval Count',
+        related='plan_id.billing_interval_count',
+        store=True,
+        readonly=True,
+        help="Number of intervals per billing cycle",
+    )
+    billing_anchor_day = fields.Integer(
+        string='Billing Anchor Day',
+        readonly=True,
+        help="Preserved day of month for anchor-preserving recurring billing (e.g. 31st)",
     )
     payment_terms = fields.Char(
         string='Payment Terms',
@@ -261,7 +300,7 @@ class BrightloopSubscription(models.Model):
     def action_activate(self):
         """
         Move from Confirmed to Active.
-        Sets start date and computes initial next billing date using plan interval.
+        Sets start date, records billing anchor day, and computes initial next billing date.
         """
         today = fields.Date.today()
         for sub in self:
@@ -271,12 +310,22 @@ class BrightloopSubscription(models.Model):
             if not sub.start_date:
                 sub.start_date = today
 
-            # Calculate initial next billing date
-            sub.next_billing_date = sub.plan_id.compute_next_billing_date(sub.start_date)
+            sub.billing_anchor_day = sub.start_date.day
+
+            # Calculate initial next billing date preserving anchor day
+            sub.next_billing_date = sub.plan_id.compute_next_billing_date(
+                sub.start_date,
+                interval_count=sub.billing_interval_count or 1,
+                anchor_day=sub.billing_anchor_day,
+            )
 
             # Default initial expiry date if not explicitly set
             if not sub.expiry_date:
-                sub.expiry_date = sub.plan_id.compute_next_billing_date(sub.start_date)
+                sub.expiry_date = sub.plan_id.compute_next_billing_date(
+                    sub.start_date,
+                    interval_count=sub.billing_interval_count or 1,
+                    anchor_day=sub.billing_anchor_day,
+                )
 
             sub.status = SUBSCRIPTION_STATUS_ACTIVE
 
@@ -367,14 +416,38 @@ class BrightloopSubscription(models.Model):
     # Cross-Module Integration Interfaces (Member 3 & Automated Engine)
     # =========================================================================
 
-    def action_advance_billing_date(self):
+    @api.model
+    def _get_subscriptions_due_for_billing(self, billing_date=None):
         """
-        Called by Member 3 (brightloop_billing) recurring invoice engine
-        after an invoice has been successfully recorded for the period.
+        Exposed service method for Member 3 (brightloop_billing).
+        Returns active, non-paused subscriptions due for recurring billing
+        on or before billing_date (defaults to today).
+        """
+        target_date = billing_date or fields.Date.today()
+        return self.search([
+            ('status', '=', SUBSCRIPTION_STATUS_ACTIVE),
+            ('is_paused', '=', False),
+            ('next_billing_date', '<=', target_date),
+        ])
+
+    def _update_next_billing_date(self):
+        """
+        Exposed callback method for Member 3 (brightloop_billing).
+        Advances next_billing_date by the plan billing interval and interval count,
+        preserving the original billing anchor day (e.g. Jan 31 -> Feb 28 -> Mar 31).
+        Called after successful invoice and BillingJob generation.
         """
         for sub in self:
             if sub.status == SUBSCRIPTION_STATUS_ACTIVE and sub.next_billing_date:
-                sub.next_billing_date = sub.plan_id.compute_next_billing_date(sub.next_billing_date)
+                sub.next_billing_date = sub.plan_id.compute_next_billing_date(
+                    sub.next_billing_date,
+                    interval_count=sub.billing_interval_count or 1,
+                    anchor_day=sub.billing_anchor_day,
+                )
+
+    def action_advance_billing_date(self):
+        """Backward-compatible alias invoking _update_next_billing_date."""
+        return self._update_next_billing_date()
 
     @api.model
     def _cron_auto_close_subscriptions(self):
@@ -424,41 +497,85 @@ class BrightloopSubscriptionLine(models.Model):
         default=1.0,
         required=True,
     )
+    original_unit_price = fields.Float(
+        string='Original Unit Price',
+        digits=(16, 2),
+        help="Agreed unit price before recurring discount",
+    )
     unit_price = fields.Float(
         string='Unit Price',
         digits=(16, 2),
         required=True,
         default=0.0,
+        help="Agreed recurring unit price for Member 3 invoice generation",
+    )
+    discount = fields.Float(
+        string='Discount (%)',
+        digits=(16, 2),
+        default=0.0,
+        help="Agreed recurring discount percentage for Member 3 billing engine",
+    )
+    discount_amount = fields.Float(
+        string='Discount Amount',
+        digits=(16, 2),
+        default=0.0,
+        help="Agreed fixed recurring discount amount",
+    )
+    discount_id = fields.Char(
+        string='Discount Reference',
+        help="Reference or code to applicable Member 3 discount rule",
     )
     tax_id = fields.Char(
-        string='Tax Reference',
+        string='Tax Reference Code',
         help="Tax reference code for Member 3 billing engine (e.g. GST_18)",
+    )
+    tax_ids = fields.Many2many(
+        'account.tax',
+        string='Taxes',
+        help="Odoo accounting tax references for Member 3 invoice line generation",
+    )
+    plan_id = fields.Many2one(
+        'brightloop.plan',
+        string='Subscription Plan',
+        related='subscription_id.plan_id',
+        store=True,
+        readonly=True,
     )
     amount_subtotal = fields.Float(
         string='Subtotal',
         digits=(16, 2),
         compute='_compute_amount_subtotal',
         store=True,
+        help="Estimated line subtotal: quantity * unit_price * (1 - discount/100) - discount_amount",
     )
 
-    @api.depends('quantity', 'unit_price')
+    @api.depends('quantity', 'unit_price', 'discount', 'discount_amount')
     def _compute_amount_subtotal(self):
         for line in self:
-            line.amount_subtotal = line.quantity * line.unit_price
+            base = line.quantity * line.unit_price
+            discount_pct = (line.discount or 0.0) / 100.0
+            subtotal = (base * (1.0 - discount_pct)) - (line.discount_amount or 0.0)
+            line.amount_subtotal = max(0.0, subtotal)
 
     @api.onchange('product_id', 'variant_id')
     def _onchange_product(self):
         if self.variant_id and self.variant_id.product_id == self.product_id:
             self.unit_price = self.variant_id.effective_price
+            self.original_unit_price = self.variant_id.effective_price
             self.name = self.variant_id.display_name
         elif self.product_id:
             self.unit_price = self.product_id.sales_price
+            self.original_unit_price = self.product_id.sales_price
             self.name = self.product_id.name
 
-    @api.constrains('quantity', 'unit_price')
+    @api.constrains('quantity', 'unit_price', 'discount', 'discount_amount')
     def _check_positive_values(self):
         for line in self:
             if line.quantity <= 0.0:
                 raise ValidationError(_("Line quantity must be strictly positive."))
             if line.unit_price < 0.0:
                 raise ValidationError(_("Unit price cannot be negative."))
+            if line.discount < 0.0 or line.discount > 100.0:
+                raise ValidationError(_("Discount percentage must be between 0 and 100."))
+            if line.discount_amount < 0.0:
+                raise ValidationError(_("Discount amount cannot be negative."))
