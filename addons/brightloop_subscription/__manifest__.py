@@ -34,6 +34,8 @@ Key Features:
         'views/menu_views.xml',
         'views/product_views.xml',
         'views/plan_views.xml',
+        'views/quotation_template_views.xml',
+        'views/subscription_views.xml',
     ],
     'installable': True,
     'application': True,
