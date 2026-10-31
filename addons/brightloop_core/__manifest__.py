@@ -8,7 +8,8 @@
 Brightloop Subscription Management System - Platform Foundation
 ===============================================================
 Central integration module for the Brightloop platform.
-Maintains canonical roles, shared status enums, and common architecture contracts.
+Maintains canonical roles (Admin, Staff, Customer), shared status enums,
+strict password policies, and customer data isolation rules.
 
 Workstream Ownership: Member 1 (Platform Foundation, Authentication & Security Lead)
     """,
@@ -21,9 +22,11 @@ Workstream Ownership: Member 1 (Platform Foundation, Authentication & Security L
         'portal',
     ],
     'data': [
+        'security/brightloop_security.xml',
+        'security/ir.model.access.csv',
+        'security/customer_rules.xml',
     ],
     'installable': True,
     'application': False,
     'auto_install': False,
 }
-
