@@ -16,6 +16,10 @@ from .shared_constants import ROLE_CUSTOMER, ROLE_SELECTION
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    signup_type = fields.Char(
+        groups="base.group_erp_manager,brightloop_core.group_brightloop_admin",
+    )
+
     customer_user_id = fields.Many2one(
         'res.users',
         string='Customer User Account',
@@ -56,3 +60,4 @@ class ResPartner(models.Model):
             else:
                 partner.brightloop_role = False
                 partner.is_brightloop_customer = False
+

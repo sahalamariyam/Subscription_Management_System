@@ -76,11 +76,29 @@ class ResUsers(models.Model):
     # =========================================================================
 
     def _is_brightloop_admin(self):
-        """Check whether the current user is an authorized Brightloop administrator."""
+        """
+        Check whether the given user is an authorized Brightloop administrator.
+
+        Intentional trust model (post Finding 3.1 remediation):
+          - Odoo superuser (UID=1 / SUPERUSER_ID) only.
+          - Explicit Brightloop Administrator group members.
+
+        Implementation note — why _is_superuser() instead of env.su:
+          In Odoo 18, env.user always returns a sudoed record (env.su=True),
+          so checking self.env.su would return True for EVERY user when this
+          method is called on env.user.  _is_superuser() is identity-based
+          (self.id == SUPERUSER_ID) and immune to this issue.
+
+        Deliberately excluded (Finding 3.1 fix):
+          - env.is_admin() was removed because it returns True for ANY
+            base.group_erp_manager holder, not just the superuser.
+            ERP Managers are Odoo system admins, not Brightloop business admins.
+        """
         self.ensure_one()
-        if self._is_superuser() or self.env.is_admin():
-            return True
-        return self.has_group('brightloop_core.group_brightloop_admin')
+        return (
+            self._is_superuser()
+            or self.has_group('brightloop_core.group_brightloop_admin')
+        )
 
     def _is_brightloop_staff(self):
         """Check whether the current user is a Brightloop staff member."""
@@ -168,6 +186,37 @@ class ResUsers(models.Model):
             self._validate_password_policy(new_passwd)
         return super()._change_password(new_passwd)
 
+    def _set_new_password(self):
+        """
+        Override to enforce the password policy immediately when the new_password
+        field is written (e.g. admin sets a password for another user via the UI).
+
+        Finding 3.3 remediation: Without this override, the Odoo 18 base
+        implementation of _set_new_password() assigns `user.password = user.new_password`
+        into the ORM dirty cache without any validation.  The policy would only fire
+        during _set_password() at flush time, leaving a window where a weak plaintext
+        value temporarily occupies the ORM cache.
+
+        This override validates the cleartext value up-front, before delegating to
+        super(), which then performs the assignment → flush → _set_password() → hashing.
+        Native Odoo hashing (PBKDF2-SHA512 via Passlib) is fully preserved because we
+        call super() and do NOT hash or store the password ourselves.
+
+        Odoo 18 base behaviour (confirmed from source):
+          - If user == self.env.user → raises UserError (unchanged, not our concern).
+          - Otherwise → user.password = user.new_password (triggers _set_password at flush).
+        """
+        for user in self:
+            if not user.new_password:
+                # Mirror base behaviour: silently skip empty/False values.
+                continue
+            if user == self.env.user:
+                # Let the base class raise UserError for self-write attempts.
+                continue
+            # Validate before the assignment enters the ORM dirty cache.
+            self._validate_password_policy(user.new_password)
+        return super()._set_new_password()
+
     # =========================================================================
     # Server-Side Access Control & Privilege Escalation Prevention
     # =========================================================================
@@ -177,10 +226,16 @@ class ResUsers(models.Model):
         """
         Enforce Admin-Only Staff Account Creation.
         Non-administrators cannot create accounts with staff/admin privileges.
+
+        The is_admin check uses three layers:
+          1. self.env.su — sudo context (cron jobs, module init, ORM internals).
+          2. self.env.uid == SUPERUSER_ID — explicit superuser calls.
+          3. _is_brightloop_admin() — explicit Brightloop Admin group or UID=1.
         """
         current_user = self.env.user
         is_admin = (
-            self.env.uid == SUPERUSER_ID
+            self.env.su
+            or self.env.uid == SUPERUSER_ID
             or (current_user and current_user._is_brightloop_admin())
         )
         privileged_ids = self._get_privileged_group_ids()
@@ -200,10 +255,16 @@ class ResUsers(models.Model):
         """
         Prevent unauthorized users from promoting themselves or others,
         or modifying security group memberships.
+
+        The is_admin check uses three layers (same as create):
+          1. self.env.su — sudo context.
+          2. self.env.uid == SUPERUSER_ID — explicit superuser.
+          3. _is_brightloop_admin() — explicit Brightloop Admin group or UID=1.
         """
         current_user = self.env.user
         is_admin = (
-            self.env.uid == SUPERUSER_ID
+            self.env.su
+            or self.env.uid == SUPERUSER_ID
             or (current_user and current_user._is_brightloop_admin())
         )
 
@@ -215,3 +276,4 @@ class ResUsers(models.Model):
             raise AccessError(_("Only Brightloop administrators may modify user security groups."))
 
         return super().write(values)
+

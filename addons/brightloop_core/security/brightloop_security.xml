@@ -28,8 +28,24 @@
         <record id="group_brightloop_admin" model="res.groups">
             <field name="name">Administrator</field>
             <field name="category_id" ref="module_category_brightloop"/>
-            <field name="implied_ids" eval="[(4, ref('group_brightloop_staff')), (4, ref('base.group_erp_manager'))]"/>
-            <field name="comment">Platform administrator with full application access: staff account creation, customer management, shared configuration, and security management.</field>
+            <!--
+                Finding 3.2 remediation: Previously implied base.group_erp_manager,
+                which grants full Odoo Settings access (module install, system config,
+                user management across the entire Odoo instance). That is excessive for
+                a Brightloop business administrator.
+
+                Revised: implies only group_brightloop_staff (which implies base.group_user).
+                Any additional model-level access for Admin is granted explicitly via
+                ir.model.access.csv ACL records.
+
+                IMPORTANT: Uses Command 6 (SET / replace-all) not Command 4 (LINK/add).
+                Command 4 only adds — it would not remove the previously-linked
+                group_erp_manager from existing deployments. Command 6 replaces the
+                entire implied_ids set, ensuring upgrades correctly remove the old link.
+            -->
+            <field name="implied_ids" eval="[(6, 0, [ref('group_brightloop_staff')])]"/>
+            <field name="comment">Platform administrator with full Brightloop application access: staff account creation, customer management, shared configuration, and security management. Does NOT grant Odoo-wide system settings access.</field>
         </record>
     </data>
 </odoo>
+
