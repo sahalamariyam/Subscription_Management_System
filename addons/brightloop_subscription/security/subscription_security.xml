@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="0">
-        <!-- Security rules for Brightloop Subscription module -->
+        <!-- Customer Data Isolation: Subscriptions Self-Access Only -->
+        <record id="rule_brightloop_customer_subscription_isolation" model="ir.rule">
+            <field name="name">Brightloop Customer: Subscription Self-Access Only</field>
+            <field name="model_id" ref="model_brightloop_subscription"/>
+            <field name="groups" eval="[(4, ref('brightloop_core.group_brightloop_customer'))]"/>
+            <field name="domain_force">[('partner_id', 'child_of', user.commercial_partner_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- Customer Data Isolation: Subscription Lines Self-Access Only -->
+        <record id="rule_brightloop_customer_subscription_line_isolation" model="ir.rule">
+            <field name="name">Brightloop Customer: Subscription Line Self-Access Only</field>
+            <field name="model_id" ref="model_brightloop_subscription_line"/>
+            <field name="groups" eval="[(4, ref('brightloop_core.group_brightloop_customer'))]"/>
+            <field name="domain_force">[('subscription_id.partner_id', 'child_of', user.commercial_partner_id.id)]</field>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
     </data>
 </odoo>
