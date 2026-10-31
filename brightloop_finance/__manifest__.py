@@ -28,7 +28,8 @@
     'depends': [
         'base',
         'mail',
-        'account',          # Member 3 confirmed: using account.move as invoice model (Odoo 18)
+        'account',          # Odoo 18 native — account.move is the invoice model
+        'brightloop_billing',   # Member 3 — extends account.move with subscription_id ✅
         'brightloop_core',  # Member 1 shared constants — add when available
     ],
 
@@ -65,7 +66,6 @@
     'application': False,
     'auto_install': False,
 
-    # Change to False once Member 3's module is confirmed installed
-    # and remove this comment before final submission
+    # installable: True once brightloop_billing and brightloop_core are merged to main
     'external_dependencies': {},
 }

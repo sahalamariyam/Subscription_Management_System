@@ -17,6 +17,7 @@
                         </group>
                         <group string="Filters">
                             <field name="partner_id" options="{'no_create': True}"/>
+                            <field name="subscription_id" options="{'no_create': True}"/>
                             <field name="export_type"/>
                         </group>
                     </group>

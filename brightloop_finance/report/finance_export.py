@@ -81,6 +81,11 @@ class BrightloopFinanceExport(models.TransientModel):
         string='Customer (optional)',
         help='Leave blank to export all customers (staff only).',
     )
+    subscription_id = fields.Many2one(
+        comodel_name='brightloop.subscription',
+        string='Subscription (optional)',
+        help='Filter invoice/payment export to a specific subscription.',
+    )
     export_type = fields.Selection(
         selection=[
             ('payments', 'Payment History'),
@@ -123,7 +128,8 @@ class BrightloopFinanceExport(models.TransientModel):
             )
 
         # Authorization check
-        partner_id = self.partner_id.id if self.partner_id else None
+        partner_id      = self.partner_id.id if self.partner_id else None
+        subscription_id = self.subscription_id.id if self.subscription_id else None
         self._check_report_access(partner_id)
 
         output = io.BytesIO()
@@ -137,11 +143,17 @@ class BrightloopFinanceExport(models.TransientModel):
         if export_type in ('payments', 'full_report'):
             self._write_payments_sheet(workbook, fmt, partner_id)
         if export_type in ('invoices_all', 'full_report'):
-            self._write_invoices_sheet(workbook, fmt, partner_id, overdue_only=False, label='All Invoices')
+            self._write_invoices_sheet(workbook, fmt, partner_id,
+                                       subscription_id=subscription_id,
+                                       overdue_only=False, label='All Invoices')
         if export_type in ('invoices_outstanding', 'full_report'):
-            self._write_invoices_sheet(workbook, fmt, partner_id, outstanding_only=True, label='Outstanding')
+            self._write_invoices_sheet(workbook, fmt, partner_id,
+                                       subscription_id=subscription_id,
+                                       outstanding_only=True, label='Outstanding')
         if export_type in ('invoices_overdue', 'full_report'):
-            self._write_invoices_sheet(workbook, fmt, partner_id, overdue_only=True, label='Overdue')
+            self._write_invoices_sheet(workbook, fmt, partner_id,
+                                       subscription_id=subscription_id,
+                                       overdue_only=True, label='Overdue')
         if export_type in ('revenue_summary', 'full_report'):
             self._write_revenue_summary_sheet(workbook, fmt, partner_id)
         if export_type in ('subscriptions', 'full_report'):
@@ -256,8 +268,9 @@ class BrightloopFinanceExport(models.TransientModel):
 
     # ─── Invoices sheet ───────────────────────────────────────────────────────
     def _write_invoices_sheet(self, workbook, fmt, partner_id,
-                               overdue_only=False, outstanding_only=False, label='Invoices'):
-        ws = workbook.add_worksheet(label[:31])  # xlsx sheet name max 31 chars
+                               overdue_only=False, outstanding_only=False,
+                               subscription_id=None, label='Invoices'):
+        ws = workbook.add_worksheet(label[:31])
         ws.set_column('A:B', 18)
         ws.set_column('C:C', 22)
         ws.set_column('D:F', 14)
@@ -275,9 +288,9 @@ class BrightloopFinanceExport(models.TransientModel):
             self.date_from, self.date_to,
             overdue_only=overdue_only,
             partner_id=partner_id,
+            subscription_id=subscription_id,
         )
         if outstanding_only and not overdue_only:
-            # account.move: outstanding = amount_residual > 0
             invoices = invoices.filtered(lambda i: i.amount_residual > 0)
 
         # Human-readable payment_state labels (Odoo 18 account.move)
@@ -295,7 +308,7 @@ class BrightloopFinanceExport(models.TransientModel):
         for inv in invoices:
             # account.move field mapping (Member 3 confirmed 2026-10-31)
             inv_number  = inv.name or ''
-            inv_sub     = inv.subscription_id.display_name if getattr(inv, 'subscription_id', None) else ''
+            inv_sub     = inv.subscription_id.display_name if inv.subscription_id else ''
             inv_partner = inv.partner_id.display_name if inv.partner_id else ''
             pay_state   = PAYMENT_STATE_LABELS.get(inv.payment_state, inv.payment_state or '')
             inv_date    = inv.invoice_date

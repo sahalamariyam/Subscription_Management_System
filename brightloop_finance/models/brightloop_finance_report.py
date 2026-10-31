@@ -38,7 +38,7 @@ Integration contracts (confirmed):
     invoice_date_due= due date                    ✅ (was: due_date)
     invoice_date    = invoice date                ✅ same
     name            = invoice number/ref          ✅ (was: invoice_number)
-    subscription_id = Many2one(brightloop.sub)    ⏳ Member 3 adds via _inherit
+    subscription_id = Many2one(brightloop.sub)    ✅ confirmed 2026-10-31 (Member 3 adds via _inherit on account.move in brightloop_billing)
     state: draft | posted | cancel               ✅ confirmed
     payment_state: not_paid | partial | in_payment | paid | reversed ✅
 """
@@ -279,7 +279,7 @@ class BrightloopFinanceDashboard(models.TransientModel):
         return invoices.read([
             'name', 'partner_id', 'invoice_date_due',
             'amount_total', 'amount_residual',
-            'payment_state', 'subscription_id',
+            'payment_state', 'subscription_id',   # subscription_id confirmed ✅
         ])
 
     def get_recent_payments(self, limit=20, offset=0):
@@ -329,10 +329,12 @@ class BrightloopFinanceReport(models.AbstractModel):
         return self.env['brightloop.payment'].search(domain, order='payment_date desc')
 
     def _get_invoice_summary(self, date_from, date_to, status_filter=None,
-                              overdue_only=False, partner_id=None):
+                              overdue_only=False, partner_id=None,
+                              subscription_id=None):
         """
         Return invoice records for export.
         Source: account.move (Odoo 18, confirmed Member 3 2026-10-31)
+        subscription_id field confirmed ✅ — added by Member 3 via _inherit.
         Enforces customer data isolation.
         """
         self._check_report_access(partner_id)
@@ -354,6 +356,8 @@ class BrightloopFinanceReport(models.AbstractModel):
             ]
         if partner_id:
             domain.append(('partner_id', '=', partner_id))
+        if subscription_id:
+            domain.append(('subscription_id', '=', subscription_id))
 
         return self.env[INVOICE_MODEL].search(domain, order='invoice_date desc')
 
