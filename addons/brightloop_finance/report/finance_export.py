@@ -374,21 +374,35 @@ class BrightloopFinanceExport(models.TransientModel):
 
     # ─── Revenue summary sheet ────────────────────────────────────────────────
     def _write_revenue_summary_sheet(self, workbook, fmt, partner_id):
+        """
+        Revenue Summary sheet — 4 columns per calendar month:
+          A  Month label        (e.g. 'October 2026')
+          B  Revenue Received   (sum of allocated_amount from posted payments)
+          C  Total Invoiced     (sum of amount_total from posted account.move invoices)
+          D  Outstanding        (sum of amount_residual from those same invoices)
+
+        Sources:
+          B → brightloop.invoice.payment grouped by allocation_date:month
+          C, D → account.move (Odoo 18, confirmed Member 3) grouped by invoice_date:month
+        """
         ws = workbook.add_worksheet('Revenue Summary')
         ws.set_column('A:A', 20)
         ws.set_column('B:D', 16)
 
-        headers = ['Month', 'Revenue Received', 'Invoiced', 'Outstanding']
+        headers = ['Month', 'Revenue Received', 'Total Invoiced', 'Outstanding Balance']
         row = self._write_sheet_title(ws, fmt, 'Revenue Summary', self.date_from, self.date_to, len(headers))
         for col, h in enumerate(headers):
             ws.write(row, col, h, fmt['header'])
         row += 1
 
-        # Revenue by month (from allocations)
+        date_from_str = str(self.date_from)
+        date_to_str   = str(self.date_to)
+
+        # ── Column B: Revenue received per month (from our allocation records) ──
         payment_domain = [
             ('payment_id.state', '=', 'posted'),
-            ('allocation_date', '>=', str(self.date_from)),
-            ('allocation_date', '<=', str(self.date_to)),
+            ('allocation_date', '>=', date_from_str),
+            ('allocation_date', '<=', date_to_str),
         ]
         if partner_id:
             payment_domain.append(('partner_id', '=', partner_id))
@@ -399,20 +413,82 @@ class BrightloopFinanceExport(models.TransientModel):
             groupby=['allocation_date:month'],
             orderby='allocation_date asc',
         )
-
-        total_revenue = 0.0
+        # Build lookup: month_label → revenue_received
+        revenue_by_month = {}
         for r in revenue_data:
-            month_label = r.get('allocation_date:month', 'Unknown')
-            revenue = r.get('allocated_amount', 0.0) or 0.0
-            ws.write(row, 0, month_label, fmt['text'])
-            ws.write(row, 1, revenue, fmt['money'])
-            ws.write(row, 2, '', fmt['text'])   # invoiced per month — needs invoice model
-            ws.write(row, 3, '', fmt['text'])   # outstanding — needs invoice model
-            total_revenue += revenue
+            key = r.get('allocation_date:month', '')
+            revenue_by_month[key] = r.get('allocated_amount', 0.0) or 0.0
+
+        # ── Columns C & D: Invoiced and Outstanding per month (account.move) ──
+        # Uses Odoo 18 native invoice model confirmed by Member 3
+        invoiced_by_month    = {}
+        outstanding_by_month = {}
+
+        if INVOICE_MODEL in self.env:
+            inv_base_domain = AM_BASE_DOMAIN + [
+                ('state', '=', 'posted'),
+                ('invoice_date', '>=', date_from_str),
+                ('invoice_date', '<=', date_to_str),
+            ]
+            if partner_id:
+                inv_base_domain.append(('partner_id', '=', partner_id))
+
+            # Total invoiced per month (amount_total)
+            inv_data = self.env[INVOICE_MODEL].read_group(
+                domain=inv_base_domain,
+                fields=['amount_total:sum', 'invoice_date:month'],
+                groupby=['invoice_date:month'],
+                orderby='invoice_date asc',
+            )
+            for r in inv_data:
+                key = r.get('invoice_date:month', '')
+                invoiced_by_month[key] = r.get('amount_total', 0.0) or 0.0
+
+            # Outstanding per month (amount_residual, only where > 0)
+            out_data = self.env[INVOICE_MODEL].read_group(
+                domain=inv_base_domain + [('amount_residual', '>', 0)],
+                fields=['amount_residual:sum', 'invoice_date:month'],
+                groupby=['invoice_date:month'],
+                orderby='invoice_date asc',
+            )
+            for r in out_data:
+                key = r.get('invoice_date:month', '')
+                outstanding_by_month[key] = r.get('amount_residual', 0.0) or 0.0
+        else:
+            _logger.warning(
+                'brightloop_finance: %s not available — Revenue Summary C/D columns will be empty.',
+                INVOICE_MODEL,
+            )
+
+        # ── Merge all months from all three sources ───────────────────────────
+        all_months = sorted(
+            set(revenue_by_month) | set(invoiced_by_month) | set(outstanding_by_month)
+        )
+
+        total_revenue     = 0.0
+        total_invoiced    = 0.0
+        total_outstanding = 0.0
+
+        for month_key in all_months:
+            revenue     = revenue_by_month.get(month_key, 0.0)
+            invoiced    = invoiced_by_month.get(month_key, 0.0)
+            outstanding = outstanding_by_month.get(month_key, 0.0)
+
+            ws.write(row, 0, month_key,    fmt['text'])
+            ws.write(row, 1, revenue,      fmt['money'])
+            ws.write(row, 2, invoiced,     fmt['money'])
+            ws.write(row, 3, outstanding,  fmt['money'])
+
+            total_revenue     += revenue
+            total_invoiced    += invoiced
+            total_outstanding += outstanding
             row += 1
 
-        ws.write(row, 0, 'TOTAL', fmt['label_total'])
-        ws.write(row, 1, total_revenue, fmt['money_total'])
+        # Totals row
+        ws.write(row, 0, 'TOTAL',          fmt['label_total'])
+        ws.write(row, 1, total_revenue,    fmt['money_total'])
+        ws.write(row, 2, total_invoiced,   fmt['money_total'])
+        ws.write(row, 3, total_outstanding, fmt['money_total'])
 
     # ─── Subscriptions sheet ─────────────────────────────────────────────────
     def _write_subscriptions_sheet(self, workbook, fmt, partner_id):
