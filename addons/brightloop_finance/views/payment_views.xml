@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ─── Payment Method Views ──────────────────────────────────────────── -->
+    <record id="view_payment_method_tree" model="ir.ui.view">
+        <field name="name">brightloop.payment.method.tree</field>
+        <field name="model">brightloop.payment.method</field>
+        <field name="arch" type="xml">
+            <tree string="Payment Methods" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="requires_reference"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_payment_method_form" model="ir.ui.view">
+        <field name="name">brightloop.payment.method.form</field>
+        <field name="model">brightloop.payment.method</field>
+        <field name="arch" type="xml">
+            <form string="Payment Method">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="requires_reference"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Description of this payment method..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_payment_method" model="ir.actions.act_window">
+        <field name="name">Payment Methods</field>
+        <field name="res_model">brightloop.payment.method</field>
+        <field name="view_mode">tree,form</field>
+        <field name="groups_id" eval="[(4, ref('brightloop_finance.group_brightloop_finance_manager'))]"/>
+    </record>
+
+    <!-- ─── Payment Views ─────────────────────────────────────────────────── -->
+    <record id="view_payment_tree" model="ir.ui.view">
+        <field name="name">brightloop.payment.tree</field>
+        <field name="model">brightloop.payment</field>
+        <field name="arch" type="xml">
+            <tree string="Payments"
+                  decoration-success="state == 'posted' and is_fully_allocated"
+                  decoration-warning="state == 'posted' and not is_fully_allocated and unallocated_amount > 0"
+                  decoration-danger="is_overpayment"
+                  decoration-muted="state == 'cancelled'">
+                <field name="name" string="Reference"/>
+                <field name="payment_date"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="payment_method_id"/>
+                <field name="amount" sum="Total Amount"/>
+                <field name="total_allocated" sum="Total Allocated"/>
+                <field name="unallocated_amount" string="Unallocated"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'posted'"
+                       decoration-warning="state == 'draft'"
+                       decoration-danger="state == 'cancelled'"/>
+                <field name="is_fully_allocated" optional="show"/>
+                <field name="is_overpayment" optional="show"/>
+                <field name="currency_id" column_invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_payment_form" model="ir.ui.view">
+        <field name="name">brightloop.payment.form</field>
+        <field name="model">brightloop.payment</field>
+        <field name="arch" type="xml">
+            <form string="Payment">
+                <header>
+                    <button name="action_post" string="Post Payment" type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state == 'cancelled'"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,posted,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+
+                    <!-- Overpayment alert -->
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not is_overpayment">
+                        ⚠️ This payment has been over-allocated.
+                        Total allocated exceeds the payment amount.
+                    </div>
+
+                    <group>
+                        <group string="Payment Details">
+                            <field name="partner_id"
+                                   readonly="state != 'draft'"
+                                   options="{'no_create': True}"/>
+                            <field name="payment_method_id"
+                                   readonly="state != 'draft'"/>
+                            <field name="amount"
+                                   readonly="state != 'draft'"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"
+                                   readonly="state != 'draft'"/>
+                            <field name="payment_date"
+                                   readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Reference &amp; Status">
+                            <field name="reference"
+                                   readonly="state != 'draft'"/>
+                            <field name="total_allocated"/>
+                            <field name="unallocated_amount"/>
+                            <field name="is_fully_allocated"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+
+                    <field name="notes" placeholder="Notes about this payment..." readonly="state != 'draft'"/>
+
+                    <!-- Invoice allocations -->
+                    <notebook>
+                        <page string="Invoice Allocations">
+                            <field name="invoice_payment_ids"
+                                   readonly="state == 'cancelled'">
+                                <tree editable="bottom">
+                                    <field name="invoice_id"/>
+                                    <field name="invoice_total" optional="show"/>
+                                    <field name="allocated_amount" sum="Total Allocated"/>
+                                    <field name="allocation_date"/>
+                                    <field name="notes" optional="hide"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_payment_search" model="ir.ui.view">
+        <field name="name">brightloop.payment.search</field>
+        <field name="model">brightloop.payment</field>
+        <field name="arch" type="xml">
+            <search string="Search Payments">
+                <field name="name" string="Reference"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="payment_method_id"/>
+                <field name="reference" string="Transaction Reference"/>
+
+                <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="posted" string="Posted" domain="[('state','=','posted')]"/>
+                <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
+                <separator/>
+                <filter name="fully_allocated" string="Fully Allocated"
+                        domain="[('is_fully_allocated','=',True)]"/>
+                <filter name="unallocated" string="Unallocated"
+                        domain="[('unallocated_amount','>',0)]"/>
+                <filter name="overpayment" string="Overpayment"
+                        domain="[('is_overpayment','=',True)]"/>
+                <separator/>
+                <filter name="this_month" string="This Month"
+                        domain="[('payment_date','&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
+                                  ('payment_date','&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+
+                <group expand="0" string="Group By">
+                    <filter name="group_method" string="Payment Method"
+                            context="{'group_by': 'payment_method_id'}"/>
+                    <filter name="group_partner" string="Customer"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_date" string="Payment Date"
+                            context="{'group_by': 'payment_date:month'}"/>
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_brightloop_payment" model="ir.actions.act_window">
+        <field name="name">Payments</field>
+        <field name="res_model">brightloop.payment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_payment_search"/>
+        <field name="context">{'search_default_posted': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Record your first payment
+            </p>
+            <p>
+                Record manual or gateway payments and allocate them to customer invoices.
+            </p>
+        </field>
+    </record>
+
+    <!-- ─── Menu ─────────────────────────────────────────────────────────── -->
+    <menuitem id="menu_brightloop_finance_root"
+              name="Finance"
+              sequence="50"
+              web_icon="brightloop_finance,static/src/finance_icon.png"
+              groups="brightloop_finance.group_brightloop_finance_user"/>
+
+    <menuitem id="menu_brightloop_payment"
+              name="Payments"
+              parent="menu_brightloop_finance_root"
+              action="action_brightloop_payment"
+              sequence="10"/>
+
+    <menuitem id="menu_brightloop_config"
+              name="Configuration"
+              parent="menu_brightloop_finance_root"
+              sequence="90"
+              groups="brightloop_finance.group_brightloop_finance_manager"/>
+
+    <menuitem id="menu_brightloop_payment_methods"
+              name="Payment Methods"
+              parent="menu_brightloop_config"
+              action="action_payment_method"
+              sequence="10"/>
+
+</odoo>
+

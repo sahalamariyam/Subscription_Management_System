@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ─── Financial Dashboard View ─────────────────────────────────────── -->
+    <record id="view_finance_dashboard_form" model="ir.ui.view">
+        <field name="name">brightloop.finance.dashboard.form</field>
+        <field name="model">brightloop.finance.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Financial Dashboard" create="false" edit="true">
+                <sheet>
+                    <h1>Financial Dashboard</h1>
+
+                    <!-- Date filters -->
+                    <group string="Date Range">
+                        <group>
+                            <field name="date_from" string="From"/>
+                            <field name="date_to" string="To"/>
+                        </group>
+                    </group>
+
+                    <!-- KPI Cards -->
+                    <div class="row mt16">
+                        <div class="col-md-4 col-sm-6 mb16">
+                            <div class="card text-center p-3">
+                                <div class="text-muted small">Active Subscriptions</div>
+                                <div class="h2 fw-bold text-primary">
+                                    <field name="active_subscription_count"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb16">
+                            <div class="card text-center p-3">
+                                <div class="text-muted small">Paused Subscriptions</div>
+                                <div class="h2 fw-bold text-info">
+                                    <field name="paused_subscription_count"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb16">
+                            <div class="card text-center p-3">
+                                <div class="text-muted small">Revenue Received</div>
+                                <div class="h2 fw-bold text-success">
+                                    <field name="revenue_received" widget="monetary"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb16">
+                            <div class="card text-center p-3">
+                                <div class="text-muted small">Total Invoiced</div>
+                                <div class="h2 fw-bold">
+                                    <field name="total_invoice_value" widget="monetary"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb16">
+                            <div class="card text-center p-3">
+                                <div class="text-muted small">Outstanding</div>
+                                <div class="h2 fw-bold text-warning">
+                                    <field name="total_outstanding" widget="monetary"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb16">
+                            <div class="card text-center p-3">
+                                <div class="text-muted small">Overdue Invoices</div>
+                                <div class="h2 fw-bold text-danger">
+                                    <field name="overdue_invoice_count"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 mb16">
+                            <div class="card text-center p-3">
+                                <div class="text-muted small">Overdue Amount</div>
+                                <div class="h2 fw-bold text-danger">
+                                    <field name="overdue_amount" widget="monetary"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_finance_dashboard" model="ir.actions.act_window">
+        <field name="name">Financial Dashboard</field>
+        <field name="res_model">brightloop.finance.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'form_view_initial_mode': 'edit'}</field>
+    </record>
+
+    <menuitem id="menu_brightloop_dashboard"
+              name="Dashboard"
+              parent="menu_brightloop_finance_root"
+              action="action_finance_dashboard"
+              sequence="1"/>
+
+</odoo>
+
