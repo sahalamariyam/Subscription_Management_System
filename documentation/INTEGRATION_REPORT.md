@@ -208,3 +208,71 @@ With the backend fully integrated and stable:
 
 **Final Verdict:** **`READY FOR UI DEVELOPMENT`**
 
+---
+
+## 8. Phase 6 — UI Implementation (Completed 2026-10-31)
+
+**Commit:** `d5e0b10` — `feat(ui): implement Phase 6 — OWL financial dashboard, live customer portal pages`
+
+Phase 6 delivered the complete frontend layer on top of the verified Phase 5 backend.
+
+### 8.1 OWL Financial Dashboard (`brightloop_finance`)
+
+| File | Change |
+|---|---|
+| `static/src/dashboard.js` | Full OWL 2 `FinanceDashboard` component — KPI fetch, currency formatting, collection-rate calculation, XLSX export, date range controls |
+| `static/src/dashboard.xml` | OWL QWeb template — 6 KPI cards, collection-rate progress bar, recent payments table, export/refresh buttons |
+| `static/src/dashboard.scss` | SCSS — responsive card styles, hover elevation, accent left borders per KPI category |
+| `models/brightloop_finance_report.py` | Added `get_dashboard_kpis()` `@api.model` RPC endpoint — instantiates TransientModel with date range, computes KPIs, returns payments list |
+| `views/dashboard_views.xml` | Added `ir.actions.client` (`brightloop_finance_dashboard`) as primary menu entry; kept fallback `act_window` form view |
+
+**OWL Component Architecture:**
+```
+FinanceDashboard (OWL Component)
+  ├── state.kpis  ← RPC: brightloop.finance.dashboard.get_dashboard_kpis()
+  ├── state.payments  ← RPC: same endpoint, returns last 20 posted payments
+  ├── formatCurrency()  ← Intl.NumberFormat USD
+  ├── collectionRate()  ← revenue_received / total_invoice_value × 100
+  ├── onDateFromChange / onDateToChange / resetDates
+  ├── loadKPIs()  ← /web/dataset/call_kw
+  └── exportXLSX()  ← /web/dataset/call_kw → blob download
+```
+
+### 8.2 Live Customer Portal Pages (`brightloop_core`)
+
+Replaced all four integration placeholder routes with fully functional paginated portal pages:
+
+| Route | Template | Features |
+|---|---|---|
+| `/my/subscriptions` | `portal_subscriptions` | Sort (date/name), filter (all/running/paused), pager, status badge macro, link to detail |
+| `/my/subscriptions/<id>` | `portal_subscription_detail` | Full subscription fields, plan, product, billing dates, breadcrumb nav |
+| `/my/quotations` | `portal_quotations` | Draft/quotation stage, pager, status badge |
+| `/my/invoices` | `portal_invoices` | Filter (all/unpaid/paid/overdue), payment state badges, amount_residual, link to detail |
+| `/my/invoices/<id>` | `portal_invoice_detail` | Line items table, tax/total, subscription cross-link, breadcrumb nav |
+| `/my/payments` | `portal_payments` | Paginated payment history, method badge, allocated/unallocated amounts |
+
+**Security Contracts Preserved:**
+- All routes require `auth='user'` — unauthenticated access is denied.
+- All model queries scoped to `partner_id = request.env.user.partner_id.id`.
+- All partner-module routes guard against missing models (`account.move`, `brightloop.payment`, `brightloop.subscription`) for safe isolated testing.
+- `_prepare_home_portal_values()` adds sidebar count badges (`subscription_count`, `invoice_count`, `payment_count`).
+
+### 8.3 Test Fixes (Phase 6)
+
+| File | Fix |
+|---|---|
+| `brightloop_core/tests/test_portal_http.py` | Updated `test_portal_integration_placeholder_routes` to verify HTTP 200 on live pages (content-agnostic in isolated contexts) |
+| `brightloop_finance/tests/test_payment.py` | Fixed `test_10`/`test_11` + both `setUpClass` to use `uuid`-suffixed codes/references — eliminates cross-run unique-constraint failures in `TransactionCase` |
+
+### 8.4 Final Test Result (Phase 6)
+
+```
+brightloop_billing:      15 tests — 0 failed, 0 errors
+brightloop_core:         80 tests — 0 failed, 0 errors
+brightloop_finance:      43 tests — 0 failed, 0 errors
+brightloop_subscription: 43 tests — 0 failed, 0 errors
+─────────────────────────────────────────────────────
+TOTAL:                  181 tests — 0 failed, 0 error(s)
+```
+
+**Updated Verdict:** **`UI LAYER COMPLETE — READY FOR FINAL REVIEW & DEPLOYMENT`**
