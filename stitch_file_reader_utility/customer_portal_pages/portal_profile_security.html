@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_standard" name="shell-type"/>
+  <title>Account &amp; Security - Brightloop Customer Portal</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed": "#6ffbbe",
+            "on-secondary-container": "#006172",
+            "tertiary-container": "#006e4b",
+            "secondary": "#00687a",
+            "surface-bright": "#faf8ff",
+            "primary-fixed": "#e2dfff",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#001f26",
+            "tertiary-fixed-dim": "#4edea3",
+            "background": "#faf8ff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#4cd7f6",
+            "surface-container-high": "#e2e7ff",
+            "on-primary-container": "#dad7ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#464555",
+            "on-secondary-fixed-variant": "#004e5c",
+            "tertiary": "#005338",
+            "error-container": "#ffdad6",
+            "surface-container": "#eaedff",
+            "outline-variant": "#c7c4d8",
+            "primary": "#3525cd",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#acedff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-fixed": "#002113",
+            "surface-variant": "#dae2fd",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-tertiary-container": "#67f4b7",
+            "secondary-container": "#57dffe",
+            "primary-container": "#4f46e5",
+            "error": "#ba1a1a",
+            "inverse-surface": "#283044",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#131b2e",
+            "surface-tint": "#4d44e3",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eef0ff",
+            "outline": "#777587",
+            "on-background": "#131b2e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased">
+  <!-- Top Navigation Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+    <div class="w-full max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-8">
+        <a href="../customer_portal_self_service_hub/code.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">all_inclusive</span>
+          </div>
+          <span class="text-base font-bold text-on-surface tracking-tight">Brightloop Portal</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../customer_portal_self_service_hub/code.html">Dashboard</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_subscriptions_list.html">My Subscriptions</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_quotations_list.html">Quotations</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_invoices_list.html">Invoices</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_payments_list.html">Payments</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="w-9 h-9 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-xs shadow-sm">
+          AC
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="w-full pt-16 min-h-screen bg-surface">
+    <div class="w-full max-w-4xl mx-auto px-6 py-8 flex flex-col gap-6">
+      
+      <!-- Breadcrumb -->
+      <div class="flex items-center gap-2 text-xs text-on-surface-variant">
+        <a class="hover:text-primary transition-colors" href="../customer_portal_self_service_hub/code.html">Portal Home</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="font-semibold text-on-surface">Account Settings &amp; Security</span>
+      </div>
+
+      <!-- Header -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-on-surface tracking-tight">Account Profile &amp; Security</h1>
+          <p class="text-xs text-on-surface-variant mt-1">Manage company details, billing contact information, and credential security.</p>
+        </div>
+      </div>
+
+      <!-- Tab Switcher -->
+      <div class="flex items-center bg-surface-container-low p-1 rounded-xl w-fit text-xs">
+        <button class="px-4 py-2 rounded-lg bg-surface-container-lowest text-primary font-semibold shadow-sm transition-all" id="tabProfileBtn" onclick="switchSettingTab('profile')">
+          Organization Profile
+        </button>
+        <button class="px-4 py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-medium transition-all" id="tabSecurityBtn" onclick="switchSettingTab('security')">
+          Password &amp; Security
+        </button>
+      </div>
+
+      <!-- Tab 1: Organization Profile -->
+      <div class="bg-surface-container-lowest rounded-2xl p-6 lg:p-8 shadow-sm border border-outline-variant/30 flex flex-col gap-6" id="panelProfile">
+        <div class="flex items-center justify-between border-b border-outline-variant/20 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-primary/10 text-primary">
+              <span class="material-symbols-outlined text-2xl">domain</span>
+            </div>
+            <div>
+              <h2 class="text-base font-bold text-on-surface">Legal Entity &amp; Billing Details</h2>
+              <p class="text-xs text-on-surface-variant">Used for official tax invoicing on account.move entries</p>
+            </div>
+          </div>
+          <span class="text-xs font-mono text-on-surface-variant">Partner ID: 1042</span>
+        </div>
+
+        <form class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs" onsubmit="event.preventDefault(); alert('Profile information updated successfully in Odoo partner ledger!');">
+          <div class="flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">Company / Organization Legal Name</label>
+            <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-xs" type="text" value="Acme Corporation"/>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">VAT / Tax ID</label>
+            <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-xs" type="text" value="US94830219"/>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">Primary Contact Person</label>
+            <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-xs" type="text" value="Sarah Jenkins"/>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">Billing Email Address</label>
+            <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-xs" type="email" value="sarah.jenkins@acmecorp.com"/>
+          </div>
+          <div class="col-span-1 sm:col-span-2 flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">Billing Street Address</label>
+            <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-xs" type="text" value="100 Innovation Way, Suite 400"/>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">City</label>
+            <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-xs" type="text" value="San Francisco"/>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">State / Postal Code</label>
+            <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-xs" type="text" value="CA 94107"/>
+          </div>
+          <div class="col-span-1 sm:col-span-2 pt-4 flex justify-end">
+            <button class="px-5 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container shadow-sm transition-all" type="submit">
+              Save Profile Changes
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tab 2: Security & Password -->
+      <div class="hidden bg-surface-container-lowest rounded-2xl p-6 lg:p-8 shadow-sm border border-outline-variant/30 flex flex-col gap-6" id="panelSecurity">
+        <div class="flex items-center justify-between border-b border-outline-variant/20 pb-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 rounded-xl bg-secondary/10 text-secondary">
+              <span class="material-symbols-outlined text-2xl">lock_reset</span>
+            </div>
+            <div>
+              <h2 class="text-base font-bold text-on-surface">Credential Security &amp; Password Policy</h2>
+              <p class="text-xs text-on-surface-variant">Encrypted via PBKDF2-SHA512 with strict password policy</p>
+            </div>
+          </div>
+        </div>
+
+        <form class="flex flex-col gap-4 text-xs max-w-lg" onsubmit="event.preventDefault(); alert('Password updated successfully!');">
+          <div class="flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">Current Password</label>
+            <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-xs" placeholder="••••••••••••" required type="password"/>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">New Password</label>
+            <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-xs" oninput="checkPolicy(this.value)" placeholder="••••••••••••" required type="password"/>
+          </div>
+
+          <!-- Password Policy Checklist -->
+          <div class="p-4 rounded-xl bg-surface-container-low flex flex-col gap-2">
+            <span class="text-[11px] font-semibold text-on-surface-variant uppercase">Policy Checklist:</span>
+            <div class="grid grid-cols-2 gap-2 text-[11px]" id="policyGrid">
+              <span class="text-on-surface-variant" id="p-len">• ≥ 12 characters</span>
+              <span class="text-on-surface-variant" id="p-upper">• Uppercase letter</span>
+              <span class="text-on-surface-variant" id="p-lower">• Lowercase letter</span>
+              <span class="text-on-surface-variant" id="p-sym">• Special symbol</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">Confirm New Password</label>
+            <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-xs" placeholder="••••••••••••" required type="password"/>
+          </div>
+
+          <div class="pt-2">
+            <button class="px-5 py-2.5 rounded-xl bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container shadow-sm transition-all" type="submit">
+              Update Password
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function switchSettingTab(name) {
+      const pProfile = document.getElementById('panelProfile');
+      const pSec = document.getElementById('panelSecurity');
+      const bProfile = document.getElementById('tabProfileBtn');
+      const bSec = document.getElementById('tabSecurityBtn');
+
+      if (name === 'profile') {
+        pProfile.classList.remove('hidden');
+        pSec.classList.add('hidden');
+        bProfile.className = 'px-4 py-2 rounded-lg bg-surface-container-lowest text-primary font-semibold shadow-sm transition-all';
+        bSec.className = 'px-4 py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-medium transition-all';
+      } else {
+        pProfile.classList.add('hidden');
+        pSec.classList.remove('hidden');
+        bSec.className = 'px-4 py-2 rounded-lg bg-surface-container-lowest text-primary font-semibold shadow-sm transition-all';
+        bProfile.className = 'px-4 py-2 rounded-lg text-on-surface-variant hover:text-on-surface font-medium transition-all';
+      }
+    }
+
+    // Auto-switch if URL hash specifies #security
+    if (window.location.hash === '#security') {
+      switchSettingTab('security');
+    }
+
+    function checkPolicy(v) {
+      document.getElementById('p-len').className = v.length >= 12 ? 'text-emerald-600 font-bold' : 'text-on-surface-variant';
+      document.getElementById('p-upper').className = /[A-Z]/.test(v) ? 'text-emerald-600 font-bold' : 'text-on-surface-variant';
+      document.getElementById('p-lower').className = /[a-z]/.test(v) ? 'text-emerald-600 font-bold' : 'text-on-surface-variant';
+      document.getElementById('p-sym').className = /[!@#$%^&*]/.test(v) ? 'text-emerald-600 font-bold' : 'text-on-surface-variant';
+    }
+  </script>
+</body>
+</html>
+

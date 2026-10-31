@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_standard" name="shell-type"/>
+  <title>Invoices &amp; Statements - Brightloop Customer Portal</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed": "#6ffbbe",
+            "on-secondary-container": "#006172",
+            "tertiary-container": "#006e4b",
+            "secondary": "#00687a",
+            "surface-bright": "#faf8ff",
+            "primary-fixed": "#e2dfff",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#001f26",
+            "tertiary-fixed-dim": "#4edea3",
+            "background": "#faf8ff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#4cd7f6",
+            "surface-container-high": "#e2e7ff",
+            "on-primary-container": "#dad7ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#464555",
+            "on-secondary-fixed-variant": "#004e5c",
+            "tertiary": "#005338",
+            "error-container": "#ffdad6",
+            "surface-container": "#eaedff",
+            "outline-variant": "#c7c4d8",
+            "primary": "#3525cd",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#acedff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-fixed": "#002113",
+            "surface-variant": "#dae2fd",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-tertiary-container": "#67f4b7",
+            "secondary-container": "#57dffe",
+            "primary-container": "#4f46e5",
+            "error": "#ba1a1a",
+            "inverse-surface": "#283044",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#131b2e",
+            "surface-tint": "#4d44e3",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eef0ff",
+            "outline": "#777587",
+            "on-background": "#131b2e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased">
+  <!-- Top Navigation Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+    <div class="w-full max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-8">
+        <a href="../customer_portal_self_service_hub/code.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">all_inclusive</span>
+          </div>
+          <span class="text-base font-bold text-on-surface tracking-tight">Brightloop Portal</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../customer_portal_self_service_hub/code.html">Dashboard</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_subscriptions_list.html">My Subscriptions</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_quotations_list.html">Quotations</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-high text-primary" href="portal_invoices_list.html">Invoices</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_payments_list.html">Payments</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="hidden sm:flex flex-col text-right">
+          <span class="text-xs font-semibold text-on-surface">Acme Corporation</span>
+          <span class="text-[11px] text-on-surface-variant">Customer Account</span>
+        </div>
+        <div class="w-9 h-9 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-xs shadow-sm">
+          AC
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="w-full pt-16 min-h-screen bg-surface">
+    <div class="w-full max-w-7xl mx-auto px-6 py-8 flex flex-col gap-6">
+      
+      <!-- Breadcrumb -->
+      <div class="flex items-center gap-2 text-xs text-on-surface-variant">
+        <a class="hover:text-primary transition-colors" href="../customer_portal_self_service_hub/code.html">Portal Home</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="font-semibold text-on-surface">Invoices &amp; Statements</span>
+      </div>
+
+      <!-- Header & Financial KPI Overview -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-on-surface tracking-tight">Billing Statements &amp; Invoices</h1>
+          <p class="text-xs text-on-surface-variant mt-1">Review official tax invoices, check settlement status, and pay outstanding balances.</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="px-4 py-2 rounded-xl bg-surface-container-lowest border border-outline-variant/30 flex items-center gap-2 text-xs shadow-sm">
+            <span class="text-on-surface-variant uppercase text-[10px] font-semibold">Outstanding Due:</span>
+            <span class="font-mono font-bold text-amber-600">$1,850.00</span>
+          </div>
+          <button class="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container shadow-sm transition-all flex items-center gap-1.5" onclick="alert('Proceeding to automated payment gateway...')">
+            <span class="material-symbols-outlined text-[16px]">payment</span>
+            <span>Pay All Balances ($1,850.00)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filter Tabs & Search Bar -->
+      <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-1 bg-surface-container-low p-1 rounded-xl text-xs">
+          <button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-semibold shadow-sm" onclick="filterInvoices('all', this)">All Statements (4)</button>
+          <button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-medium" onclick="filterInvoices('unpaid', this)">Unpaid / Due (2)</button>
+          <button class="px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-medium" onclick="filterInvoices('paid', this)">Settled (2)</button>
+        </div>
+        <div class="relative flex items-center w-full sm:w-72">
+          <span class="material-symbols-outlined absolute left-3 text-[18px] text-on-surface-variant pointer-events-none">search</span>
+          <input class="w-full h-9 pl-9 pr-4 bg-surface-container-low rounded-lg text-xs text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/20" id="invSearch" onkeyup="searchInvoice(this.value)" placeholder="Search invoice number..." type="text"/>
+        </div>
+      </div>
+
+      <!-- Invoices Table -->
+      <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs" id="invoiceTable">
+            <thead>
+              <tr class="bg-surface-container-low text-on-surface-variant uppercase tracking-wider font-semibold">
+                <th class="py-3.5 px-4">Invoice #</th>
+                <th class="py-3.5 px-4">Invoice Date</th>
+                <th class="py-3.5 px-4">Due Date</th>
+                <th class="py-3.5 px-4">Subscription</th>
+                <th class="py-3.5 px-4 text-right">Total Amount</th>
+                <th class="py-3.5 px-4 text-right">Balance Due</th>
+                <th class="py-3.5 px-4 text-center">Payment Status</th>
+                <th class="py-3.5 px-4 text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-surface-container font-sans text-on-surface" id="invoiceBody">
+              <!-- Item 1: Overdue -->
+              <tr class="hover:bg-surface-container-low/50 transition-colors inv-row" data-status="unpaid">
+                <td class="py-4 px-4 font-mono font-bold text-primary">
+                  <a href="portal_invoice_detail.html" class="hover:underline">INV/2026/00120</a>
+                </td>
+                <td class="py-4 px-4 font-mono">2026-10-01</td>
+                <td class="py-4 px-4 font-mono text-rose-600 font-semibold">2026-10-15 (Past Due)</td>
+                <td class="py-4 px-4">
+                  <a href="portal_subscription_detail.html" class="font-mono text-primary hover:underline">SUB/2026/00072</a>
+                </td>
+                <td class="py-4 px-4 text-right font-mono font-bold">$1,250.00</td>
+                <td class="py-4 px-4 text-right font-mono font-bold text-rose-600">$1,250.00</td>
+                <td class="py-4 px-4 text-center">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-50 text-rose-700">
+                    <span class="material-symbols-outlined text-[12px]">warning</span> Overdue
+                  </span>
+                </td>
+                <td class="py-4 px-4 text-center">
+                  <a class="px-3 py-1.5 rounded-lg bg-primary text-on-primary hover:bg-primary-container font-semibold transition-colors shadow-sm" href="portal_invoice_detail.html">
+                    Pay Now
+                  </a>
+                </td>
+              </tr>
+
+              <!-- Item 2: Unpaid / Pending -->
+              <tr class="hover:bg-surface-container-low/50 transition-colors inv-row" data-status="unpaid">
+                <td class="py-4 px-4 font-mono font-bold text-primary">
+                  <a href="portal_invoice_detail.html" class="hover:underline">INV/2026/00118</a>
+                </td>
+                <td class="py-4 px-4 font-mono">2026-10-15</td>
+                <td class="py-4 px-4 font-mono">2026-11-15</td>
+                <td class="py-4 px-4">
+                  <a href="portal_subscription_detail.html" class="font-mono text-primary hover:underline">SUB/2026/00072</a>
+                </td>
+                <td class="py-4 px-4 text-right font-mono font-bold">$600.00</td>
+                <td class="py-4 px-4 text-right font-mono font-bold text-amber-600">$600.00</td>
+                <td class="py-4 px-4 text-center">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-800">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Unpaid
+                  </span>
+                </td>
+                <td class="py-4 px-4 text-center">
+                  <a class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-semibold transition-colors" href="portal_invoice_detail.html">
+                    View &amp; Pay
+                  </a>
+                </td>
+              </tr>
+
+              <!-- Item 3: Paid Full -->
+              <tr class="hover:bg-surface-container-low/50 transition-colors inv-row" data-status="paid">
+                <td class="py-4 px-4 font-mono font-bold text-primary">
+                  <a href="portal_invoice_detail.html" class="hover:underline">INV/2026/00115</a>
+                </td>
+                <td class="py-4 px-4 font-mono">2026-05-30</td>
+                <td class="py-4 px-4 font-mono">2026-06-30</td>
+                <td class="py-4 px-4">
+                  <span class="text-on-surface-variant font-mono">Ad-hoc Add-on</span>
+                </td>
+                <td class="py-4 px-4 text-right font-mono font-bold">$2,544.00</td>
+                <td class="py-4 px-4 text-right font-mono text-on-surface-variant">$0.00</td>
+                <td class="py-4 px-4 text-center">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700">
+                    <span class="material-symbols-outlined text-[12px]">check_circle</span> Paid
+                  </span>
+                </td>
+                <td class="py-4 px-4 text-center">
+                  <a class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-semibold transition-colors" href="portal_invoice_detail.html">
+                    Download PDF
+                  </a>
+                </td>
+              </tr>
+
+              <!-- Item 4: Paid Full Annual -->
+              <tr class="hover:bg-surface-container-low/50 transition-colors inv-row" data-status="paid">
+                <td class="py-4 px-4 font-mono font-bold text-primary">
+                  <a href="portal_invoice_detail.html" class="hover:underline">INV/2026/00112</a>
+                </td>
+                <td class="py-4 px-4 font-mono">2025-11-30</td>
+                <td class="py-4 px-4 font-mono">2025-12-30</td>
+                <td class="py-4 px-4">
+                  <a href="portal_subscription_detail.html" class="font-mono text-primary hover:underline">SUB/2026/00088</a>
+                </td>
+                <td class="py-4 px-4 text-right font-mono font-bold">$14,256.00</td>
+                <td class="py-4 px-4 text-right font-mono text-on-surface-variant">$0.00</td>
+                <td class="py-4 px-4 text-center">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700">
+                    <span class="material-symbols-outlined text-[12px]">check_circle</span> Paid
+                  </span>
+                </td>
+                <td class="py-4 px-4 text-center">
+                  <a class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-semibold transition-colors" href="portal_invoice_detail.html">
+                    Download PDF
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="p-4 bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-on-surface-variant border-t border-outline-variant/30">
+          <span>Official tax statements generated by Brightloop Billing Engine</span>
+          <a href="portal_payments_list.html" class="text-primary font-semibold hover:underline">View Payment Receipts →</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    function filterInvoices(status, el) {
+      document.querySelectorAll('.inv-row').forEach(row => {
+        if (status === 'all' || row.dataset.status === status) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+      el.parentElement.querySelectorAll('button').forEach(btn => {
+        btn.className = 'px-3 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-medium';
+      });
+      el.className = 'px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-semibold shadow-sm';
+    }
+
+    function searchInvoice(val) {
+      const q = val.toLowerCase();
+      document.querySelectorAll('.inv-row').forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(q) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_blank" name="shell-type"/>
+  <title>Brightloop Revenue Operations - Authentication</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed": "#6ffbbe",
+            "on-secondary-container": "#006172",
+            "tertiary-container": "#006e4b",
+            "secondary": "#00687a",
+            "surface-bright": "#faf8ff",
+            "primary-fixed": "#e2dfff",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#001f26",
+            "tertiary-fixed-dim": "#4edea3",
+            "background": "#faf8ff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#4cd7f6",
+            "surface-container-high": "#e2e7ff",
+            "on-primary-container": "#dad7ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#464555",
+            "on-secondary-fixed-variant": "#004e5c",
+            "tertiary": "#005338",
+            "error-container": "#ffdad6",
+            "surface-container": "#eaedff",
+            "outline-variant": "#c7c4d8",
+            "primary": "#3525cd",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#acedff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-fixed": "#002113",
+            "surface-variant": "#dae2fd",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-tertiary-container": "#67f4b7",
+            "secondary-container": "#57dffe",
+            "primary-container": "#4f46e5",
+            "error": "#ba1a1a",
+            "inverse-surface": "#283044",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#131b2e",
+            "surface-tint": "#4d44e3",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eef0ff",
+            "outline": "#777587",
+            "on-background": "#131b2e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "gutter": "1.5rem",
+            "margin": "2rem"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased">
+<main class="w-full min-h-screen bg-surface flex items-center justify-center p-4 lg:p-8">
+  <div class="w-full max-w-6xl flex flex-col shadow-2xl rounded-2xl overflow-hidden bg-surface-container-lowest border border-outline-variant/30">
+    <div class="w-full flex flex-col lg:flex-row">
+      <!-- Left Pane: Enterprise Strategic Overview & Architecture (45% on desktop) -->
+      <div class="w-full lg:w-[45%] bg-primary-container text-on-primary flex flex-col justify-between p-8 lg:p-12 relative overflow-hidden">
+        <!-- Ambient decorative shapes -->
+        <div class="absolute -right-24 -top-24 w-96 h-96 rounded-full bg-primary opacity-40 blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-16 bottom-10 w-80 h-80 rounded-full bg-secondary opacity-30 blur-2xl pointer-events-none"></div>
+        <svg class="absolute inset-0 w-full h-full opacity-10 pointer-events-none" fill="none" viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+          <path d="M-50 150 C 150 100, 200 350, 450 250 S 550 600, 700 550" stroke="currentColor" stroke-dasharray="6 6" stroke-width="1.5"></path>
+          <path d="M-20 280 C 180 230, 240 480, 490 380 S 590 730, 740 680" stroke="currentColor" stroke-width="1.5"></path>
+          <circle cx="450" cy="250" fill="currentColor" r="6"></circle>
+          <circle cx="200" cy="350" fill="currentColor" r="4"></circle>
+          <circle cx="490" cy="380" fill="currentColor" r="5"></circle>
+        </svg>
+
+        <!-- Brand Header -->
+        <div class="relative z-10 flex flex-col gap-y-6">
+          <div class="flex items-center gap-x-3">
+            <div class="w-10 h-10 rounded-xl bg-surface-container-lowest flex items-center justify-center shadow-md">
+              <span class="material-symbols-outlined text-primary text-[24px]">all_inclusive</span>
+            </div>
+            <div class="flex flex-col">
+              <span class="text-xl font-bold tracking-tight text-surface-container-lowest">Brightloop</span>
+              <span class="text-[11px] font-semibold uppercase tracking-widest text-secondary-fixed">Subscription &amp; Revenue Operations</span>
+            </div>
+          </div>
+
+          <!-- Headline & Proposition -->
+          <div class="flex flex-col gap-y-3 mt-4">
+            <div class="inline-flex items-center gap-x-2 px-3 py-1 rounded-full bg-surface-container-lowest/15 w-fit backdrop-blur-md">
+              <span class="w-2 h-2 rounded-full bg-tertiary-fixed animate-pulse"></span>
+              <span class="text-xs font-semibold text-surface-bright">Brightloop Core Active • Odoo 18.0</span>
+            </div>
+            <h1 class="text-2xl lg:text-3xl font-bold text-surface-container-lowest leading-tight">
+              Enterprise Subscription &amp; Billing Automation Engine.
+            </h1>
+            <p class="text-sm text-on-primary-container max-w-md leading-relaxed">
+              Deterministic state orchestration, automated daily recurring billing, and real-time multi-invoice payment allocation.
+            </p>
+          </div>
+
+          <!-- Key Engine Capabilities -->
+          <div class="flex flex-col gap-y-4 mt-2">
+            <div class="flex items-start gap-x-3">
+              <div class="w-6 h-6 rounded-full bg-surface-container-lowest/15 flex items-center justify-center shrink-0 mt-0.5">
+                <span class="material-symbols-outlined text-[15px] text-tertiary-fixed">check</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-surface-container-lowest">Automated Recurring Billing</span>
+                <span class="text-xs text-on-primary-container">Scheduled cron engine with idempotency tracking to prevent duplicate invoice runs.</span>
+              </div>
+            </div>
+            <div class="flex items-start gap-x-3">
+              <div class="w-6 h-6 rounded-full bg-surface-container-lowest/15 flex items-center justify-center shrink-0 mt-0.5">
+                <span class="material-symbols-outlined text-[15px] text-tertiary-fixed">check</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-surface-container-lowest">Multi-Invoice Payment Allocation</span>
+                <span class="text-xs text-on-primary-container">Granular FIFO and customized settlement against customer account.move balances.</span>
+              </div>
+            </div>
+            <div class="flex items-start gap-x-3">
+              <div class="w-6 h-6 rounded-full bg-surface-container-lowest/15 flex items-center justify-center shrink-0 mt-0.5">
+                <span class="material-symbols-outlined text-[15px] text-tertiary-fixed">check</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-surface-container-lowest">Lifecycle State Orchestration</span>
+                <span class="text-xs text-on-primary-container">State machine preserving billing anchors across Draft, Quotation, Confirmed, Active, and Paused states.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trust & Security Certifications Footer -->
+        <div class="relative z-10 flex flex-col gap-y-4 mt-8">
+          <div class="p-4 rounded-xl bg-surface-container-lowest/10 backdrop-blur-md flex flex-col gap-y-2">
+            <div class="flex items-center gap-x-1 text-secondary-fixed">
+              <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+              <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+            </div>
+            <p class="text-xs text-surface-bright italic leading-relaxed">
+              “Brightloop deterministic billing eliminated manual reconciliation lag and provides accurate financial auditing across all subscriptions.”
+            </p>
+            <span class="text-[11px] font-semibold text-secondary-fixed">Enterprise Revenue Operations</span>
+          </div>
+
+          <!-- Security Badge -->
+          <div class="flex items-center gap-x-2 px-3 py-2 rounded-lg bg-surface-container-lowest/5">
+            <span class="material-symbols-outlined text-[18px] text-tertiary-fixed shrink-0">verified_user</span>
+            <span class="text-xs text-surface-bright tracking-wide">
+              PBKDF2 Password Encryption • Multi-Company Tenant Isolation • Odoo 18.0 Native
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Pane: Interactive Auth / Customer Self-Service Portal Hub (55% on desktop) -->
+      <div class="w-full lg:w-[55%] bg-surface-container-low p-8 lg:p-14 flex flex-col justify-center">
+        <div class="max-w-xl w-full mx-auto flex flex-col">
+          <!-- Tabbed Switcher (Sign In vs Register) -->
+          <div class="flex items-center p-1 rounded-xl bg-surface-container-high w-full mb-8 shadow-sm">
+            <button class="flex-1 py-2.5 px-4 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-x-2 bg-surface-container-lowest text-primary shadow-sm" id="tab-login" onclick="switchAuthTab('login')" type="button">
+              <span class="material-symbols-outlined text-[18px]">lock_open</span>
+              <span>Sign In</span>
+            </button>
+            <button class="flex-1 py-2.5 px-4 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-x-2 text-on-surface-variant hover:text-on-surface" id="tab-signup" onclick="switchAuthTab('signup')" type="button">
+              <span class="material-symbols-outlined text-[18px]">person_add</span>
+              <span>Create Customer Account</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Header Block -->
+          <div class="flex flex-col gap-y-2 mb-6">
+            <h2 class="text-2xl font-bold text-on-surface" id="auth-title">Welcome back</h2>
+            <p class="text-sm text-on-surface-variant" id="auth-desc">
+              Sign in to access your customer self-service portal, invoices, and active subscriptions.
+            </p>
+          </div>
+
+          <!-- Notification Banner / Micro Status Display -->
+          <div class="hidden mb-6 p-4 rounded-lg bg-surface-container flex items-center gap-x-3 text-secondary shadow-sm" id="auth-banner">
+            <span class="material-symbols-outlined text-[20px]">shield</span>
+            <span class="text-xs">Authorized tenant isolation applied.</span>
+          </div>
+
+          <!-- Authentication Form -->
+          <form class="flex flex-col gap-y-5" id="auth-form" onsubmit="handleFormSubmit(event)">
+            <!-- Company & Legal Entity Field (Visible in Registration Mode) -->
+            <div class="hidden flex flex-col gap-y-4" id="signup-extra-fields">
+              <div class="flex flex-col sm:flex-row gap-4">
+                <div class="flex-1 flex flex-col gap-y-1.5">
+                  <label class="text-xs font-semibold text-on-surface" for="company-name">Organization / Legal Name</label>
+                  <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">domain</span>
+                    <input class="w-full h-10 pl-10 pr-3 rounded-lg bg-surface-container-lowest text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm transition-all" id="company-name" placeholder="Acme Global Inc." type="text"/>
+                  </div>
+                </div>
+                <div class="flex-1 flex flex-col gap-y-1.5">
+                  <label class="text-xs font-semibold text-on-surface" for="tax-id">VAT / Tax ID <span class="text-on-surface-variant font-normal">(Optional)</span></label>
+                  <div class="relative flex items-center">
+                    <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">badge</span>
+                    <input class="w-full h-10 pl-10 pr-3 rounded-lg bg-surface-container-lowest text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm transition-all" id="tax-id" placeholder="US94830219" type="text"/>
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col gap-y-1.5">
+                <label class="text-xs font-semibold text-on-surface" for="full-name">Primary Contact Name</label>
+                <div class="relative flex items-center">
+                  <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">person</span>
+                  <input class="w-full h-10 pl-10 pr-3 rounded-lg bg-surface-container-lowest text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm transition-all" id="full-name" placeholder="Sarah Jenkins" type="text"/>
+                </div>
+              </div>
+            </div>
+
+            <!-- Email Address Input -->
+            <div class="flex flex-col gap-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-semibold text-on-surface" for="auth-email">Work Email Address</label>
+                <span class="text-[11px] text-on-surface-variant">res.partner login</span>
+              </div>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">mail</span>
+                <input autofocus class="w-full h-11 pl-10 pr-3 rounded-lg bg-surface-container-lowest text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm transition-all" id="auth-email" placeholder="sarah.jenkins@acmecorp.com" required type="email"/>
+              </div>
+            </div>
+
+            <!-- Password Input -->
+            <div class="flex flex-col gap-y-1.5">
+              <div class="flex items-center justify-between">
+                <label class="text-xs font-semibold text-on-surface" for="auth-password">Password</label>
+                <span class="text-[11px] text-on-surface-variant" id="label-pwd-aux">Encrypted via PBKDF2</span>
+              </div>
+              <div class="relative flex items-center">
+                <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[20px] pointer-events-none">lock</span>
+                <input class="w-full h-11 pl-10 pr-10 rounded-lg bg-surface-container-lowest text-on-surface text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm transition-all" id="auth-password" oninput="evaluatePasswordStrength(this.value)" placeholder="••••••••••••" required type="password"/>
+                <button class="absolute right-3 text-on-surface-variant hover:text-on-surface focus:outline-none" onclick="togglePasswordVisibility()" type="button">
+                  <span class="material-symbols-outlined text-[20px]" id="pwd-visibility-icon">visibility</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Password Policy Requirements (Active on Signup) -->
+            <div class="hidden p-4 rounded-xl bg-surface-container-lowest flex flex-col gap-y-2 shadow-sm border border-outline-variant/30" id="password-policy-card">
+              <span class="text-[11px] font-semibold uppercase tracking-wider text-on-surface-variant">Security Policy Requirements</span>
+              <div class="grid grid-cols-2 gap-2 mt-1">
+                <div class="flex items-center gap-x-2 text-on-surface-variant" id="req-len">
+                  <span class="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
+                  <span class="text-xs">Length ≥ 12 characters</span>
+                </div>
+                <div class="flex items-center gap-x-2 text-on-surface-variant" id="req-upper">
+                  <span class="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
+                  <span class="text-xs">Uppercase letter (A-Z)</span>
+                </div>
+                <div class="flex items-center gap-x-2 text-on-surface-variant" id="req-lower">
+                  <span class="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
+                  <span class="text-xs">Lowercase letter (a-z)</span>
+                </div>
+                <div class="flex items-center gap-x-2 text-on-surface-variant" id="req-sym">
+                  <span class="material-symbols-outlined text-[16px]">radio_button_unchecked</span>
+                  <span class="text-xs">Special symbol (!@#$%^&amp;*)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Auxiliary Options Row (Remember device & Forgot password) -->
+            <div class="flex items-center justify-between pt-1" id="auth-aux-row">
+              <label class="flex items-center gap-x-2.5 cursor-pointer select-none">
+                <input checked class="w-4 h-4 rounded bg-surface-container-high text-primary focus:ring-0 cursor-pointer" id="remember-device" type="checkbox"/>
+                <span class="text-xs text-on-surface">Remember this session for 30 days</span>
+              </label>
+              <a class="text-xs font-semibold text-primary hover:underline" href="javascript:void(0)" onclick="triggerResetNotice()">
+                Forgot password?
+              </a>
+            </div>
+
+            <!-- Registration Self-Service Disclaimer -->
+            <div class="hidden p-3 rounded-lg bg-surface-container text-on-surface-variant flex items-start gap-x-2.5" id="signup-disclaimer">
+              <span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">verified</span>
+              <p class="text-xs leading-relaxed">
+                Customer registration creates a dedicated portal workspace with immediate self-service access to active subscriptions, downloadable invoice statements, and payment receipts.
+              </p>
+            </div>
+
+            <!-- Submit Button -->
+            <button class="w-full h-11 rounded-lg bg-primary text-on-primary font-semibold text-sm hover:bg-primary-container active:bg-on-primary-fixed-variant transition-all flex items-center justify-center gap-x-2 shadow-md hover:shadow-lg mt-2 group" id="btn-submit" type="submit">
+              <span id="submit-text">Sign In to Customer Portal</span>
+              <span class="material-symbols-outlined text-[20px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </button>
+
+            <!-- Navigation Links to Workspace Views -->
+            <div class="flex items-center justify-between pt-2 border-t border-outline-variant/30 text-xs text-on-surface-variant">
+              <span>Quick Navigation:</span>
+              <div class="flex gap-3">
+                <a class="text-primary font-semibold hover:underline" href="../customer_portal_self_service_hub/code.html">Customer Portal</a>
+                <span class="text-outline-variant">•</span>
+                <a class="text-primary font-semibold hover:underline" href="../executive_financial_dashboard_owl_spa/code.html">Staff Dashboard</a>
+              </div>
+            </div>
+          </form>
+
+          <!-- Security Notice -->
+          <div class="mt-8 pt-4 flex flex-col sm:flex-row items-center justify-between gap-y-2 text-on-surface-variant text-xs">
+            <div class="flex items-center gap-x-1.5">
+              <span class="material-symbols-outlined text-[16px] text-tertiary">lock</span>
+              <span>Protected by Brightloop Enterprise Security</span>
+            </div>
+            <span class="text-[11px] text-outline">Anti-enumeration defense enabled</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  let currentAuthMode = 'login';
+
+  function switchAuthTab(mode) {
+    currentAuthMode = mode;
+    const tabLogin = document.getElementById('tab-login');
+    const tabSignup = document.getElementById('tab-signup');
+    const authTitle = document.getElementById('auth-title');
+    const authDesc = document.getElementById('auth-desc');
+    const submitText = document.getElementById('submit-text');
+    const signupExtraFields = document.getElementById('signup-extra-fields');
+    const passwordPolicyCard = document.getElementById('password-policy-card');
+    const authAuxRow = document.getElementById('auth-aux-row');
+    const signupDisclaimer = document.getElementById('signup-disclaimer');
+
+    if (mode === 'signup') {
+      tabSignup.className = "flex-1 py-2.5 px-4 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-x-2 bg-surface-container-lowest text-primary shadow-sm";
+      tabLogin.className = "flex-1 py-2.5 px-4 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-x-2 text-on-surface-variant hover:text-on-surface";
+      
+      authTitle.innerText = "Register Customer Account";
+      authDesc.innerText = "Provision an enterprise self-service workspace to manage your subscriptions and invoices.";
+      submitText.innerText = "Create Customer Account";
+
+      signupExtraFields.classList.remove('hidden');
+      passwordPolicyCard.classList.remove('hidden');
+      signupDisclaimer.classList.remove('hidden');
+      authAuxRow.classList.add('hidden');
+    } else {
+      tabLogin.className = "flex-1 py-2.5 px-4 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-x-2 bg-surface-container-lowest text-primary shadow-sm";
+      tabSignup.className = "flex-1 py-2.5 px-4 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-x-2 text-on-surface-variant hover:text-on-surface";
+      
+      authTitle.innerText = "Welcome back";
+      authDesc.innerText = "Sign in to access your customer self-service portal, invoices, and active subscriptions.";
+      submitText.innerText = "Sign In to Customer Portal";
+
+      signupExtraFields.classList.add('hidden');
+      passwordPolicyCard.classList.add('hidden');
+      signupDisclaimer.classList.add('hidden');
+      authAuxRow.classList.remove('hidden');
+    }
+  }
+
+  function togglePasswordVisibility() {
+    const pwdInput = document.getElementById('auth-password');
+    const icon = document.getElementById('pwd-visibility-icon');
+    if (pwdInput.type === 'password') {
+      pwdInput.type = 'text';
+      icon.innerText = 'visibility_off';
+    } else {
+      pwdInput.type = 'password';
+      icon.innerText = 'visibility';
+    }
+  }
+
+  function evaluatePasswordStrength(val) {
+    if (currentAuthMode !== 'signup') return;
+    
+    const reqLen = document.getElementById('req-len');
+    const reqUpper = document.getElementById('req-upper');
+    const reqLower = document.getElementById('req-lower');
+    const reqSym = document.getElementById('req-sym');
+
+    const updateStatus = (elem, passed) => {
+      const icon = elem.querySelector('.material-symbols-outlined');
+      if (passed) {
+        elem.classList.remove('text-on-surface-variant');
+        elem.classList.add('text-tertiary');
+        icon.innerText = 'check_circle';
+      } else {
+        elem.classList.add('text-on-surface-variant');
+        elem.classList.remove('text-tertiary');
+        icon.innerText = 'radio_button_unchecked';
+      }
+    };
+
+    updateStatus(reqLen, val.length >= 12);
+    updateStatus(reqUpper, /[A-Z]/.test(val));
+    updateStatus(reqLower, /[a-z]/.test(val));
+    updateStatus(reqSym, /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(val));
+  }
+
+  function triggerResetNotice() {
+    const banner = document.getElementById('auth-banner');
+    banner.classList.remove('hidden');
+    banner.innerHTML = `
+      <span class="material-symbols-outlined text-[20px] text-primary">info</span>
+      <span class="text-xs leading-relaxed">
+        <strong>Anti-Enumeration Protocol:</strong> If the provided email address exists within Brightloop, password reset instructions have been dispatched. Please check your inbox.
+      </span>
+    `;
+  }
+
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    const banner = document.getElementById('auth-banner');
+    banner.classList.remove('hidden');
+    
+    if (currentAuthMode === 'login') {
+      banner.innerHTML = `
+        <span class="material-symbols-outlined text-[20px] text-tertiary">check_circle</span>
+        <span class="text-xs">
+          <strong>Authentication Verified:</strong> Redirecting to customer self-service hub...
+        </span>
+      `;
+      setTimeout(() => {
+        window.location.href = "../customer_portal_self_service_hub/code.html";
+      }, 700);
+    } else {
+      banner.innerHTML = `
+        <span class="material-symbols-outlined text-[20px] text-tertiary">check_circle</span>
+        <span class="text-xs">
+          <strong>Account Provisioned:</strong> Customer workspace created. Redirecting to portal...
+        </span>
+      `;
+      setTimeout(() => {
+        window.location.href = "../customer_portal_self_service_hub/code.html";
+      }, 700);
+    }
+  }
+</script>
+</body>
+</html>

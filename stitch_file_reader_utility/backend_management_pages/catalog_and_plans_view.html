@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_dashboard" name="shell-type"/>
+  <title>Catalog &amp; Plans - Brightloop Staff</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed": "#6ffbbe",
+            "on-secondary-container": "#006172",
+            "tertiary-container": "#006e4b",
+            "secondary": "#00687a",
+            "surface-bright": "#faf8ff",
+            "primary-fixed": "#e2dfff",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#001f26",
+            "tertiary-fixed-dim": "#4edea3",
+            "background": "#faf8ff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#4cd7f6",
+            "surface-container-high": "#e2e7ff",
+            "on-primary-container": "#dad7ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#464555",
+            "on-secondary-fixed-variant": "#004e5c",
+            "tertiary": "#005338",
+            "error-container": "#ffdad6",
+            "surface-container": "#eaedff",
+            "outline-variant": "#c7c4d8",
+            "primary": "#3525cd",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#acedff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-fixed": "#002113",
+            "surface-variant": "#dae2fd",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-tertiary-container": "#67f4b7",
+            "secondary-container": "#57dffe",
+            "primary-container": "#4f46e5",
+            "error": "#ba1a1a",
+            "inverse-surface": "#283044",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#131b2e",
+            "surface-tint": "#4d44e3",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eef0ff",
+            "outline": "#777587",
+            "on-background": "#131b2e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased">
+  <!-- Top Global Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+    <div class="w-full h-16 px-6 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-6">
+        <a href="../executive_financial_dashboard_owl_spa/code.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">all_inclusive</span>
+          </div>
+          <span class="text-base font-bold text-on-surface tracking-tight">Brightloop</span>
+        </a>
+        <div class="h-6 w-px bg-surface-container-high hidden md:block"></div>
+        <nav class="hidden xl:flex items-center gap-1">
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../executive_financial_dashboard_owl_spa/code.html">Finance Dashboard</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="subscriptions_list_view.html">Subscriptions</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="payments_and_allocations_view.html">Payments &amp; Ledger</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container text-primary" href="catalog_and_plans_view.html">Catalog &amp; Plans</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="billing_jobs_audit_view.html">Billing Jobs</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../customer_portal_self_service_hub/code.html">Customer Portal</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-xs shadow-sm">
+          FO
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="fixed left-0 top-16 bottom-0 w-64 bg-surface-container-low/70 backdrop-blur-xl z-40 flex flex-col p-4 border-r border-outline-variant/30">
+    <div class="mb-4 px-2">
+      <span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Configuration</span>
+    </div>
+    <nav class="flex-1 flex flex-col gap-1">
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="../executive_financial_dashboard_owl_spa/code.html">
+        <span class="material-symbols-outlined text-[18px]">monitoring</span> Dashboard
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="subscriptions_list_view.html">
+        <span class="material-symbols-outlined text-[18px]">autorenew</span> Subscriptions
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="payments_and_allocations_view.html">
+        <span class="material-symbols-outlined text-[18px]">payments</span> Payments &amp; Ledger
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-lowest text-primary shadow-sm font-semibold text-xs transition-all" href="catalog_and_plans_view.html">
+        <span class="material-symbols-outlined text-[18px]">inventory_2</span> Catalog &amp; Plans
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="billing_jobs_audit_view.html">
+        <span class="material-symbols-outlined text-[18px]">schedule</span> Billing Jobs
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="financial_export_wizard.html">
+        <span class="material-symbols-outlined text-[18px]">table_view</span> Financial Reports
+      </a>
+      <div class="h-px bg-outline-variant/30 my-2"></div>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="../customer_portal_self_service_hub/code.html">
+        <span class="material-symbols-outlined text-[18px]">open_in_new</span> Customer Portal View
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Body Content Area -->
+  <div class="pl-64">
+    <main class="relative pt-16 min-h-screen bg-surface">
+      <div class="p-6 lg:p-8 flex flex-col gap-6 max-w-[1600px] mx-auto w-full">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 class="text-xl font-bold text-on-surface tracking-tight">Subscription Plans &amp; Product Catalog</h1>
+            <p class="text-xs text-on-surface-variant mt-0.5">Configure recurring billing models, governance rules, and product pricing templates.</p>
+          </div>
+          <button class="px-3.5 py-1.5 rounded-lg bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container shadow-sm transition-all flex items-center gap-1.5" onclick="alert('Creating new subscription plan template...')">
+            <span class="material-symbols-outlined text-[16px]">add</span>
+            <span>Create New Plan</span>
+          </button>
+        </div>
+
+        <!-- Section 1: Subscription Plans (brightloop.plan) -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col">
+          <div class="p-6 border-b border-outline-variant/20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="p-2.5 rounded-xl bg-primary/10 text-primary">
+                <span class="material-symbols-outlined text-2xl">autorenew</span>
+              </div>
+              <div>
+                <h2 class="text-base font-bold text-on-surface">Subscription Plans (brightloop.plan)</h2>
+                <p class="text-xs text-on-surface-variant">Cadence schedules, intervals, and customer lifecycle governance toggles</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant">3 Configured Plans</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="bg-surface-container-low text-on-surface-variant uppercase tracking-wider font-semibold">
+                  <th class="py-3 px-6">Plan Name</th>
+                  <th class="py-3 px-4">Cadence</th>
+                  <th class="py-3 px-4">Interval</th>
+                  <th class="py-3 px-4 text-center">allow_pause</th>
+                  <th class="py-3 px-4 text-center">allow_renewal</th>
+                  <th class="py-3 px-4 text-center">allow_early_close</th>
+                  <th class="py-3 px-4 text-center">auto_close</th>
+                  <th class="py-3 px-4 text-center">Trial Days</th>
+                  <th class="py-3 px-6 text-center">Active Contracts</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-surface-container font-sans text-on-surface">
+                <tr class="hover:bg-surface-container-low/50">
+                  <td class="py-3.5 px-6 font-bold text-primary">Enterprise Cloud Tier - Annual</td>
+                  <td class="py-3.5 px-4 font-semibold">Yearly</td>
+                  <td class="py-3.5 px-4 font-mono">1</td>
+                  <td class="py-3.5 px-4 text-center text-emerald-600 font-bold">Yes</td>
+                  <td class="py-3.5 px-4 text-center text-emerald-600 font-bold">Yes</td>
+                  <td class="py-3.5 px-4 text-center text-on-surface-variant">No</td>
+                  <td class="py-3.5 px-4 text-center text-on-surface-variant">No</td>
+                  <td class="py-3.5 px-4 text-center font-mono">0</td>
+                  <td class="py-3.5 px-6 text-center font-bold text-on-surface">8 Subscriptions</td>
+                </tr>
+                <tr class="hover:bg-surface-container-low/50">
+                  <td class="py-3.5 px-6 font-bold text-primary">Pro Growth Tier</td>
+                  <td class="py-3.5 px-4 font-semibold">Monthly</td>
+                  <td class="py-3.5 px-4 font-mono">1</td>
+                  <td class="py-3.5 px-4 text-center text-emerald-600 font-bold">Yes</td>
+                  <td class="py-3.5 px-4 text-center text-emerald-600 font-bold">Yes</td>
+                  <td class="py-3.5 px-4 text-center text-emerald-600 font-bold">Yes</td>
+                  <td class="py-3.5 px-4 text-center text-on-surface-variant">No</td>
+                  <td class="py-3.5 px-4 text-center font-mono">14 days</td>
+                  <td class="py-3.5 px-6 text-center font-bold text-on-surface">6 Subscriptions</td>
+                </tr>
+                <tr class="hover:bg-surface-container-low/50">
+                  <td class="py-3.5 px-6 font-bold text-primary">Data Analytics Sandbox</td>
+                  <td class="py-3.5 px-4 font-semibold">Monthly</td>
+                  <td class="py-3.5 px-4 font-mono">1</td>
+                  <td class="py-3.5 px-4 text-center text-emerald-600 font-bold">Yes</td>
+                  <td class="py-3.5 px-4 text-center text-emerald-600 font-bold">Yes</td>
+                  <td class="py-3.5 px-4 text-center text-emerald-600 font-bold">Yes</td>
+                  <td class="py-3.5 px-4 text-center text-emerald-600 font-bold">Yes</td>
+                  <td class="py-3.5 px-4 text-center font-mono">7 days</td>
+                  <td class="py-3.5 px-6 text-center font-bold text-on-surface">2 Subscriptions</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Section 2: Products Catalog (product.template) -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col">
+          <div class="p-6 border-b border-outline-variant/20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="p-2.5 rounded-xl bg-secondary/10 text-secondary">
+                <span class="material-symbols-outlined text-2xl">category</span>
+              </div>
+              <div>
+                <h2 class="text-base font-bold text-on-surface">Catalog Products (product.template)</h2>
+                <p class="text-xs text-on-surface-variant">Service items attachable to brightloop.subscription.line</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant">3 Items Active</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="bg-surface-container-low text-on-surface-variant uppercase tracking-wider font-semibold">
+                  <th class="py-3 px-6">Product Item</th>
+                  <th class="py-3 px-4">Type</th>
+                  <th class="py-3 px-4 text-right">Standard List Price</th>
+                  <th class="py-3 px-4 text-center">Tax Assignment</th>
+                  <th class="py-3 px-4 text-center">Invoicing Policy</th>
+                  <th class="py-3 px-6 text-center">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-surface-container font-sans text-on-surface">
+                <tr class="hover:bg-surface-container-low/50">
+                  <td class="py-3.5 px-6 font-bold text-on-surface">Cloud Platform Core</td>
+                  <td class="py-3.5 px-4 text-on-surface-variant">Service (Recurring)</td>
+                  <td class="py-3.5 px-4 text-right font-mono font-bold">$240.00 /seat</td>
+                  <td class="py-3.5 px-4 text-center">VAT 10%</td>
+                  <td class="py-3.5 px-4 text-center">Ordered Quantities</td>
+                  <td class="py-3.5 px-6 text-center">
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold text-[11px]">Active</span>
+                  </td>
+                </tr>
+                <tr class="hover:bg-surface-container-low/50">
+                  <td class="py-3.5 px-6 font-bold text-on-surface">Dedicated Support Add-on</td>
+                  <td class="py-3.5 px-4 text-on-surface-variant">Service (Support)</td>
+                  <td class="py-3.5 px-4 text-right font-mono font-bold">$2,400.00 /pkg</td>
+                  <td class="py-3.5 px-4 text-center">VAT 10%</td>
+                  <td class="py-3.5 px-4 text-center">Ordered Quantities</td>
+                  <td class="py-3.5 px-6 text-center">
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold text-[11px]">Active</span>
+                  </td>
+                </tr>
+                <tr class="hover:bg-surface-container-low/50">
+                  <td class="py-3.5 px-6 font-bold text-on-surface">API Volume Booster</td>
+                  <td class="py-3.5 px-4 text-on-surface-variant">Service (Usage Pool)</td>
+                  <td class="py-3.5 px-4 text-right font-mono font-bold">$0.00 (Tiered)</td>
+                  <td class="py-3.5 px-4 text-center">Included (0%)</td>
+                  <td class="py-3.5 px-4 text-center">Delivered Quantities</td>
+                  <td class="py-3.5 px-6 text-center">
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold text-[11px]">Active</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>
+

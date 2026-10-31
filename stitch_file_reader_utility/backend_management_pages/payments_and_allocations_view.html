@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_dashboard" name="shell-type"/>
+  <title>Payments &amp; Allocation Studio - Brightloop Staff</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed": "#6ffbbe",
+            "on-secondary-container": "#006172",
+            "tertiary-container": "#006e4b",
+            "secondary": "#00687a",
+            "surface-bright": "#faf8ff",
+            "primary-fixed": "#e2dfff",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#001f26",
+            "tertiary-fixed-dim": "#4edea3",
+            "background": "#faf8ff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#4cd7f6",
+            "surface-container-high": "#e2e7ff",
+            "on-primary-container": "#dad7ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#464555",
+            "on-secondary-fixed-variant": "#004e5c",
+            "tertiary": "#005338",
+            "error-container": "#ffdad6",
+            "surface-container": "#eaedff",
+            "outline-variant": "#c7c4d8",
+            "primary": "#3525cd",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#acedff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-fixed": "#002113",
+            "surface-variant": "#dae2fd",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-tertiary-container": "#67f4b7",
+            "secondary-container": "#57dffe",
+            "primary-container": "#4f46e5",
+            "error": "#ba1a1a",
+            "inverse-surface": "#283044",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#131b2e",
+            "surface-tint": "#4d44e3",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eef0ff",
+            "outline": "#777587",
+            "on-background": "#131b2e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased">
+  <!-- Top Global Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+    <div class="w-full h-16 px-6 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-6">
+        <a href="../executive_financial_dashboard_owl_spa/code.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">all_inclusive</span>
+          </div>
+          <span class="text-base font-bold text-on-surface tracking-tight">Brightloop</span>
+        </a>
+        <div class="h-6 w-px bg-surface-container-high hidden md:block"></div>
+        <nav class="hidden xl:flex items-center gap-1">
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../executive_financial_dashboard_owl_spa/code.html">Finance Dashboard</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="subscriptions_list_view.html">Subscriptions</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container text-primary" href="payments_and_allocations_view.html">Payments &amp; Ledger</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="catalog_and_plans_view.html">Catalog &amp; Plans</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="billing_jobs_audit_view.html">Billing Jobs</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../customer_portal_self_service_hub/code.html">Customer Portal</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container shadow-sm transition-all" onclick="openRecordPaymentModal()">
+          <span class="material-symbols-outlined text-[16px]">add_card</span>
+          <span>Record Payment</span>
+        </button>
+        <div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-xs shadow-sm">
+          FO
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="fixed left-0 top-16 bottom-0 w-64 bg-surface-container-low/70 backdrop-blur-xl z-40 flex flex-col p-4 border-r border-outline-variant/30">
+    <div class="mb-4 px-2">
+      <span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Ledger Settlement</span>
+    </div>
+    <nav class="flex-1 flex flex-col gap-1">
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="../executive_financial_dashboard_owl_spa/code.html">
+        <span class="material-symbols-outlined text-[18px]">monitoring</span> Dashboard
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="subscriptions_list_view.html">
+        <span class="material-symbols-outlined text-[18px]">autorenew</span> Subscriptions
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-lowest text-primary shadow-sm font-semibold text-xs transition-all" href="payments_and_allocations_view.html">
+        <span class="material-symbols-outlined text-[18px]">payments</span> Payments &amp; Ledger
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="catalog_and_plans_view.html">
+        <span class="material-symbols-outlined text-[18px]">inventory_2</span> Catalog &amp; Plans
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="billing_jobs_audit_view.html">
+        <span class="material-symbols-outlined text-[18px]">schedule</span> Billing Jobs
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="financial_export_wizard.html">
+        <span class="material-symbols-outlined text-[18px]">table_view</span> Financial Reports
+      </a>
+      <div class="h-px bg-outline-variant/30 my-2"></div>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="../customer_portal_self_service_hub/code.html">
+        <span class="material-symbols-outlined text-[18px]">open_in_new</span> Customer Portal View
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Body Content Area -->
+  <div class="pl-64">
+    <main class="relative pt-16 min-h-screen bg-surface">
+      <div class="p-6 lg:p-8 flex flex-col gap-6 max-w-[1600px] mx-auto w-full">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-xl font-bold text-on-surface tracking-tight">Payments &amp; Invoice Allocations Studio</h1>
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-surface-container text-on-surface-variant font-mono">brightloop.payment.allocation</span>
+            </div>
+            <p class="text-xs text-on-surface-variant mt-0.5">Ingest customer settlements and reconcile payments against open account.move invoices.</p>
+          </div>
+          <button class="px-3.5 py-1.5 rounded-lg bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container shadow-sm transition-all flex items-center gap-1.5" onclick="openRecordPaymentModal()">
+            <span class="material-symbols-outlined text-[16px]">add</span>
+            <span>Record Offline Payment</span>
+          </button>
+        </div>
+
+        <!-- Payments Ledger Table -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col">
+          <div class="p-6 border-b border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="text-base font-bold text-on-surface">Payment Ingestion Ledger (brightloop.payment)</h2>
+              <p class="text-xs text-on-surface-variant">Reconciled bank transfers, card webhooks, and manual journal allocations</p>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant font-mono">Total Settled: $45,200.00</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="bg-surface-container-low text-on-surface-variant uppercase tracking-wider font-semibold">
+                  <th class="py-3 px-6">Payment ID</th>
+                  <th class="py-3 px-4">Partner</th>
+                  <th class="py-3 px-4">Method</th>
+                  <th class="py-3 px-4 text-right">Total Amount</th>
+                  <th class="py-3 px-4 text-right">Allocated</th>
+                  <th class="py-3 px-4 text-right">Unallocated Surplus</th>
+                  <th class="py-3 px-4">Settled Date</th>
+                  <th class="py-3 px-4">State</th>
+                  <th class="py-3 px-6 text-center">Allocations</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-surface-container font-sans text-on-surface">
+                <tr class="hover:bg-surface-container-low/50">
+                  <td class="py-3.5 px-6 font-mono font-bold text-primary">PAY/2026/00042</td>
+                  <td class="py-3.5 px-4 font-bold">Acme Corporation</td>
+                  <td class="py-3.5 px-4">Credit Card</td>
+                  <td class="py-3.5 px-4 text-right font-mono font-bold">$14,500.00</td>
+                  <td class="py-3.5 px-4 text-right font-mono text-emerald-600 font-bold">$14,500.00</td>
+                  <td class="py-3.5 px-4 text-right font-mono text-on-surface-variant">$0.00</td>
+                  <td class="py-3.5 px-4 font-mono text-on-surface-variant">2026-10-28 14:22</td>
+                  <td class="py-3.5 px-4">
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">Posted</span>
+                  </td>
+                  <td class="py-3.5 px-6 text-center">
+                    <button class="px-2.5 py-1 rounded-md bg-surface-container hover:bg-surface-container-high text-primary font-semibold" onclick="alert('Allocated 100% to INV/2026/00112 ($14,256.00) and balance surplus ($244.00) credit retained.')">
+                      Inspect (2 Lines)
+                    </button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-surface-container-low/50">
+                  <td class="py-3.5 px-6 font-mono font-bold text-primary">PAY/2026/00041</td>
+                  <td class="py-3.5 px-4 font-bold">Apex Cloud Ltd</td>
+                  <td class="py-3.5 px-4">Bank Wire</td>
+                  <td class="py-3.5 px-4 text-right font-mono font-bold">$12,000.00</td>
+                  <td class="py-3.5 px-4 text-right font-mono text-emerald-600 font-bold">$11,500.00</td>
+                  <td class="py-3.5 px-4 text-right font-mono text-amber-600 font-bold bg-amber-50 rounded px-1">$500.00</td>
+                  <td class="py-3.5 px-4 font-mono text-on-surface-variant">2026-10-27 11:08</td>
+                  <td class="py-3.5 px-4">
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">Posted</span>
+                  </td>
+                  <td class="py-3.5 px-6 text-center">
+                    <button class="px-2.5 py-1 rounded-md bg-surface-container hover:bg-surface-container-high text-primary font-semibold" onclick="alert('Allocated to INV/2026/00109 with $500 unallocated surplus.')">
+                      Inspect (1 Line)
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Record Payment Modal Wizard -->
+  <div class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 backdrop-blur-sm p-4" id="recordPaymentModal">
+    <div class="bg-surface-container-lowest rounded-2xl shadow-xl max-w-lg w-full overflow-hidden border border-outline-variant/30">
+      <div class="p-6 bg-surface-container-low flex items-center justify-between border-b border-outline-variant/30">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-2xl">add_card</span>
+          <h3 class="text-base font-bold text-on-surface">Record Customer Payment</h3>
+        </div>
+        <button class="p-1 rounded-lg text-on-surface-variant hover:text-on-surface" onclick="closeRecordPaymentModal()">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <form class="p-6 flex flex-col gap-4 text-xs" onsubmit="handlePaymentSubmit(event)">
+        <div class="flex flex-col gap-1.5">
+          <label class="font-semibold text-on-surface">Customer (partner_id)</label>
+          <select class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/20 text-xs">
+            <option>Acme Corporation (Partner #1042)</option>
+            <option>Apex Cloud Ltd (Partner #1088)</option>
+            <option>Starlight Data (Partner #1095)</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">Payment Amount ($)</label>
+            <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-mono font-bold text-xs" placeholder="1250.00" required type="number" step="0.01"/>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="font-semibold text-on-surface">Payment Method</label>
+            <select class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface text-xs">
+              <option>Bank Wire Transfer</option>
+              <option>Credit Card (Stripe)</option>
+              <option>ACH Direct Debit</option>
+              <option>Cheque</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label class="font-semibold text-on-surface">Payment Reference / Transaction ID</label>
+          <input class="w-full h-10 px-3 rounded-lg bg-surface-container-low text-on-surface font-mono text-xs" placeholder="WIRE-2026-9981X" required type="text"/>
+        </div>
+
+        <div class="p-3 rounded-xl bg-surface-container-low text-xs flex flex-col gap-1">
+          <span class="font-bold text-on-surface">Automatic FIFO Invoices Allocation</span>
+          <span class="text-on-surface-variant">System will allocate this amount against the oldest open account.move invoice for this partner.</span>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2 border-t border-outline-variant/30">
+          <button class="px-4 py-2 rounded-lg bg-surface-container text-on-surface font-semibold hover:bg-surface-container-high" onclick="closeRecordPaymentModal()" type="button">Cancel</button>
+          <button class="px-4 py-2 rounded-lg bg-primary text-on-primary font-semibold hover:bg-primary-container shadow-sm" type="submit">Post &amp; Allocate</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function openRecordPaymentModal() {
+      document.getElementById('recordPaymentModal').classList.remove('hidden');
+      document.getElementById('recordPaymentModal').classList.add('flex');
+    }
+
+    function closeRecordPaymentModal() {
+      document.getElementById('recordPaymentModal').classList.add('hidden');
+      document.getElementById('recordPaymentModal').classList.remove('flex');
+    }
+
+    function handlePaymentSubmit(e) {
+      e.preventDefault();
+      alert('Payment posted and allocated to open invoice INV/2026/00120 successfully!');
+      closeRecordPaymentModal();
+    }
+  </script>
+</body>
+</html>
+

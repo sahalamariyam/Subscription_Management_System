@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_dashboard" name="shell-type"/>
+  <title>Subscription Lifecycle Studio - Brightloop</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed": "#6ffbbe",
+            "on-secondary-container": "#006172",
+            "tertiary-container": "#006e4b",
+            "secondary": "#00687a",
+            "surface-bright": "#faf8ff",
+            "primary-fixed": "#e2dfff",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#001f26",
+            "tertiary-fixed-dim": "#4edea3",
+            "background": "#faf8ff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#4cd7f6",
+            "surface-container-high": "#e2e7ff",
+            "on-primary-container": "#dad7ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#464555",
+            "on-secondary-fixed-variant": "#004e5c",
+            "tertiary": "#005338",
+            "error-container": "#ffdad6",
+            "surface-container": "#eaedff",
+            "outline-variant": "#c7c4d8",
+            "primary": "#3525cd",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#acedff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-fixed": "#002113",
+            "surface-variant": "#dae2fd",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-tertiary-container": "#67f4b7",
+            "secondary-container": "#57dffe",
+            "primary-container": "#4f46e5",
+            "error": "#ba1a1a",
+            "inverse-surface": "#283044",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#131b2e",
+            "surface-tint": "#4d44e3",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eef0ff",
+            "outline": "#777587",
+            "on-background": "#131b2e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "gutter": "1.5rem",
+            "margin": "2rem"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased">
+  <!-- Top Global Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+    <div class="w-full h-16 px-6 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-6">
+        <a href="code.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">all_inclusive</span>
+          </div>
+          <span class="text-base font-bold text-on-surface tracking-tight">Brightloop</span>
+        </a>
+        <div class="h-6 w-px bg-surface-container-high hidden md:block"></div>
+        <!-- Main Top Navigation -->
+        <nav class="hidden xl:flex items-center gap-1">
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../executive_financial_dashboard_owl_spa/code.html">Finance Dashboard</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container text-primary" href="../backend_management_pages/subscriptions_list_view.html">Subscriptions</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../backend_management_pages/payments_and_allocations_view.html">Payments &amp; Ledger</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../backend_management_pages/catalog_and_plans_view.html">Catalog &amp; Plans</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../backend_management_pages/billing_jobs_audit_view.html">Billing Jobs</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../customer_portal_self_service_hub/code.html">Customer Portal</a>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <div class="relative hidden md:flex items-center w-64">
+          <span class="material-symbols-outlined absolute left-3 text-[18px] text-on-surface-variant pointer-events-none">search</span>
+          <input class="w-full h-9 pl-9 pr-4 bg-surface-container-low rounded-lg text-xs text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="Search subscriptions... (Cmd+K)" type="text"/>
+        </div>
+        <a href="../backend_management_pages/subscriptions_list_view.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface text-xs font-semibold hover:bg-surface-container transition-colors">
+          <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+          <span>All Subscriptions</span>
+        </a>
+        <div class="flex items-center gap-2 pl-2">
+          <div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-xs shadow-sm">
+            FO
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="fixed left-0 top-16 bottom-0 w-64 bg-surface-container-low/70 backdrop-blur-xl z-40 flex flex-col p-4 border-r border-outline-variant/30">
+    <div class="mb-4 px-2">
+      <span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Lifecycle Navigation</span>
+    </div>
+    <nav class="flex-1 flex flex-col gap-1">
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="../executive_financial_dashboard_owl_spa/code.html">
+        <span class="material-symbols-outlined text-[18px]">monitoring</span> Dashboard
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-lowest text-primary shadow-sm font-semibold text-xs transition-all" href="../backend_management_pages/subscriptions_list_view.html">
+        <span class="material-symbols-outlined text-[18px]">autorenew</span> Subscriptions
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="../backend_management_pages/payments_and_allocations_view.html">
+        <span class="material-symbols-outlined text-[18px]">payments</span> Payments &amp; Ledger
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="../backend_management_pages/catalog_and_plans_view.html">
+        <span class="material-symbols-outlined text-[18px]">inventory_2</span> Catalog &amp; Plans
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="../backend_management_pages/billing_jobs_audit_view.html">
+        <span class="material-symbols-outlined text-[18px]">schedule</span> Billing Jobs
+      </a>
+      <div class="h-px bg-outline-variant/30 my-2"></div>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="../customer_portal_self_service_hub/code.html">
+        <span class="material-symbols-outlined text-[18px]">open_in_new</span> Customer Portal View
+      </a>
+    </nav>
+    <div class="mt-auto p-3 rounded-xl bg-surface-container-lowest/80 border border-outline-variant/30">
+      <div class="flex items-center justify-between text-on-surface-variant mb-1">
+        <span class="text-[11px] font-semibold uppercase">Lifecycle Engine</span>
+        <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] bg-tertiary-container/10 text-tertiary font-bold">Strict FSM</span>
+      </div>
+      <span class="text-xs text-on-surface-variant block">Deterministic status flow</span>
+    </div>
+  </aside>
+
+  <!-- Main Body Content Area -->
+  <div class="pl-64">
+    <main class="relative pt-16 min-h-screen bg-surface">
+      <div class="p-6 lg:p-8 flex flex-col gap-6 max-w-[1520px] mx-auto w-full">
+        
+        <!-- Workflow Execution Action Header -->
+        <div class="bg-surface-container-lowest rounded-2xl p-4 lg:p-6 shadow-sm border border-outline-variant/30 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+          <!-- 8 Canonical Action Buttons -->
+          <div class="flex flex-wrap items-center gap-2">
+            <!-- Active Progression Actions -->
+            <button class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-primary text-on-primary text-xs font-semibold shadow-sm hover:bg-primary-container transition-all" onclick="triggerAction('Generate Next Invoice triggered. Creating draft account.move...')" type="button">
+              <span class="material-symbols-outlined text-[16px]">receipt</span>
+              <span>Generate Next Invoice</span>
+            </button>
+            <button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-xs font-semibold transition-all" onclick="triggerAction('Renew Subscription triggered. Period extended by 1 year.')" type="button">
+              <span class="material-symbols-outlined text-[16px] text-primary">autorenew</span>
+              <span>Renew Subscription</span>
+            </button>
+            <button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container text-xs font-semibold transition-all" id="btnPauseResume" onclick="togglePause()" type="button">
+              <span class="material-symbols-outlined text-[16px] text-amber-600" id="iconPauseResume">pause_circle</span>
+              <span id="textPauseResume">Pause Subscription</span>
+            </button>
+            <button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-low text-error hover:bg-error-container/20 text-xs font-semibold transition-all" onclick="triggerAction('Close Subscription triggered. Contract marked as Closed.')" type="button">
+              <span class="material-symbols-outlined text-[16px]">cancel</span>
+              <span>Close Subscription</span>
+            </button>
+            
+            <div class="h-6 w-px bg-outline-variant/30 hidden sm:block"></div>
+
+            <button class="inline-flex items-center gap-1 px-3 py-2 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface text-xs font-semibold transition-colors" onclick="triggerAction('Reset to Draft executed.')" type="button">
+              <span class="material-symbols-outlined text-[16px]">history</span>
+              <span class="hidden sm:inline">Reset to Draft</span>
+            </button>
+            <button class="inline-flex items-center gap-1 px-3 py-2 rounded-lg bg-surface-container-low text-on-surface-variant hover:text-on-surface text-xs font-semibold transition-colors" onclick="triggerAction('Customer quotation email dispatched with token link.')" type="button">
+              <span class="material-symbols-outlined text-[16px]">send</span>
+              <span class="hidden sm:inline">Send Quotation</span>
+            </button>
+          </div>
+
+          <!-- Canonical State Pipeline Statusbar Widget -->
+          <div class="flex items-center bg-surface-container-low rounded-xl p-1 overflow-x-auto self-start xl:self-auto max-w-full text-xs">
+            <div class="flex items-center font-semibold uppercase tracking-wider">
+              <div class="px-3 py-1 text-on-surface-variant flex items-center gap-1">
+                <span>Draft</span>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+              </div>
+              <div class="px-3 py-1 text-on-surface-variant flex items-center gap-1">
+                <span>Quotation</span>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+              </div>
+              <div class="px-3 py-1 text-on-surface-variant flex items-center gap-1">
+                <span>Confirmed</span>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+              </div>
+              <div class="px-3.5 py-1 rounded-lg bg-tertiary text-on-tertiary flex items-center gap-1.5 shadow-sm font-bold" id="badgeActiveStatus">
+                <span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse"></span>
+                <span>Active</span>
+              </div>
+              <div class="px-3 py-1 text-on-surface-variant/40 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span>Closed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Document Header & Quick Financial Pulse Banner -->
+        <div class="relative bg-surface-container-lowest rounded-2xl p-6 lg:p-8 shadow-sm border border-outline-variant/30 overflow-hidden">
+          <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-gradient-to-br from-primary-fixed/30 to-secondary-fixed/20 blur-3xl pointer-events-none"></div>
+          <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div class="flex flex-col gap-1.5">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] bg-surface-container-high text-on-surface-variant uppercase font-semibold">Contract Record</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] bg-tertiary-container/15 text-tertiary font-bold flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[14px]">check_circle</span> In Good Standing
+                </span>
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] bg-secondary-fixed text-on-secondary-fixed font-semibold">
+                  Anchor Day: 30th
+                </span>
+              </div>
+              <div class="flex flex-wrap items-baseline gap-3 pt-1">
+                <h1 class="text-2xl lg:text-3xl font-bold text-on-surface tracking-tight font-mono">SUB/2026/00088</h1>
+                <div class="flex items-center gap-2 px-3 py-1 rounded-full bg-surface-container-low text-xs">
+                  <span class="font-bold text-primary">Acme Corporation</span>
+                  <span class="text-on-surface-variant">• Enterprise Cloud Tier</span>
+                </div>
+              </div>
+              <p class="text-xs text-on-surface-variant font-mono">UUID: 8f2c3d01-a12b-4890 • res.partner ID: 1042</p>
+            </div>
+
+            <!-- Quick Key Metrics -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 self-stretch lg:self-auto">
+              <div class="bg-surface-container-low rounded-xl p-3 flex flex-col justify-center">
+                <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Contract Annual Total</span>
+                <span class="text-xl font-bold text-on-surface font-mono mt-0.5">$14,256.00</span>
+                <span class="text-xs text-tertiary font-medium">+$1,188/mo MRR</span>
+              </div>
+              <div class="bg-surface-container-low rounded-xl p-3 flex flex-col justify-center">
+                <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Next Invoicing Date</span>
+                <span class="text-sm font-bold text-on-surface font-mono mt-1">Nov 30, 2026</span>
+                <span class="text-xs text-on-surface-variant">Scheduled Cycle 2</span>
+              </div>
+              <div class="bg-surface-container-low rounded-xl p-3 flex flex-col justify-center col-span-2 sm:col-span-1">
+                <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Renewals</span>
+                <span class="text-xl font-bold text-primary font-mono mt-0.5">2 Times</span>
+                <span class="text-xs text-on-surface-variant">auto_renewal=True</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-Column Specification Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Column 1: Partner & Plan Profile -->
+          <div class="lg:col-span-6 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[20px]">corporate_fare</span>
+                <h2 class="text-base font-bold text-on-surface">Customer &amp; Plan Profile</h2>
+              </div>
+              <span class="text-xs text-on-surface-variant font-mono">brightloop.subscription</span>
+            </div>
+            <div class="space-y-3 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-on-surface-variant">Customer (partner_id)</span>
+                <a class="font-bold text-primary hover:underline" href="../customer_portal_self_service_hub/code.html">Acme Corporation</a>
+              </div>
+              <div class="h-px bg-surface-container-low"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-on-surface-variant">Subscription Plan (plan_id)</span>
+                <span class="font-semibold text-on-surface">Enterprise Cloud Tier - Annual</span>
+              </div>
+              <div class="h-px bg-surface-container-low"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-on-surface-variant">Quotation Template</span>
+                <span class="font-medium text-on-surface">Standard Enterprise SaaS v2</span>
+              </div>
+              <div class="h-px bg-surface-container-low"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-on-surface-variant">Legal Company (company_id)</span>
+                <span class="font-medium text-on-surface">Brightloop Technologies Inc.</span>
+              </div>
+              <div class="h-px bg-surface-container-low"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-on-surface-variant">Assigned Account Lead</span>
+                <span class="font-medium text-on-surface">Finance Operations Desk</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2: Invoicing Schedule & Anchoring -->
+          <div class="lg:col-span-6 bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4">
+            <div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[20px]">calendar_month</span>
+                <h2 class="text-base font-bold text-on-surface">Schedule &amp; Invoicing Cadence</h2>
+              </div>
+              <span class="text-xs font-bold text-tertiary">Anchor Preserved</span>
+            </div>
+            <div class="space-y-3 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-on-surface-variant">Active Service Horizon</span>
+                <span class="font-mono font-bold text-on-surface">2025-11-30 thru 2027-11-30</span>
+              </div>
+              <div class="h-px bg-surface-container-low"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-on-surface-variant">Price Guarantee Valid Until</span>
+                <span class="font-mono font-medium text-on-surface">2026-11-15</span>
+              </div>
+              <div class="h-px bg-surface-container-low"></div>
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="font-semibold text-on-surface block">Next Invoicing Trigger</span>
+                  <span class="text-[11px] text-on-surface-variant">Day 30 calendar anchor preserved</span>
+                </div>
+                <span class="px-2.5 py-1 rounded bg-primary/10 text-primary font-mono font-bold">2026-11-30</span>
+              </div>
+              <div class="h-px bg-surface-container-low"></div>
+              <div class="flex items-center justify-between">
+                <span class="text-on-surface-variant">Billing Cadence</span>
+                <span class="font-semibold text-on-surface">Yearly (Interval: 1) • 2 Renewals</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Governance Flags -->
+        <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/30 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px] text-on-surface-variant">gavel</span>
+            <span class="font-bold uppercase tracking-wider text-on-surface">Plan Governance Rules</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-container/10 text-tertiary font-semibold">
+              <span class="material-symbols-outlined text-[14px]">check_circle</span> allow_pause: Enabled
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-container/10 text-tertiary font-semibold">
+              <span class="material-symbols-outlined text-[14px]">check_circle</span> allow_renewal: Enabled
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-fixed text-secondary font-semibold">
+              <span class="material-symbols-outlined text-[14px]">lock</span> allow_early_close: Restricted
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface-variant font-semibold">
+              <span class="material-symbols-outlined text-[14px]">cancel</span> auto_close: Disabled
+            </span>
+          </div>
+        </div>
+
+        <!-- Notebook Tabs Section -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col">
+          <!-- Tabs Navigation -->
+          <div class="flex items-center bg-surface-container-low px-4 pt-2 gap-2 overflow-x-auto border-b border-outline-variant/30 text-xs">
+            <button class="tab-btn px-4 py-3 rounded-t-xl bg-surface-container-lowest text-primary font-bold flex items-center gap-2 shadow-sm focus:outline-none" id="tabBtnLines" onclick="switchTab('lines')" type="button">
+              <span class="material-symbols-outlined text-[18px]">list_alt</span>
+              <span>Subscription Lines</span>
+              <span class="px-1.5 py-0.2 rounded-full bg-primary/10 text-primary text-[10px] font-bold">3</span>
+            </button>
+            <button class="tab-btn px-4 py-3 rounded-t-xl text-on-surface-variant hover:text-on-surface font-semibold flex items-center gap-2 focus:outline-none transition-colors" id="tabBtnTerms" onclick="switchTab('terms')" type="button">
+              <span class="material-symbols-outlined text-[18px]">description</span>
+              <span>Commercial Terms</span>
+            </button>
+            <button class="tab-btn px-4 py-3 rounded-t-xl text-on-surface-variant hover:text-on-surface font-semibold flex items-center gap-2 focus:outline-none transition-colors" id="tabBtnInvoices" onclick="switchTab('invoices')" type="button">
+              <span class="material-symbols-outlined text-[18px]">receipt_long</span>
+              <span>Linked Invoices (account.move)</span>
+              <span class="px-1.5 py-0.2 rounded-full bg-surface-container text-on-surface-variant text-[10px] font-semibold">2</span>
+            </button>
+          </div>
+
+          <!-- Tab 1: Subscription Lines -->
+          <div class="p-6 flex flex-col gap-6" id="tabPanelLines">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="bg-surface-container-low text-on-surface-variant uppercase tracking-wider font-semibold">
+                    <th class="py-3 px-4 rounded-l-xl">Product</th>
+                    <th class="py-3 px-4">Variant / Scope</th>
+                    <th class="py-3 px-4 text-right">Quantity</th>
+                    <th class="py-3 px-4 text-right">Unit Price</th>
+                    <th class="py-3 px-4 text-center">Discount</th>
+                    <th class="py-3 px-4 text-center">Tax</th>
+                    <th class="py-3 px-4 text-right rounded-r-xl">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-surface-container font-sans text-on-surface">
+                  <tr class="hover:bg-surface-container-low/50 transition-colors">
+                    <td class="py-3 px-4 font-bold text-on-surface">Cloud Platform Core</td>
+                    <td class="py-3 px-4 text-on-surface-variant">Multi-Region Enterprise Tier</td>
+                    <td class="py-3 px-4 text-right font-mono">50 seats</td>
+                    <td class="py-3 px-4 text-right font-mono">$240.00</td>
+                    <td class="py-3 px-4 text-center">
+                      <span class="px-2 py-0.5 rounded bg-surface-container text-primary font-semibold">10%</span>
+                    </td>
+                    <td class="py-3 px-4 text-center">VAT 10%</td>
+                    <td class="py-3 px-4 text-right font-mono font-bold">$10,800.00</td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low/50 transition-colors">
+                    <td class="py-3 px-4 font-bold text-on-surface">Dedicated Support Add-on</td>
+                    <td class="py-3 px-4 text-on-surface-variant">24/7 Priority Support Routing</td>
+                    <td class="py-3 px-4 text-right font-mono">1 pkg</td>
+                    <td class="py-3 px-4 text-right font-mono">$2,400.00</td>
+                    <td class="py-3 px-4 text-center">
+                      <span class="px-2 py-0.5 rounded bg-surface-container text-primary font-semibold">10%</span>
+                    </td>
+                    <td class="py-3 px-4 text-center">VAT 10%</td>
+                    <td class="py-3 px-4 text-right font-mono font-bold">$2,160.00</td>
+                  </tr>
+                  <tr class="hover:bg-surface-container-low/50 transition-colors">
+                    <td class="py-3 px-4 font-bold text-on-surface">API Volume Booster</td>
+                    <td class="py-3 px-4 text-on-surface-variant">Up to 2.5M Monthly Ingestion Events</td>
+                    <td class="py-3 px-4 text-right font-mono">1 pool</td>
+                    <td class="py-3 px-4 text-right font-mono">$0.00</td>
+                    <td class="py-3 px-4 text-center text-on-surface-variant">—</td>
+                    <td class="py-3 px-4 text-center">Included</td>
+                    <td class="py-3 px-4 text-right font-mono font-bold">$0.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Financial Aggregate Card -->
+            <div class="flex justify-end pt-2">
+              <div class="w-full sm:w-80 bg-surface-container-low rounded-2xl p-4 flex flex-col gap-2 text-xs">
+                <div class="flex justify-between items-center text-on-surface-variant">
+                  <span>Untaxed Amount:</span>
+                  <span class="font-mono font-bold text-on-surface">$12,960.00</span>
+                </div>
+                <div class="flex justify-between items-center text-on-surface-variant">
+                  <span>Taxes (10%):</span>
+                  <span class="font-mono font-bold text-on-surface">$1,296.00</span>
+                </div>
+                <div class="h-px bg-outline-variant/30 my-1"></div>
+                <div class="flex justify-between items-baseline">
+                  <span class="font-bold text-on-surface text-sm">Recurring Total:</span>
+                  <div class="text-right">
+                    <span class="text-lg font-bold font-mono text-primary block">$14,256.00</span>
+                    <span class="text-[11px] text-on-surface-variant">Billed Annually</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 2: Commercial Terms -->
+          <div class="hidden p-6 flex flex-col gap-4 text-xs" id="tabPanelTerms">
+            <div class="bg-surface-container-low rounded-xl p-4 flex flex-col gap-2">
+              <h3 class="font-bold text-on-surface text-sm">Payment Directives &amp; Invoice Terms</h3>
+              <p class="text-on-surface leading-relaxed">
+                Net 30 days from automated invoice creation. Recurring charges execute on anchor date 30 via registered customer payment tokens.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tab 3: Linked Invoices -->
+          <div class="hidden p-6 flex flex-col gap-4 text-xs" id="tabPanelInvoices">
+            <table class="w-full text-left">
+              <thead>
+                <tr class="bg-surface-container-low text-on-surface-variant uppercase tracking-wider font-semibold">
+                  <th class="py-3 px-4 rounded-l-xl">Invoice Ref</th>
+                  <th class="py-3 px-4">Invoice Date</th>
+                  <th class="py-3 px-4">Due Date</th>
+                  <th class="py-3 px-4 text-right">Amount</th>
+                  <th class="py-3 px-4 text-center">Payment State</th>
+                  <th class="py-3 px-4 text-right rounded-r-xl">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-surface-container">
+                <tr>
+                  <td class="py-3 px-4 font-mono font-bold text-primary">INV/2026/00112</td>
+                  <td class="py-3 px-4 font-mono">2025-11-30</td>
+                  <td class="py-3 px-4 font-mono">2025-12-30</td>
+                  <td class="py-3 px-4 text-right font-mono font-bold">$14,256.00</td>
+                  <td class="py-3 px-4 text-center">
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold text-[11px]">Paid</span>
+                  </td>
+                  <td class="py-3 px-4 text-right">
+                    <a class="text-primary font-semibold hover:underline" href="../customer_portal_pages/portal_invoice_detail.html">View Statement →</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Activity Audit Log (mail.thread) -->
+        <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col gap-4 text-xs">
+          <div class="flex items-center justify-between pb-2 border-b border-outline-variant/20">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[20px]">forum</span>
+              <h3 class="text-base font-bold text-on-surface">Audit Trail &amp; Chatter (mail.thread)</h3>
+            </div>
+            <span class="text-on-surface-variant font-medium">Odoo Chatter Integration</span>
+          </div>
+          <div class="space-y-3">
+            <div class="p-3 rounded-xl bg-surface-container-low flex flex-col gap-1">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-on-surface">Finance Operations</span>
+                <span class="text-on-surface-variant font-mono">2026-10-28 14:22</span>
+              </div>
+              <p class="text-on-surface">Subscription status confirmed and activated following initial payment allocation.</p>
+            </div>
+            <div class="p-3 rounded-xl bg-surface-container-low flex flex-col gap-1">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-on-surface">System Billing Engine</span>
+                <span class="text-on-surface-variant font-mono">2025-11-30 00:00</span>
+              </div>
+              <p class="text-on-surface">Generated invoice INV/2026/00112 for billing period Nov 2025 - Nov 2026.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Notification Pill -->
+  <div class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none" id="toastNotification">
+    <div class="bg-inverse-surface text-inverse-on-surface px-4 py-3 rounded-xl shadow-xl flex items-center gap-3">
+      <span class="material-symbols-outlined text-tertiary-fixed text-[20px]">info</span>
+      <span class="text-xs font-medium" id="toastMessage">Action completed successfully</span>
+    </div>
+  </div>
+
+  <script>
+    let isPaused = false;
+
+    function triggerAction(message) {
+      const toast = document.getElementById('toastNotification');
+      const msg = document.getElementById('toastMessage');
+      msg.textContent = message;
+      toast.classList.remove('translate-y-16', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-16', 'opacity-0');
+      }, 3000);
+    }
+
+    function togglePause() {
+      isPaused = !isPaused;
+      const btn = document.getElementById('btnPauseResume');
+      const text = document.getElementById('textPauseResume');
+      const icon = document.getElementById('iconPauseResume');
+      const badge = document.getElementById('badgeActiveStatus');
+
+      if (isPaused) {
+        text.textContent = 'Resume Subscription';
+        icon.textContent = 'play_circle';
+        icon.className = 'material-symbols-outlined text-[16px] text-emerald-600';
+        badge.className = 'px-3.5 py-1 rounded-lg bg-amber-500 text-white flex items-center gap-1.5 shadow-sm font-bold';
+        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span><span>Paused</span>';
+        triggerAction('action_pause executed: Subscription marked as Paused. Invoicing suspended, anchor preserved.');
+      } else {
+        text.textContent = 'Pause Subscription';
+        icon.textContent = 'pause_circle';
+        icon.className = 'material-symbols-outlined text-[16px] text-amber-600';
+        badge.className = 'px-3.5 py-1 rounded-lg bg-tertiary text-on-tertiary flex items-center gap-1.5 shadow-sm font-bold';
+        badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed animate-pulse"></span><span>Active</span>';
+        triggerAction('action_resume executed: Subscription resumed. Billing anchor remains day 30.');
+      }
+    }
+
+    function switchTab(name) {
+      const tabs = ['lines', 'terms', 'invoices'];
+      tabs.forEach(t => {
+        const btn = document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+        const panel = document.getElementById('tabPanel' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (t === name) {
+          panel.classList.remove('hidden');
+          btn.className = 'tab-btn px-4 py-3 rounded-t-xl bg-surface-container-lowest text-primary font-bold flex items-center gap-2 shadow-sm focus:outline-none';
+        } else {
+          panel.classList.add('hidden');
+          btn.className = 'tab-btn px-4 py-3 rounded-t-xl text-on-surface-variant hover:text-on-surface font-semibold flex items-center gap-2 focus:outline-none transition-colors';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
