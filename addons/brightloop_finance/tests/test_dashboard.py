@@ -158,3 +158,4 @@ class TestBrightloopDashboard(TransactionCase):
         self.assertIn(active_sub.id, active_ids)
         self.assertIn(paused_sub.id, paused_ids)
         self.assertNotIn(paused_sub.id, active_ids)
+

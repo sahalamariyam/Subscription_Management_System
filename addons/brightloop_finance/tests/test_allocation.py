@@ -334,3 +334,4 @@ class TestBrightloopAllocationIntegration(TransactionCase):
         revenue = alloc_data[0]['allocated_amount'] if alloc_data else 0.0
         self.assertAlmostEqual(revenue, 0.0, places=2,
                                msg='Draft payment must not appear in revenue.')
+

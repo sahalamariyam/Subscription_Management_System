@@ -50,11 +50,28 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
+# ── Shared constants from brightloop_core (Member 1) ─────────────────────────
+# Imported at function-call time to avoid import-time circular issues.
+# Use helper below: _get_sub_const()
+try:
+    from odoo.addons.brightloop_core.models.shared_constants import (
+        SUBSCRIPTION_STATUS_ACTIVE as _CORE_SUB_ACTIVE,
+    )
+    _CORE_CONSTANTS_AVAILABLE = True
+except ImportError:
+    # brightloop_core not yet installed in this environment — use inline fallback
+    _CORE_CONSTANTS_AVAILABLE = False
+    _CORE_SUB_ACTIVE = 'active'
+
 # ── Integration constants ─────────────────────────────────────────────────────
 # Member 3 confirmed 2026-10-31: using native account.move (Odoo 18 Community)
 INVOICE_MODEL    = 'account.move'
 # Member 2 confirmed 2026-10-31
 SUBSCRIPTION_MODEL = 'brightloop.subscription'
+
+# Canonical subscription active status — sourced from brightloop_core.shared_constants
+# Fallback value 'active' matches shared_constants.SUBSCRIPTION_STATUS_ACTIVE
+SUB_STATUS_ACTIVE = _CORE_SUB_ACTIVE
 
 # account.move field map (Member 3 confirmed 2026-10-31)
 # brightloop logical name  →  account.move field
@@ -364,31 +381,42 @@ class BrightloopFinanceReport(models.AbstractModel):
     def _check_report_access(self, partner_id=None):
         """
         Enforce report authorization:
-        - Finance managers: full access
-        - Finance users: full access (internal staff)
-        - Portal users: only their own partner data
+        - Superuser: unrestricted
+        - brightloop_core.group_brightloop_admin (Member 1): unrestricted
+        - brightloop_finance.group_brightloop_finance_manager: unrestricted
+        - brightloop_finance.group_brightloop_finance_user (internal staff): full access
+        - brightloop_core.group_brightloop_customer / portal: only their own data
 
         Raises AccessError if the current user cannot access the requested data.
         """
         user = self.env.user
 
-        # Superuser and finance manager: unrestricted
-        if user._is_superuser() or user.has_group(
-            'brightloop_finance.group_brightloop_finance_manager'
+        # Superuser: always unrestricted
+        if user._is_superuser():
+            return
+
+        # Brightloop admin (Member 1 core role) or Finance Manager: unrestricted
+        # Note: Finance Manager already implies brightloop_core.group_brightloop_admin,
+        # but we check both explicitly for clarity and forward-compatibility.
+        if (
+            user.has_group('brightloop_core.group_brightloop_admin')
+            or user.has_group('brightloop_finance.group_brightloop_finance_manager')
         ):
             return
 
-        # Finance user (internal staff): full access
+        # Finance user (internal staff, implies brightloop_core.group_brightloop_staff):
+        # full read access to all records
         if user.has_group('brightloop_finance.group_brightloop_finance_user'):
             return
 
-        # Portal / customer: can only access their own data
+        # Customer / portal user (brightloop_core.group_brightloop_customer):
+        # can only access their own partner data
         if partner_id and partner_id != user.partner_id.id:
             raise AccessError(
                 _('You do not have access to financial data for this customer.')
             )
 
-        # If no partner filter is set for a portal user, restrict to self
+        # Portal user with no partner filter — refuse (would leak all data)
         if not partner_id:
             raise AccessError(
                 _('Please specify a customer to access financial reports.')

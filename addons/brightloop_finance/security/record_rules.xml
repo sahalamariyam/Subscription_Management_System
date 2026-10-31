@@ -21,7 +21,8 @@
             <field name="name">Payment: portal users see only their own</field>
             <field name="model_id" ref="model_brightloop_payment"/>
             <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <!-- Use brightloop_core.group_brightloop_customer (implies base.group_portal) -->
+            <field name="groups" eval="[(4, ref('brightloop_core.group_brightloop_customer'))]"/>
             <field name="perm_read"   eval="True"/>
             <field name="perm_write"  eval="False"/>
             <field name="perm_create" eval="False"/>
@@ -57,7 +58,8 @@
             <field name="name">Invoice Payment: portal users see only their own</field>
             <field name="model_id" ref="model_brightloop_invoice_payment"/>
             <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
-            <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+            <!-- Use brightloop_core.group_brightloop_customer (implies base.group_portal) -->
+            <field name="groups" eval="[(4, ref('brightloop_core.group_brightloop_customer'))]"/>
             <field name="perm_read"   eval="True"/>
             <field name="perm_write"  eval="False"/>
             <field name="perm_create" eval="False"/>

@@ -24,15 +24,15 @@
     'category': 'Accounting/Finance',
     'license': 'LGPL-3',
 
-    # Odoo 16/17 compatible
     'depends': [
         'base',
         'mail',
-        'account',          # Odoo 18 native — account.move is the invoice model
-        'brightloop_billing',   # Member 3 ✅ confirmed module name 2026-10-31
-                                # addons/brightloop_billing — extends account.move
-                                # with subscription_id field
-        'brightloop_core',  # Member 1 shared constants — add when available
+        'account',           # Odoo 18 native — account.move is the invoice model
+        'brightloop_core',   # Member 1 ✅ — shared constants, canonical groups, category
+                             # Must load BEFORE brightloop_billing (group refs used in rules)
+        'brightloop_billing', # Member 3 ✅ confirmed module name 2026-10-31
+                              # addons/brightloop_billing — extends account.move
+                              # with subscription_id field
     ],
 
     'data': [

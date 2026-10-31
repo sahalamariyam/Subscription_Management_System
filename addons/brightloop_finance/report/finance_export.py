@@ -32,6 +32,27 @@ except ImportError:
     XLSXWRITER_AVAILABLE = False
     _logger.warning('xlsxwriter not installed. XLSX export will be unavailable.')
 
+# ── Shared constants from brightloop_core (Member 1) ─────────────────────────
+# Import canonical subscription status constants to stay in sync with
+# shared_constants.py rather than duplicating string literals.
+try:
+    from odoo.addons.brightloop_core.models.shared_constants import (
+        SUBSCRIPTION_STATUS_ACTIVE as _CORE_SUB_ACTIVE,
+        SUBSCRIPTION_STATUS_DRAFT as _CORE_SUB_DRAFT,
+        SUBSCRIPTION_STATUS_QUOTATION as _CORE_SUB_QUOTATION,
+        SUBSCRIPTION_STATUS_CONFIRMED as _CORE_SUB_CONFIRMED,
+        SUBSCRIPTION_STATUS_CLOSED as _CORE_SUB_CLOSED,
+    )
+    _CORE_CONSTANTS_AVAILABLE = True
+except ImportError:
+    # brightloop_core not yet installed — use inline fallbacks matching shared_constants.py
+    _CORE_CONSTANTS_AVAILABLE = False
+    _CORE_SUB_ACTIVE    = 'active'
+    _CORE_SUB_DRAFT     = 'draft'
+    _CORE_SUB_QUOTATION = 'quotation'
+    _CORE_SUB_CONFIRMED = 'confirmed'
+    _CORE_SUB_CLOSED    = 'closed'
+
 INVOICE_MODEL = 'account.move'          # Confirmed with Member 3 — 2026-10-31
 # Confirmed with Member 2 — 2026-10-31
 SUBSCRIPTION_MODEL = 'brightloop.subscription'
@@ -41,10 +62,22 @@ AM_PAYMENT_PAID     = 'paid'
 AM_PAYMENT_REVERSED = 'reversed'
 AM_BASE_DOMAIN      = [('move_type', '=', 'out_invoice')]
 
-# Confirmed subscription status values (Member 2, 2026-10-31)
-# draft | quotation | confirmed | active | closed
-# Paused subscriptions: status='active', is_paused=True
-SUB_ACTIVE_STATUS = 'active'
+# Canonical subscription status values sourced from brightloop_core.shared_constants
+# (with fallback literals that match those constants exactly)
+SUB_STATUS_ACTIVE    = _CORE_SUB_ACTIVE     # 'active'
+SUB_STATUS_DRAFT     = _CORE_SUB_DRAFT      # 'draft'
+SUB_STATUS_QUOTATION = _CORE_SUB_QUOTATION  # 'quotation'
+SUB_STATUS_CONFIRMED = _CORE_SUB_CONFIRMED  # 'confirmed'
+SUB_STATUS_CLOSED    = _CORE_SUB_CLOSED     # 'closed'
+
+# Human-readable labels for export sheets — mirrors shared_constants.SUBSCRIPTION_STATUS_SELECTION
+STATUS_LABELS = {
+    SUB_STATUS_DRAFT:     'Draft',
+    SUB_STATUS_QUOTATION: 'Quotation',
+    SUB_STATUS_CONFIRMED: 'Confirmed',
+    SUB_STATUS_ACTIVE:    'Active',
+    SUB_STATUS_CLOSED:    'Closed',
+}
 
 # account.move field map (Member 3 confirmed 2026-10-31)
 #   brightloop logical   →  account.move field
@@ -416,15 +449,7 @@ class BrightloopFinanceExport(models.TransientModel):
 
         subs = self.env[SUBSCRIPTION_MODEL].search(domain, order='start_date desc')
 
-        # Human-readable status label map (confirmed values)
-        STATUS_LABELS = {
-            'draft':     'Draft',
-            'quotation': 'Quotation',
-            'confirmed': 'Confirmed',
-            'active':    'Active',
-            'closed':    'Closed',
-        }
-
+        # STATUS_LABELS is the module-level dict sourced from brightloop_core.shared_constants
         for s in subs:
             # Use partner_id (Odoo standard); fall back to customer_id alias
             customer = (
