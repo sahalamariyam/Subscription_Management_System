@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Plan List / Tree View -->
+    <record id="view_brightloop_plan_tree" model="ir.ui.view">
+        <field name="name">brightloop.plan.tree</field>
+        <field name="model">brightloop.plan</field>
+        <field name="arch" type="xml">
+            <list string="Subscription Plans">
+                <field name="name"/>
+                <field name="billing_price"/>
+                <field name="billing_interval" widget="badge"
+                       decoration-info="billing_interval == 'monthly'"
+                       decoration-success="billing_interval == 'yearly'"
+                       decoration-warning="billing_interval in ('daily', 'weekly')"/>
+                <field name="minimum_quantity"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="allow_pause" widget="boolean_toggle"/>
+                <field name="allow_renewal" widget="boolean_toggle"/>
+                <field name="auto_close" widget="boolean_toggle"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Plan Form View -->
+    <record id="view_brightloop_plan_form" model="ir.ui.view">
+        <field name="name">brightloop.plan.form</field>
+        <field name="model">brightloop.plan</field>
+        <field name="arch" type="xml">
+            <form string="Subscription Plan">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Plan Name"/>
+                        <h1><field name="name" placeholder="e.g. Enterprise Monthly Plan"/></h1>
+                    </div>
+                    <group>
+                        <group string="Commercial Terms">
+                            <field name="billing_price"/>
+                            <field name="billing_interval"/>
+                            <field name="minimum_quantity"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Availability Period">
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+                    <group string="Plan Governance &amp; Lifecycle Permissions">
+                        <group>
+                            <field name="allow_pause"/>
+                            <field name="allow_renewal"/>
+                        </group>
+                        <group>
+                            <field name="allow_early_close"/>
+                            <field name="auto_close"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Plan Search View -->
+    <record id="view_brightloop_plan_search" model="ir.ui.view">
+        <field name="name">brightloop.plan.search</field>
+        <field name="model">brightloop.plan</field>
+        <field name="arch" type="xml">
+            <search string="Search Plans">
+                <field name="name"/>
+                <filter string="Daily" name="filter_daily" domain="[('billing_interval', '=', 'daily')]"/>
+                <filter string="Weekly" name="filter_weekly" domain="[('billing_interval', '=', 'weekly')]"/>
+                <filter string="Monthly" name="filter_monthly" domain="[('billing_interval', '=', 'monthly')]"/>
+                <filter string="Yearly" name="filter_yearly" domain="[('billing_interval', '=', 'yearly')]"/>
+                <separator/>
+                <filter string="Permits Pause" name="filter_pause" domain="[('allow_pause', '=', True)]"/>
+                <filter string="Permits Renewal" name="filter_renewal" domain="[('allow_renewal', '=', True)]"/>
+                <filter string="Auto-Closing" name="filter_autoclose" domain="[('auto_close', '=', True)]"/>
+                <separator/>
+                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Billing Interval" name="group_interval" context="{'group_by': 'billing_interval'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Plan Window Action -->
+    <record id="action_brightloop_plan" model="ir.actions.act_window">
+        <field name="name">Subscription Plans</field>
+        <field name="res_model">brightloop.plan</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_brightloop_plan_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure your first subscription plan!
+            </p>
+            <p>
+                Define billing cadences (daily, weekly, monthly, yearly), minimum subscription quantities, and governance rules.
+            </p>
+        </field>
+    </record>
+
+    <!-- Catalog Menu Item for Plans -->
+    <menuitem id="menu_brightloop_plan_action"
+              name="Subscription Plans"
+              parent="menu_brightloop_catalog"
+              action="action_brightloop_plan"
+              sequence="20"/>
+</odoo>

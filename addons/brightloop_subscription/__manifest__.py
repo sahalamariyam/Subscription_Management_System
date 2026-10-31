@@ -33,6 +33,7 @@ Key Features:
         'data/sequence_data.xml',
         'views/menu_views.xml',
         'views/product_views.xml',
+        'views/plan_views.xml',
     ],
     'installable': True,
     'application': True,
