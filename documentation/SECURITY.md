@@ -3,7 +3,7 @@
 **Module:** `brightloop_core`  
 **Workstream Lead:** Member 1 (Platform Foundation, Authentication & Security Lead)  
 **Target Platform:** Odoo 18.0 Community / PostgreSQL 16 / Python 3.12  
-**Security Status:** Phase 3.2 Hardened (Findings 3.1, 3.2, 3.3, 3.4 Remediated)
+**Security Status:** Phase 4 Hardened & Verified (Customer Portal & HTTP Authentication Workflows)
 
 ---
 
@@ -142,7 +142,9 @@ All user passwords must satisfy the following criteria:
 
 ## 7. Automated Test Verification Matrix
 
-All 33 automated tests in `addons/brightloop_core/tests/` pass with 0 failures and 0 errors:
+All 58 test executions across 62 test methods in `addons/brightloop_core/tests/` pass with 0 failures and 0 errors:
+
+### Unit & ORM Security Tests (`test_security_rbac.py`, `test_password_policy.py`, `test_shared_constants.py`)
 
 | Test Class | Test Scenario | Status |
 | :--- | :--- | :---: |
@@ -179,13 +181,43 @@ All 33 automated tests in `addons/brightloop_core/tests/` pass with 0 failures a
 | `TestNewPasswordField` | `test_admin_writes_valid_new_password_accepted` | **PASSED** |
 | `TestNewPasswordField` | `test_admin_writes_weak_new_password_does_not_change_hash` | **PASSED** |
 | `TestNewPasswordField` | `test_password_stored_as_hash_not_plaintext` | **PASSED** |
+| `TestSharedConstants` | Shared status & billing interval enums | **PASSED** |
+
+### HTTP-Level Integration Tests (`test_portal_http.py`)
+
+| Test Class | Test Scenario | Status |
+| :--- | :--- | :---: |
+| `TestCustomerRegistrationHttp` | `test_public_registration_success` | **PASSED** |
+| `TestCustomerRegistrationHttp` | `test_public_registration_weak_password_rejected` | **PASSED** |
+| `TestCustomerRegistrationHttp` | `test_public_registration_password_mismatch_rejected` | **PASSED** |
+| `TestCustomerRegistrationHttp` | `test_public_registration_invalid_email_rejected` | **PASSED** |
+| `TestCustomerRegistrationHttp` | `test_public_registration_duplicate_email_rejected` | **PASSED** |
+| `TestCustomerRegistrationHttp` | `test_public_registration_privilege_escalation_attempt_ignored` | **PASSED** |
+| `TestPasswordResetHttp` | `test_password_reset_request_valid_email` | **PASSED** |
+| `TestPasswordResetHttp` | `test_password_reset_request_anti_enumeration` | **PASSED** |
+| `TestPasswordResetHttp` | `test_password_reset_request_invalid_email_syntax` | **PASSED** |
+| `TestPasswordResetHttp` | `test_password_reset_with_token_weak_password_rejected` | **PASSED** |
+| `TestPasswordResetHttp` | `test_password_reset_with_token_success_and_reuse_prevented` | **PASSED** |
+| `TestCustomerAuthSessionHttp` | `test_customer_login_success` | **PASSED** |
+| `TestCustomerAuthSessionHttp` | `test_customer_login_invalid_password` | **PASSED** |
+| `TestCustomerAuthSessionHttp` | `test_customer_login_inactive_account` | **PASSED** |
+| `TestCustomerAuthSessionHttp` | `test_unauthenticated_portal_access_redirects` | **PASSED** |
+| `TestCustomerAuthSessionHttp` | `test_customer_logout_terminates_session` | **PASSED** |
+| `TestCustomerPortalAndProfileHttp` | `test_customer_portal_dashboard_accessible` | **PASSED** |
+| `TestCustomerPortalAndProfileHttp` | `test_portal_integration_placeholder_routes` | **PASSED** |
+| `TestCustomerPortalAndProfileHttp` | `test_customer_profile_view_and_permitted_update` | **PASSED** |
+| `TestCustomerPortalAndProfileHttp` | `test_customer_profile_update_invalid_email_rejected` | **PASSED** |
+| `TestCustomerPortalAndProfileHttp` | `test_customer_profile_update_duplicate_email_rejected` | **PASSED** |
+| `TestCustomerPortalAndProfileHttp` | `test_customer_profile_idor_protection` | **PASSED** |
+| `TestAdminStaffManagementWorkflow` | `test_admin_staff_action_configured_correctly` | **PASSED** |
+| `TestAdminStaffManagementWorkflow` | `test_menu_restricted_to_brightloop_admin` | **PASSED** |
+| `TestAdminStaffManagementWorkflow` | `test_customer_cannot_access_staff_action` | **PASSED** |
 
 ---
 
-## 8. Remaining Limitations & Next Steps
+## 8. Remaining Limitations & Production Notes
 
-1. **HTTP-Level Authentication Flows:**
-   - Token-based password reset (`/web/reset_password`) and public signup (`/web/signup`) require active HTTP request contexts.
-   - While underlying ORM write hooks enforce password policy across all entry points, full end-to-end HTTP controller testing requires Odoo `HttpCase` test harness scaffolding, scheduled for Phase 4 (Customer Portal).
-2. **Customer Direct Partner Writes:**
-   - In accordance with standard Odoo architecture, external portal users cannot write directly to `res.partner` records via ORM RPC; customer profile edits in Phase 4 will be mediated through validated portal controllers.
+1. **Production Mail Delivery:**
+   - Password reset tokens and signup invitations require an active SMTP outgoing mail server configured under **Settings → Technical → Outgoing Mail Servers**. In development/test environments, outgoing emails are recorded in `mail.mail` and verified via test mock fixtures.
+2. **External Portal Profile Editing:**
+   - External portal users update their profile details via the server-side validated `/my/account` controller (`details_form_validate`), which protects identity relations while permitting verified contact field updates. Direct raw ORM RPC writes from portal users remain disabled by design.

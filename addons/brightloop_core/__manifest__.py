@@ -25,8 +25,12 @@ Workstream Ownership: Member 1 (Platform Foundation, Authentication & Security L
         'security/brightloop_security.xml',
         'security/ir.model.access.csv',
         'security/customer_rules.xml',
+        'data/ir_config_parameter_data.xml',
+        'views/staff_views.xml',
+        'views/portal_templates.xml',
     ],
     'installable': True,
     'application': False,
     'auto_install': False,
+    'post_init_hook': 'post_init_hook',
 }

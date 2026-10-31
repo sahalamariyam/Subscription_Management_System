@@ -47,3 +47,16 @@ All workstreams must reference constants defined in `odoo.addons.brightloop_core
 2. **Customer Isolation:** When defining subscription, billing, and payment models, always enforce record rules matching `[('partner_id', 'child_of', user.commercial_partner_id.id)]` for `group_brightloop_customer`.
 3. **Cross-Module Dependencies:** Cross-module dependencies must declare `brightloop_core` in their `__manifest__.py` `depends` list.
 4. **Backend Authorization:** Keep security and data access backend-enforced via `ir.rule` and `ir.model.access.csv`. Never rely on frontend view hiding.
+
+---
+
+## 4. Customer Portal & Integration Routes
+Member 1 provides the portal foundation and integration placeholders for all other members:
+- `/my` / `/my/home`: Customer portal dashboard.
+- `/my/account`: Customer profile view and validated editing.
+- `/my/security`: Customer password change with strict password policy enforcement.
+- `/my/subscriptions` & `/my/quotations`: Portal integration endpoints for Member 2 (`brightloop_subscription`).
+- `/my/invoices`: Portal integration endpoint for Member 3 (`brightloop_billing`).
+- `/my/payments`: Portal integration endpoint for Member 4 (`brightloop_finance`).
+
+*(See `documentation/PORTAL.md` and `documentation/AUTHENTICATION.md` for complete portal and auth workflow specifications.)*

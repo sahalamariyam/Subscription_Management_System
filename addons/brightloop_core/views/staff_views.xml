@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Staff Users Action (Admin-Only) -->
+    <record id="action_brightloop_staff_management" model="ir.actions.act_window">
+        <field name="name">Staff Management</field>
+        <field name="res_model">res.users</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('share', '=', False), ('groups_id', 'in', [ref('brightloop_core.group_brightloop_staff')])]</field>
+        <field name="context">{'default_groups_id': [(4, ref('brightloop_core.group_brightloop_staff'))]}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Brightloop Staff account
+            </p>
+            <p>
+                Staff accounts have operational access to subscriptions, billing, and customer support,
+                but cannot manage security roles or create staff accounts.
+            </p>
+        </field>
+    </record>
+
+    <!-- Top-Level Root Menu: Brightloop Platform -->
+    <menuitem id="menu_brightloop_root"
+              name="Brightloop"
+              sequence="10"/>
+
+    <!-- Administration Sub-Menu: Staff Management (Restricted to Brightloop Admin) -->
+    <menuitem id="menu_brightloop_staff_management"
+              name="Staff Management"
+              parent="menu_brightloop_root"
+              action="action_brightloop_staff_management"
+              groups="brightloop_core.group_brightloop_admin"
+              sequence="20"/>
+
+</odoo>

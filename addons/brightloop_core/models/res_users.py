@@ -218,13 +218,55 @@ class ResUsers(models.Model):
         return super()._set_new_password()
 
     # =========================================================================
+    # Customer Registration & Signup Extensions
+    # =========================================================================
+
+    @api.model
+    def _signup_create_user(self, values):
+        """
+        Customer registration validation & privilege escalation protection.
+        Enforces:
+        1. Stripping any client-supplied security/privilege fields.
+        2. Valid email format verification.
+        3. Email uniqueness verification across existing users.
+        """
+        # Never trust privilege/group values from public signup input
+        values.pop('groups_id', None)
+        values.pop('share', None)
+
+        email = values.get('email') or values.get('login') or ''
+        email = email.strip()
+        if not email or not re.match(r'^[^@\s]+@[^@\s]+\.[^@\s]+$', email):
+            raise UserError(_("Please provide a valid email address."))
+
+        # Verify email is not already in use by another active account
+        existing = self.sudo().search([('login', '=', email)], limit=1)
+        if not existing:
+            existing = self.sudo().search([('email', '=', email)], limit=1)
+        if existing:
+            raise UserError(_("Another user is already registered using this email address."))
+
+        return super()._signup_create_user(values)
+
+    def _create_user_from_template(self, values):
+        """
+        Ensure users created from the portal template are automatically assigned
+        the canonical Brightloop Customer group (brightloop_core.group_brightloop_customer).
+        """
+        user = super()._create_user_from_template(values)
+        customer_group = self.env.ref('brightloop_core.group_brightloop_customer', raise_if_not_found=False)
+        if customer_group and customer_group not in user.groups_id:
+            user.sudo().write({'groups_id': [Command.link(customer_group.id)]})
+        return user
+
+    # =========================================================================
     # Server-Side Access Control & Privilege Escalation Prevention
     # =========================================================================
 
     @api.model_create_multi
     def create(self, vals_list):
         """
-        Enforce Admin-Only Staff Account Creation.
+        Enforce Admin-Only Staff Account Creation & Customer Role Assignment.
         Non-administrators cannot create accounts with staff/admin privileges.
 
         The is_admin check uses three layers:
@@ -239,6 +281,10 @@ class ResUsers(models.Model):
             or (current_user and current_user._is_brightloop_admin())
         )
         privileged_ids = self._get_privileged_group_ids()
+        portal_group = self.env.ref('base.group_portal', raise_if_not_found=False)
+        customer_group = self.env.ref('brightloop_core.group_brightloop_customer', raise_if_not_found=False)
+        portal_group_id = portal_group.id if portal_group else None
+        customer_group_id = customer_group.id if customer_group else None
 
         for vals in vals_list:
             if not is_admin:
@@ -248,6 +294,12 @@ class ResUsers(models.Model):
                         raise AccessError(_("Only Brightloop administrators may create staff or administrator accounts."))
                 if vals.get('share') is False:
                     raise AccessError(_("Only Brightloop administrators may create internal staff accounts."))
+
+            # Auto-assign Brightloop Customer group to portal users
+            if customer_group_id and 'groups_id' in vals:
+                added = self._extract_added_group_ids(vals['groups_id'])
+                if portal_group_id and portal_group_id in added and customer_group_id not in added:
+                    vals['groups_id'] = list(vals['groups_id']) + [Command.link(customer_group_id)]
 
         return super().create(vals_list)
 
