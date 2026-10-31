@@ -31,9 +31,9 @@
 .o_main_navbar .o_menu_brand::before {
     content: "";
     display: inline-block;
-    width: 24px;
-    height: 24px;
-    margin-right: 8px;
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
     background: url("/brightloop_core/static/img/brightloop_logo.svg") no-repeat 0 50% / contain;
 }
 

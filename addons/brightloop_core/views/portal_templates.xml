@@ -5,8 +5,8 @@
     <template id="portal_frontend_layout_brightloop" name="Brightloop Portal Header Brand"
               inherit_id="portal.frontend_layout" priority="20">
         <xpath expr="//a[hasclass('navbar-brand')]" position="replace">
-            <a href="/my/home" class="navbar-brand logo d-flex align-items-center gap-2">
-                <img src="/brightloop_core/static/img/brightloop_logo.svg" alt="Brightloop" style="height:36px;width:auto;"/>
+            <a href="/my/home" class="navbar-brand logo d-flex align-items-center gap-2 py-1">
+                <img src="/brightloop_core/static/img/brightloop_logo.svg" alt="Brightloop" style="height:48px;width:auto;"/>
             </a>
         </xpath>
     </template>
@@ -22,7 +22,7 @@
             <div class="w-100 mb-3 mt-2">
                 <div class="d-flex align-items-center gap-2">
                     <img src="/brightloop_core/static/img/brightloop_logo.svg"
-                         alt="Brightloop" style="height:32px;width:auto;"/>
+                         alt="Brightloop" style="height:40px;width:auto;"/>
                     <span class="text-muted small fw-semibold" style="letter-spacing:.5px;text-transform:uppercase;">
                         Subscription Management
                     </span>

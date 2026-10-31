@@ -13,15 +13,17 @@
 }
 
 /* ── Portal navbar branding ─────────────────────────────── */
-.navbar-brand .logo {
-    height: 36px;
-    width: auto;
+.navbar-brand .logo,
+.navbar-brand img {
+    height: 48px !important;
+    max-height: 52px !important;
+    width: auto !important;
 }
 
 /* Make portal nav slightly taller and give it a subtle shadow */
 .o_portal .navbar,
 .website_portal .navbar {
-    min-height: 60px;
+    min-height: 70px;
     box-shadow: 0 2px 8px rgba(0,0,0,.06) !important;
 }
 
