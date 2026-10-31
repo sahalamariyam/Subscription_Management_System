@@ -13,6 +13,13 @@ Supports:
 - Partial and full payment allocation
 - Overpayment detection
 - Chatter logging via mail.thread
+
+Performance indexes (defined via _sql_constraints + init override):
+    idx_bl_payment_date         — payment_date   (date-range dashboard queries)
+    idx_bl_payment_partner      — partner_id      (customer-scoped queries)
+    idx_bl_payment_state        — state           (posted/draft filter)
+    idx_bl_payment_ref          — reference       (duplicate detection)
+    idx_bl_payment_method_ref   — (payment_method_id, reference) UNIQUE constraint
 """
 
 from odoo import api, fields, models, _
@@ -192,6 +199,27 @@ class BrightloopPayment(models.Model):
             'Check for duplicate payment.',
         ),
     ]
+
+    def init(self):
+        """
+        Create additional PostgreSQL indexes for dashboard and reporting
+        performance. These complement the field-level index=True declarations
+        and cover multi-column and partial index scenarios.
+
+        Indexes:
+          idx_bl_pay_date_state   — (payment_date, state) for date-filtered
+                                    posted-payment dashboard queries
+          idx_bl_pay_partner_date — (partner_id, payment_date) for customer
+                                    payment history export queries
+        """
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS idx_bl_pay_date_state
+            ON brightloop_payment (payment_date DESC, state)
+        """)
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS idx_bl_pay_partner_date
+            ON brightloop_payment (partner_id, payment_date DESC)
+        """)
 
     # ─── Compute ─────────────────────────────────────────────────────────────
     @api.depends('invoice_payment_ids.allocated_amount', 'amount')

@@ -29,13 +29,16 @@
         'base',
         'mail',
         'account',          # Odoo 18 native — account.move is the invoice model
-        'brightloop_billing',   # Member 3 — extends account.move with subscription_id ✅
+        'brightloop_billing',   # Member 3 ✅ confirmed module name 2026-10-31
+                                # addons/brightloop_billing — extends account.move
+                                # with subscription_id field
         'brightloop_core',  # Member 1 shared constants — add when available
     ],
 
     'data': [
         # Security — load first
         'security/security_groups.xml',
+        'security/record_rules.xml',
         'security/ir.model.access.csv',
 
         # Data

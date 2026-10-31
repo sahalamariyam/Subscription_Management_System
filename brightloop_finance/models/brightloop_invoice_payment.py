@@ -125,6 +125,33 @@ class BrightloopInvoicePayment(models.Model):
         ),
     ]
 
+    def init(self):
+        """
+        Additional PostgreSQL indexes for allocation query performance.
+
+        idx_bl_invpay_invoice   — invoice_id    (sum allocations per invoice)
+        idx_bl_invpay_partner   — partner_id    (customer report queries)
+        idx_bl_invpay_date      — allocation_date (date-range revenue queries)
+        idx_bl_invpay_pay_state — (payment_id, allocation_date) for posted
+                                   payment revenue aggregation
+        """
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS idx_bl_invpay_invoice
+            ON brightloop_invoice_payment (invoice_id)
+        """)
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS idx_bl_invpay_partner
+            ON brightloop_invoice_payment (partner_id, allocation_date DESC)
+        """)
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS idx_bl_invpay_date
+            ON brightloop_invoice_payment (allocation_date DESC)
+        """)
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS idx_bl_invpay_pay_date
+            ON brightloop_invoice_payment (payment_id, allocation_date DESC)
+        """)
+
     # ─── Constraints (Python) ─────────────────────────────────────────────────
     @api.constrains('allocated_amount', 'invoice_id', 'payment_id')
     def _check_allocation_limits(self):
