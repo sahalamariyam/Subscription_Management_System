@@ -146,9 +146,9 @@ class TestBrightloopAllocation(TransactionCase):
             'code': 'cash_alloc',
         })
 
-        # Note: invoice tests require brightloop.invoice (Member 3).
-        # These are stub tests; full integration tests run after Member 3 merges.
-        # Skipping invoice-dependent assertions for now.
+        # Note: invoice allocation tests require account.move (Member 3 confirmed,
+        # Odoo 18 native). Full integration tests run after the shared DB is available.
+        # Skipping invoice-dependent assertions here.
 
     def test_01_allocation_module_exists(self):
         """Allocation model is registered."""

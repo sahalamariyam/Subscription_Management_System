@@ -18,7 +18,7 @@ Prevents:
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
-INVOICE_MODEL = 'brightloop.invoice'
+INVOICE_MODEL = 'account.move'   # Confirmed with Member 3 — 2026-10-31
 
 
 class PaymentWizardAllocationLine(models.TransientModel):
@@ -28,12 +28,13 @@ class PaymentWizardAllocationLine(models.TransientModel):
 
     wizard_id = fields.Many2one('brightloop.payment.wizard', required=True, ondelete='cascade')
     invoice_id = fields.Many2one(INVOICE_MODEL, string='Invoice', required=True)
-    invoice_number = fields.Char(related='invoice_id.invoice_number', readonly=True)
-    invoice_total = fields.Monetary(related='invoice_id.total', readonly=True,
-                                     currency_field='currency_id')
-    balance_due = fields.Monetary(related='invoice_id.balance_due', readonly=True,
-                                   currency_field='currency_id')
-    due_date = fields.Date(related='invoice_id.due_date', readonly=True)
+    # account.move fields (Member 3 confirmed 2026-10-31)
+    invoice_number = fields.Char(related='invoice_id.name', readonly=True, string='Invoice #')
+    invoice_total  = fields.Monetary(related='invoice_id.amount_total', readonly=True,
+                                     currency_field='currency_id', string='Invoice Total')
+    balance_due    = fields.Monetary(related='invoice_id.amount_residual', readonly=True,
+                                     currency_field='currency_id', string='Balance Due')
+    due_date       = fields.Date(related='invoice_id.invoice_date_due', readonly=True)
     allocated_amount = fields.Monetary(string='Allocate', currency_field='currency_id')
     currency_id = fields.Many2one(related='wizard_id.currency_id', readonly=True)
 
@@ -107,9 +108,11 @@ class PaymentWizard(models.TransientModel):
         if self.partner_id and INVOICE_MODEL in self.env:
             open_invoices = self.env[INVOICE_MODEL].search([
                 ('partner_id', '=', self.partner_id.id),
-                ('balance_due', '>', 0),
-                ('status', 'not in', ['cancelled', 'draft', 'paid']),
-            ], order='due_date asc', limit=20)
+                ('move_type', '=', 'out_invoice'),      # customer invoices only
+                ('state', '=', 'posted'),
+                ('amount_residual', '>', 0),             # has outstanding balance
+                ('payment_state', 'not in', ['paid', 'reversed']),
+            ], order='invoice_date_due asc', limit=20)
             self.allocation_ids = [
                 (0, 0, {
                     'invoice_id': inv.id,

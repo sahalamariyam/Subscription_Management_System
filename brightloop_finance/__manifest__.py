@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Brightloop Finance',
-    'version': '1.0.0',
+    'version': '18.0.1.0.0',
     'summary': 'Payment management, financial dashboard and reporting for Brightloop subscriptions',
     'description': """
         Brightloop Finance Module
         =========================
         Owned by: Member 4
+        Odoo version: 18.0 Community (confirmed)
 
         Provides:
         - Payment recording (manual and gateway)
@@ -15,8 +16,9 @@
         - Financial dashboard with filters
         - Excel (xlsx) export for reporting
 
-        Reads invoice data from: brightloop_billing (Member 3)
-        Reads subscription/customer data via shared interfaces (Member 1)
+        Invoice model: account.move (confirmed with Member 3, 2026-10-31)
+          move_type = 'out_invoice' (customer invoices only)
+        Subscription model: brightloop.subscription (confirmed with Member 2, 2026-10-31)
     """,
     'author': 'Brightloop Team - Member 4',
     'category': 'Accounting/Finance',
@@ -25,8 +27,9 @@
     # Odoo 16/17 compatible
     'depends': [
         'base',
-        'mail',          # chatter/logging on payment records
-        'brightloop_billing',  # Member 3 — invoice model (coordinate before activating)
+        'mail',
+        'account',          # Member 3 confirmed: using account.move as invoice model (Odoo 18)
+        'brightloop_core',  # Member 1 shared constants — add when available
     ],
 
     'data': [

@@ -32,14 +32,28 @@ except ImportError:
     XLSXWRITER_AVAILABLE = False
     _logger.warning('xlsxwriter not installed. XLSX export will be unavailable.')
 
-INVOICE_MODEL = 'brightloop.invoice'
+INVOICE_MODEL = 'account.move'          # Confirmed with Member 3 — 2026-10-31
 # Confirmed with Member 2 — 2026-10-31
 SUBSCRIPTION_MODEL = 'brightloop.subscription'
+
+# account.move payment_state values (Odoo 18)
+AM_PAYMENT_PAID     = 'paid'
+AM_PAYMENT_REVERSED = 'reversed'
+AM_BASE_DOMAIN      = [('move_type', '=', 'out_invoice')]
 
 # Confirmed subscription status values (Member 2, 2026-10-31)
 # draft | quotation | confirmed | active | closed
 # Paused subscriptions: status='active', is_paused=True
 SUB_ACTIVE_STATUS = 'active'
+
+# account.move field map (Member 3 confirmed 2026-10-31)
+#   brightloop logical   →  account.move field
+#   invoice_number       →  name
+#   total                →  amount_total
+#   balance_due          →  amount_residual
+#   amount_paid          →  amount_total - amount_residual  (derived)
+#   due_date             →  invoice_date_due
+#   status               →  derived from state + payment_state
 
 
 class BrightloopFinanceExport(models.TransientModel):
@@ -249,7 +263,7 @@ class BrightloopFinanceExport(models.TransientModel):
         ws.set_column('D:F', 14)
         ws.set_column('G:I', 15)
 
-        headers = ['Invoice #', 'Subscription', 'Customer', 'Status',
+        headers = ['Invoice #', 'Subscription', 'Customer', 'Payment State',
                    'Invoice Date', 'Due Date', 'Total', 'Amount Paid', 'Balance Due']
         row = self._write_sheet_title(ws, fmt, label, self.date_from, self.date_to, len(headers))
         for col, h in enumerate(headers):
@@ -263,25 +277,48 @@ class BrightloopFinanceExport(models.TransientModel):
             partner_id=partner_id,
         )
         if outstanding_only and not overdue_only:
-            invoices = invoices.filtered(lambda i: i.balance_due > 0)
+            # account.move: outstanding = amount_residual > 0
+            invoices = invoices.filtered(lambda i: i.amount_residual > 0)
+
+        # Human-readable payment_state labels (Odoo 18 account.move)
+        PAYMENT_STATE_LABELS = {
+            'not_paid':       'Not Paid',
+            'partial':        'Partially Paid',
+            'in_payment':     'In Payment',
+            'paid':           'Paid',
+            'reversed':       'Reversed',
+            'invoicing_legacy': 'Legacy',
+        }
 
         total_total = total_paid = total_balance = 0.0
 
         for inv in invoices:
-            is_overdue = inv.due_date and inv.due_date < today and inv.balance_due > 0
-            money_fmt = fmt['overdue'] if is_overdue else fmt['money']
-            ws.write(row, 0, inv.invoice_number, fmt['text'])
-            ws.write(row, 1, inv.subscription_id.display_name if inv.subscription_id else '', fmt['text'])
-            ws.write(row, 2, inv.partner_id.display_name, fmt['text'])
-            ws.write(row, 3, inv.status, fmt['text'])
-            ws.write_datetime(row, 4, inv.invoice_date, fmt['date'])
-            ws.write_datetime(row, 5, inv.due_date, fmt['date']) if inv.due_date else ws.write(row, 5, '', fmt['text'])
-            ws.write(row, 6, inv.total, money_fmt)
-            ws.write(row, 7, inv.amount_paid, money_fmt)
-            ws.write(row, 8, inv.balance_due, money_fmt)
-            total_total += inv.total or 0
-            total_paid += inv.amount_paid or 0
-            total_balance += inv.balance_due or 0
+            # account.move field mapping (Member 3 confirmed 2026-10-31)
+            inv_number  = inv.name or ''
+            inv_sub     = inv.subscription_id.display_name if getattr(inv, 'subscription_id', None) else ''
+            inv_partner = inv.partner_id.display_name if inv.partner_id else ''
+            pay_state   = PAYMENT_STATE_LABELS.get(inv.payment_state, inv.payment_state or '')
+            inv_date    = inv.invoice_date
+            due_date    = inv.invoice_date_due
+            total       = inv.amount_total or 0.0
+            balance     = inv.amount_residual or 0.0
+            paid        = total - balance           # derived: amount_total - amount_residual
+
+            is_overdue  = due_date and due_date < today and balance > 0
+            money_fmt   = fmt['overdue'] if is_overdue else fmt['money']
+
+            ws.write(row, 0, inv_number, fmt['text'])
+            ws.write(row, 1, inv_sub, fmt['text'])
+            ws.write(row, 2, inv_partner, fmt['text'])
+            ws.write(row, 3, pay_state, fmt['text'])
+            ws.write_datetime(row, 4, inv_date, fmt['date']) if inv_date else ws.write(row, 4, '', fmt['text'])
+            ws.write_datetime(row, 5, due_date, fmt['date']) if due_date else ws.write(row, 5, '', fmt['text'])
+            ws.write(row, 6, total, money_fmt)
+            ws.write(row, 7, paid, money_fmt)
+            ws.write(row, 8, balance, money_fmt)
+            total_total   += total
+            total_paid    += paid
+            total_balance += balance
             row += 1
 
         ws.write(row, 5, 'TOTAL', fmt['label_total'])

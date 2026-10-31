@@ -6,18 +6,27 @@ Member 4 — Brightloop Finance
 Canonical data contract:
     InvoicePayment: id, invoice_id, payment_id, allocated_amount
 
-Join model between brightloop.payment and brightloop.invoice (Member 3).
+Join model between brightloop.payment and account.move (Odoo 18).
+
+Confirmed with Member 3 (2026-10-31):
+  Invoice model  : account.move (move_type='out_invoice')
+  total          : amount_total
+  balance_due    : amount_residual
+  amount_paid    : amount_total - amount_residual (derived, not stored)
+  due_date       : invoice_date_due
+  invoice_number : name
+  state          : draft | posted | cancel
+  payment_state  : not_paid | partial | in_payment | paid | reversed
 
 Business rules:
 - allocated_amount must be > 0
-- allocated_amount cannot exceed invoice.balance_due at time of recording
-- Sum of allocations per invoice must not exceed invoice.total (overpayment guard)
-- On write, trigger invoice balance recalculation via _compute methods
-- Coordinate invoice paid-state changes with Member 3's model
+- allocated_amount cannot exceed invoice's amount_residual at time of recording
+- Sum of allocations per invoice must not exceed invoice's amount_total
+- Coordinate invoice status reads with account.move state/payment_state
 
 Integration note:
-    invoice_id references 'brightloop.invoice' (Member 3).
-    Field name confirmed as placeholder — update once Member 3 pushes.
+    invoice_id references 'account.move' (Odoo 18 native accounting model).
+    member 3 will extend account.move via _inherit to add subscription_id.
 """
 
 from odoo import api, fields, models, _
@@ -26,8 +35,8 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-# ── Placeholder: update with Member 3's confirmed model name ─────────────────
-INVOICE_MODEL = 'brightloop.invoice'
+# Confirmed with Member 3 — 2026-10-31
+INVOICE_MODEL = 'account.move'
 
 
 class BrightloopInvoicePayment(models.Model):
@@ -94,7 +103,8 @@ class BrightloopInvoicePayment(models.Model):
         index=True,
     )
     invoice_total = fields.Monetary(
-        related='invoice_id.total',
+        # account.move: amount_total
+        related='invoice_id.amount_total',
         string='Invoice Total',
         currency_field='currency_id',
         readonly=True,
@@ -168,25 +178,25 @@ class BrightloopInvoicePayment(models.Model):
         optionally excluding a specific allocation line (used during validation
         of an existing record to avoid self-comparison).
 
-        Falls back to invoice.balance_due if available on Member 3's model,
-        otherwise recalculates from invoice.total minus sum of allocations.
+        For account.move (Odoo 18):
+          balance = amount_residual (computed by Odoo reconciliation engine)
+          We add back our own allocation being validated to avoid false negatives.
         """
-        # Prefer Member 3's stored computed field if it exists
-        if hasattr(invoice, 'balance_due') and invoice.balance_due is not False:
-            # Adjust for the current allocation line being checked (re-validation case)
+        # account.move: use amount_residual as the authoritative outstanding balance
+        if hasattr(invoice, 'amount_residual') and invoice.amount_residual is not False:
             if exclude_allocation:
                 existing_line = self.browse(exclude_allocation).exists()
                 if existing_line:
-                    return invoice.balance_due + existing_line.allocated_amount
-            return invoice.balance_due
+                    return invoice.amount_residual + existing_line.allocated_amount
+            return invoice.amount_residual
 
-        # Fallback: recalculate from allocations
+        # Fallback: recalculate from our own allocation records
         domain = [('invoice_id', '=', invoice.id)]
         if exclude_allocation:
             domain.append(('id', '!=', exclude_allocation))
         existing_allocs = self.search(domain)
         total_allocated = sum(existing_allocs.mapped('allocated_amount'))
-        invoice_total = invoice.total if hasattr(invoice, 'total') else 0
+        invoice_total = getattr(invoice, 'amount_total', 0)
         return max(0.0, invoice_total - total_allocated)
 
     # ─── ORM Overrides ───────────────────────────────────────────────────────
@@ -213,12 +223,14 @@ class BrightloopInvoicePayment(models.Model):
 
     def _update_invoice_payment_status(self):
         """
-        After recording or modifying an allocation, recalculate each
-        affected invoice's amount_paid and trigger status update.
+        After recording or modifying an allocation, log the allocation.
 
-        Coordinates with Member 3's invoice model:
-        - If brightloop.invoice exposes _recompute_payment_state(), call it.
-        - Otherwise, write amount_paid directly (requires Member 3 agreement).
+        For account.move (Odoo 18):
+        - We do NOT write amount_paid to account.move — Odoo's reconciliation
+          engine manages amount_residual and payment_state automatically.
+        - Our brightloop.invoice.payment records are a separate tracking layer
+          for manual/external payments not going through Odoo's account.payment.
+        - If Member 3 adds a reconciliation bridge, coordinate here.
         """
         invoices = self.mapped('invoice_id')
         for invoice in invoices:
@@ -226,24 +238,19 @@ class BrightloopInvoicePayment(models.Model):
 
     def _recompute_invoice_status(self, invoice):
         """
-        Recalculate amount_paid for a single invoice and attempt
-        to sync the invoice's payment state.
+        Log allocation totals for a single invoice.
+        Does NOT write to account.move — Odoo manages its own state.
         """
         allocations = self.search([('invoice_id', '=', invoice.id)])
         total_paid = sum(allocations.mapped('allocated_amount'))
 
-        # Write amount_paid if the field is writable on Member 3's model
-        # COORDINATE WITH MEMBER 3 before enabling this write
-        # invoice.sudo().write({'amount_paid': total_paid})
-
         _logger.debug(
-            'Invoice %s: total_paid=%.2f (from %d allocations)',
-            invoice.display_name,
+            'account.move %s (id=%s): brightloop allocations total=%.2f '
+            '(from %d allocation lines). Odoo amount_residual=%.2f.',
+            invoice.name,
+            invoice.id,
             total_paid,
             len(allocations),
+            getattr(invoice, 'amount_residual', 0),
         )
-
-        # Trigger Member 3's recompute hook if it exists
-        if hasattr(invoice, '_recompute_payment_state'):
-            invoice._recompute_payment_state()
 

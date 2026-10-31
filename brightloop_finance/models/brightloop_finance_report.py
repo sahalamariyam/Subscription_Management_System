@@ -28,8 +28,19 @@ Integration contracts (confirmed):
     pause_date  = Date                        ✅ confirmed
     next_billing_date = Date                  ✅ confirmed, indexed
 
-  Member 3 (brightloop.invoice):
-    _name       = 'brightloop.invoice'        ⏳ pending confirmation
+  Member 3 (account.move — Odoo 18 native):
+    _name           = 'account.move'              ✅ confirmed 2026-10-31
+    move_type       = 'out_invoice'               ✅ customer invoices only
+    amount_total    = total invoice amount        ✅ (was: total)
+    amount_residual = outstanding balance         ✅ (was: balance_due)
+    amount_paid     = amount_total-amount_residual✅ derived, not stored
+    partner_id      = res.partner                 ✅ same
+    invoice_date_due= due date                    ✅ (was: due_date)
+    invoice_date    = invoice date                ✅ same
+    name            = invoice number/ref          ✅ (was: invoice_number)
+    subscription_id = Many2one(brightloop.sub)    ⏳ Member 3 adds via _inherit
+    state: draft | posted | cancel               ✅ confirmed
+    payment_state: not_paid | partial | in_payment | paid | reversed ✅
 """
 
 from odoo import api, fields, models, _
@@ -39,16 +50,34 @@ import logging
 
 _logger = logging.getLogger(__name__)
 
-# ── Integration constants — confirmed with Member 2 on 2026-10-31 ────────────
-INVOICE_MODEL = 'brightloop.invoice'
-SUBSCRIPTION_MODEL = 'brightloop.subscription'   # confirmed ✅
+# ── Integration constants ─────────────────────────────────────────────────────
+# Member 3 confirmed 2026-10-31: using native account.move (Odoo 18 Community)
+INVOICE_MODEL    = 'account.move'
+# Member 2 confirmed 2026-10-31
+SUBSCRIPTION_MODEL = 'brightloop.subscription'
 
-# Canonical subscription status values (Member 2 confirmed 2026-10-31)
-SUB_STATUS_ACTIVE    = 'active'
-SUB_STATUS_CLOSED    = 'closed'
-SUB_STATUS_DRAFT     = 'draft'
-SUB_STATUS_QUOTATION = 'quotation'
-SUB_STATUS_CONFIRMED = 'confirmed'
+# account.move field map (Member 3 confirmed 2026-10-31)
+# brightloop logical name  →  account.move field
+#   total                  →  amount_total
+#   balance_due            →  amount_residual
+#   amount_paid            →  amount_total - amount_residual  (derived)
+#   due_date               →  invoice_date_due
+#   invoice_number         →  name
+#   status (draft)         →  state = 'draft'
+#   status (confirmed)     →  state = 'posted', payment_state != 'paid'
+#   status (paid)          →  state = 'posted', payment_state = 'paid'
+#   status (cancelled)     →  state = 'cancel'
+#   partner_id             →  partner_id  (unchanged)
+
+# account.move payment_state values (Odoo 18)
+AM_PAYMENT_PAID     = 'paid'
+AM_PAYMENT_PARTIAL  = 'partial'
+AM_PAYMENT_IN_PAY   = 'in_payment'
+AM_PAYMENT_NOT_PAID = 'not_paid'
+AM_PAYMENT_REVERSED = 'reversed'
+
+# Base domain for ALL customer invoices (apply to every account.move query)
+AM_BASE_DOMAIN = [('move_type', '=', 'out_invoice')]
 
 
 class BrightloopFinanceDashboard(models.TransientModel):
@@ -149,9 +178,12 @@ class BrightloopFinanceDashboard(models.TransientModel):
         Returns: (revenue_received, total_outstanding, overdue_count,
                   overdue_amount, total_invoice_value)
 
-        Invoice status values: pending confirmation from Member 3.
-        Using defensive 'not in cancelled/draft' until Member 3 confirms
-        the full selection set.
+        Invoice source: account.move (Odoo 18, confirmed Member 3 2026-10-31)
+        Field mapping:
+          total       → amount_total
+          balance_due → amount_residual
+          due_date    → invoice_date_due
+          status      → derived from state + payment_state
         """
         today = date.today()
         date_from = self.date_from or date.today().replace(day=1)
@@ -171,52 +203,51 @@ class BrightloopFinanceDashboard(models.TransientModel):
         )
         revenue = alloc_data[0]['allocated_amount'] if alloc_data else 0.0
 
-        # ── Invoice aggregation (from Member 3's model) ───────────────────
+        # ── Invoice aggregation via account.move ──────────────────────────
         total_invoice_value = 0.0
-        total_outstanding = 0.0
-        overdue_count = 0
-        overdue_amount = 0.0
+        total_outstanding   = 0.0
+        overdue_count       = 0
+        overdue_amount      = 0.0
 
         if INVOICE_MODEL in self.env:
-            # Total invoice value (all confirmed/posted invoices in period)
-            # TODO: update excluded statuses once Member 3 confirms selection values
-            inv_domain = [
-                ('status', 'not in', ['cancelled', 'draft']),
+            # All posted customer invoices in the date period
+            inv_domain = AM_BASE_DOMAIN + [
+                ('state', '=', 'posted'),
                 ('invoice_date', '>=', str(date_from)),
                 ('invoice_date', '<=', str(date_to)),
             ]
             inv_data = self.env[INVOICE_MODEL].read_group(
                 domain=inv_domain,
-                fields=['total:sum'],
+                fields=['amount_total:sum'],
                 groupby=[],
             )
-            total_invoice_value = inv_data[0]['total'] if inv_data else 0.0
+            total_invoice_value = inv_data[0]['amount_total'] if inv_data else 0.0
 
-            # Outstanding: balance_due > 0
-            outstanding_domain = inv_domain + [('balance_due', '>', 0)]
+            # Outstanding: posted invoices with residual > 0
+            outstanding_domain = inv_domain + [('amount_residual', '>', 0)]
             out_data = self.env[INVOICE_MODEL].read_group(
                 domain=outstanding_domain,
-                fields=['balance_due:sum'],
+                fields=['amount_residual:sum'],
                 groupby=[],
             )
-            total_outstanding = out_data[0]['balance_due'] if out_data else 0.0
+            total_outstanding = out_data[0]['amount_residual'] if out_data else 0.0
 
-            # Overdue: due_date < today AND balance_due > 0
-            # Not filtering by status='paid' since Member 3 hasn't confirmed
-            # that 'paid' is a valid status — relying on balance_due > 0 instead.
-            overdue_domain = [
-                ('status', 'not in', ['cancelled', 'draft']),
-                ('due_date', '<', str(today)),
-                ('balance_due', '>', 0),
+            # Overdue: posted, not fully paid, past due date
+            # Excludes reversed invoices (credit notes etc.)
+            overdue_domain = AM_BASE_DOMAIN + [
+                ('state', '=', 'posted'),
+                ('payment_state', 'not in', [AM_PAYMENT_PAID, AM_PAYMENT_REVERSED]),
+                ('amount_residual', '>', 0),
+                ('invoice_date_due', '<', str(today)),
             ]
             overdue_data = self.env[INVOICE_MODEL].read_group(
                 domain=overdue_domain,
-                fields=['balance_due:sum', 'id:count'],
+                fields=['amount_residual:sum', 'id:count'],
                 groupby=[],
             )
             if overdue_data:
-                overdue_count = overdue_data[0].get('id_count', 0) or overdue_data[0].get('__count', 0)
-                overdue_amount = overdue_data[0].get('balance_due', 0.0)
+                overdue_count  = overdue_data[0].get('__count', 0)
+                overdue_amount = overdue_data[0].get('amount_residual', 0.0)
         else:
             _logger.warning('Invoice model %s not yet available.', INVOICE_MODEL)
 
@@ -227,25 +258,28 @@ class BrightloopFinanceDashboard(models.TransientModel):
     def get_overdue_invoices(self, limit=50, offset=0):
         """
         Return overdue invoices as a paginated list of dicts.
-        Overdue rule: due_date < today AND balance_due > 0.
+        Overdue rule: invoice_date_due < today AND amount_residual > 0.
+        Source: account.move (Odoo 18, confirmed Member 3 2026-10-31)
         """
         if INVOICE_MODEL not in self.env:
             return []
         today = date.today()
-        domain = [
-            ('due_date', '<', str(today)),
-            ('balance_due', '>', 0),
-            ('status', 'not in', ['cancelled', 'draft']),
+        domain = AM_BASE_DOMAIN + [
+            ('state', '=', 'posted'),
+            ('payment_state', 'not in', [AM_PAYMENT_PAID, AM_PAYMENT_REVERSED]),
+            ('amount_residual', '>', 0),
+            ('invoice_date_due', '<', str(today)),
         ]
         invoices = self.env[INVOICE_MODEL].search(
             domain,
             limit=limit,
             offset=offset,
-            order='due_date asc',
+            order='invoice_date_due asc',
         )
         return invoices.read([
-            'invoice_number', 'partner_id', 'due_date',
-            'total', 'amount_paid', 'balance_due',
+            'name', 'partner_id', 'invoice_date_due',
+            'amount_total', 'amount_residual',
+            'payment_state', 'subscription_id',
         ])
 
     def get_recent_payments(self, limit=20, offset=0):
@@ -298,23 +332,25 @@ class BrightloopFinanceReport(models.AbstractModel):
                               overdue_only=False, partner_id=None):
         """
         Return invoice records for export.
+        Source: account.move (Odoo 18, confirmed Member 3 2026-10-31)
         Enforces customer data isolation.
         """
         self._check_report_access(partner_id)
 
         if INVOICE_MODEL not in self.env:
-            return self.env['brightloop.payment'].browse()  # empty
+            return self.env['brightloop.payment'].browse()  # empty recordset
 
-        domain = [
+        # Base: posted customer invoices in date range
+        domain = AM_BASE_DOMAIN + [
+            ('state', '=', 'posted'),
             ('invoice_date', '>=', str(date_from)),
             ('invoice_date', '<=', str(date_to)),
         ]
-        if status_filter:
-            domain.append(('status', '=', status_filter))
         if overdue_only:
             domain += [
-                ('due_date', '<', str(date.today())),
-                ('balance_due', '>', 0),
+                ('payment_state', 'not in', [AM_PAYMENT_PAID, AM_PAYMENT_REVERSED]),
+                ('amount_residual', '>', 0),
+                ('invoice_date_due', '<', str(date.today())),
             ]
         if partner_id:
             domain.append(('partner_id', '=', partner_id))
