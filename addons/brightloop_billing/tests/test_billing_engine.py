@@ -384,3 +384,13 @@ class TestBrightloopBillingEngine(common.TransactionCase):
         sub2.invalidate_recordset()
         self.assertEqual(sub2.next_billing_date, date(2026, 6, 1))
 
+    def test_13_billing_job_deletion_prohibited(self):
+        """13. Billing jobs are permanent audit records; deletion is prohibited via unlink()."""
+        target_date = date(2026, 5, 1)
+        sub = self._create_active_subscription(next_billing_date=target_date)
+        self.BillingEngine.run_billing_engine(billing_date=target_date)
+
+        job = self.BillingJob.search([('subscription_id', '=', sub.id)], limit=1)
+        self.assertTrue(job)
+        with self.assertRaises(UserError):
+            job.unlink()

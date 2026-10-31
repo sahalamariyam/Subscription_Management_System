@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class BrightloopBillingJob(models.Model):
@@ -110,6 +110,9 @@ class BrightloopBillingJob(models.Model):
                 raise ValidationError(
                     _('Billing period end cannot be before its start date.')
                 )
+
+    def unlink(self):
+        raise UserError(_('Billing jobs are permanent financial audit records and cannot be deleted.'))
 
     def action_view_invoice(self):
         self.ensure_one()

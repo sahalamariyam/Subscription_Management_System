@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Billing Job List View -->
+    <record id="view_brightloop_billing_job_list" model="ir.ui.view">
+        <field name="name">brightloop.billing.job.list</field>
+        <field name="res_model">brightloop.billing.job</field>
+        <field name="arch" type="xml">
+            <list string="Billing Jobs"
+                  create="false"
+                  delete="false"
+                  decoration-warning="state == 'pending'"
+                  decoration-success="state == 'done'"
+                  decoration-danger="state == 'failed'">
+                <field name="subscription_id"/>
+                <field name="invoice_id"/>
+                <field name="billing_period_start"/>
+                <field name="billing_period_end"/>
+                <field name="state" widget="badge"
+                       decoration-warning="state == 'pending'"
+                       decoration-success="state == 'done'"
+                       decoration-danger="state == 'failed'"/>
+                <field name="attempted_at"/>
+                <field name="completed_at"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="amount_total" sum="Total Invoiced" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Billing Job Form View -->
+    <record id="view_brightloop_billing_job_form" model="ir.ui.view">
+        <field name="name">brightloop.billing.job.form</field>
+        <field name="res_model">brightloop.billing.job</field>
+        <field name="arch" type="xml">
+            <form string="Billing Job" create="false" delete="false">
+                <header>
+                    <button name="action_view_invoice"
+                            string="View Invoice"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="not invoice_id"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,done,failed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                invisible="not invoice_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Generated Invoice</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="idempotency_key" string="Billing Job Idempotency Key"/>
+                        <h1>
+                            <field name="idempotency_key" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Subscription &amp; Invoice">
+                            <field name="subscription_id" readonly="1"/>
+                            <field name="invoice_id" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                        </group>
+                        <group string="Billing Period">
+                            <field name="billing_period_start" readonly="1"/>
+                            <field name="billing_period_end" readonly="1"/>
+                            <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group string="Execution Audit">
+                        <group>
+                            <field name="attempted_at" readonly="1"/>
+                            <field name="completed_at" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Error Details" invisible="not error_message">
+                            <field name="error_message" readonly="1" placeholder="No errors recorded."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Billing Job Search View -->
+    <record id="view_brightloop_billing_job_search" model="ir.ui.view">
+        <field name="name">brightloop.billing.job.search</field>
+        <field name="res_model">brightloop.billing.job</field>
+        <field name="arch" type="xml">
+            <search string="Search Billing Jobs">
+                <field name="subscription_id"/>
+                <field name="invoice_id"/>
+                <field name="idempotency_key"/>
+                <separator/>
+                <filter string="Pending" name="filter_pending" domain="[('state', '=', 'pending')]"/>
+                <filter string="Completed" name="filter_done" domain="[('state', '=', 'done')]"/>
+                <filter string="Failed" name="filter_failed" domain="[('state', '=', 'failed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="groupby_state" context="{'group_by': 'state'}"/>
+                    <filter string="Subscription" name="groupby_subscription" context="{'group_by': 'subscription_id'}"/>
+                    <filter string="Company" name="groupby_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Billing Job Action -->
+    <record id="action_brightloop_billing_job" model="ir.actions.act_window">
+        <field name="name">Billing Jobs</field>
+        <field name="res_model">brightloop.billing.job</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_brightloop_billing_job_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No billing jobs found
+            </p>
+            <p>
+                Billing jobs are automatically generated when recurring subscription cycles are processed.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item in Member 1 Menu Hierarchy -->
+    <menuitem id="menu_brightloop_billing_job"
+              name="Billing Jobs"
+              parent="brightloop_core.menu_brightloop_root"
+              action="action_brightloop_billing_job"
+              groups="brightloop_core.group_brightloop_admin"
+              sequence="30"/>
+
+</odoo>

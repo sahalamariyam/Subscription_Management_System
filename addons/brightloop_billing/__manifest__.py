@@ -15,6 +15,7 @@ Features:
 - Automatic billing date advancement
 - Recurring discounts and accounting taxes
 - Scheduled billing execution (daily cron)
+- Billing job administration interface
 - Finance module integration
     """,
     'author': 'Brightloop Team - Member 3',
@@ -29,6 +30,7 @@ Features:
     'data': [
         'security/ir.model.access.csv',
         'data/ir_cron.xml',
+        'views/brightloop_billing_job_views.xml',
     ],
     'installable': True,
     'application': False,
