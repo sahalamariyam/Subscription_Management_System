@@ -27,12 +27,13 @@
     'depends': [
         'base',
         'mail',
-        'account',           # Odoo 18 native — account.move is the invoice model
-        'brightloop_core',   # Member 1 ✅ — shared constants, canonical groups, category
-                             # Must load BEFORE brightloop_billing (group refs used in rules)
-        'brightloop_billing', # Member 3 ✅ confirmed module name 2026-10-31
-                              # addons/brightloop_billing — extends account.move
-                              # with subscription_id field
+        'account',              # Odoo 18 native — account.move is the invoice model
+        'brightloop_core',      # Member 1 ✅ — shared constants, canonical groups, category
+                                # Must load BEFORE brightloop_billing
+        'brightloop_subscription',  # Member 2 ✅ — brightloop.subscription model
+                                    # actual module name confirmed from member-3 branch
+        'brightloop_billing',   # Member 3 ✅ — extends account.move with subscription_id
+                                # depends on brightloop_subscription internally
     ],
 
     'data': [
