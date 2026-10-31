@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Subscription List / Tree View -->
+    <record id="view_brightloop_subscription_tree" model="ir.ui.view">
+        <field name="name">brightloop.subscription.tree</field>
+        <field name="model">brightloop.subscription</field>
+        <field name="arch" type="xml">
+            <list string="Subscriptions"
+                  decoration-muted="status == 'closed'"
+                  decoration-info="status == 'quotation'"
+                  decoration-warning="is_paused == True"
+                  decoration-success="status == 'active' and is_paused == False">
+                <field name="subscription_number"/>
+                <field name="partner_id"/>
+                <field name="plan_id"/>
+                <field name="next_billing_date"/>
+                <field name="amount_total" sum="Total Recurring"/>
+                <field name="is_paused" widget="boolean_toggle" readonly="1"/>
+                <field name="status" widget="badge"
+                       decoration-info="status == 'quotation'"
+                       decoration-primary="status == 'confirmed'"
+                       decoration-success="status == 'active'"
+                       decoration-muted="status in ('draft', 'closed')"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Subscription Form View -->
+    <record id="view_brightloop_subscription_form" model="ir.ui.view">
+        <field name="name">brightloop.subscription.form</field>
+        <field name="model">brightloop.subscription</field>
+        <field name="arch" type="xml">
+            <form string="Subscription">
+                <header>
+                    <!-- Lifecycle Action Buttons -->
+                    <button name="action_send_quotation" string="Send Quotation" type="object"
+                            class="oe_highlight" invisible="status != 'draft'"/>
+
+                    <button name="action_confirm" string="Confirm Order" type="object"
+                            class="oe_highlight" invisible="status != 'quotation'"/>
+
+                    <button name="action_cancel_to_draft" string="Reset to Draft" type="object"
+                            invisible="status != 'quotation'"/>
+
+                    <button name="action_activate" string="Activate Subscription" type="object"
+                            class="oe_highlight" invisible="status != 'confirmed'"/>
+
+                    <button name="action_pause" string="Pause Subscription" type="object"
+                            class="btn-warning" invisible="status != 'active' or is_paused == True"/>
+
+                    <button name="action_resume" string="Resume Subscription" type="object"
+                            class="btn-success" invisible="status != 'active' or is_paused == False"/>
+
+                    <button name="action_renew" string="Renew Subscription" type="object"
+                            class="oe_highlight" invisible="status != 'active'"/>
+
+                    <button name="action_close" string="Close Subscription" type="object"
+                            invisible="status not in ('confirmed', 'active')"/>
+
+                    <!-- Mandatory Canonical Statusbar -->
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="draft,quotation,confirmed,active,closed"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Paused" bg_color="text-bg-warning" invisible="not is_paused"/>
+                    <widget name="web_ribbon" title="Closed" bg_color="text-bg-danger" invisible="status != 'closed'"/>
+
+                    <div class="oe_title">
+                        <label for="subscription_number" class="oe_edit_only" string="Subscription Number"/>
+                        <h1><field name="subscription_number" readonly="1"/></h1>
+                    </div>
+
+                    <group>
+                        <group string="Customer &amp; Plan">
+                            <field name="partner_id" readonly="status in ('confirmed', 'active', 'closed')"/>
+                            <field name="plan_id" readonly="status in ('confirmed', 'active', 'closed')"/>
+                            <field name="template_id" readonly="status != 'draft'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="is_paused" invisible="1"/>
+                        </group>
+                        <group string="Schedule &amp; Billing">
+                            <field name="valid_until" invisible="status not in ('draft', 'quotation')"/>
+                            <field name="start_date" readonly="status == 'closed'"/>
+                            <field name="expiry_date" readonly="status == 'closed'"/>
+                            <field name="next_billing_date" readonly="status == 'closed'"/>
+                            <field name="billing_interval"/>
+                            <field name="billing_interval_count"/>
+                            <field name="renewal_count" invisible="renewal_count == 0"/>
+                        </group>
+                    </group>
+
+                    <group string="Closure Details" invisible="status != 'closed'">
+                        <field name="closed_date"/>
+                        <field name="closure_reason"/>
+                        <field name="early_closed"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Subscription Lines" name="lines">
+                            <field name="line_ids" readonly="status == 'closed'">
+                                <list editable="bottom" string="Lines">
+                                    <field name="product_id"/>
+                                    <field name="variant_id"/>
+                                    <field name="name"/>
+                                    <field name="quantity"/>
+                                    <field name="unit_price"/>
+                                    <field name="discount"/>
+                                    <field name="discount_id" optional="hide"/>
+                                    <field name="tax_id" optional="show"/>
+                                    <field name="amount_subtotal" readonly="1"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="amount_subtotal" widget="monetary"/>
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="amount_total"/>
+                                </div>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary"/>
+                            </group>
+                        </page>
+                        <page string="Commercial Terms" name="terms">
+                            <group>
+                                <field name="payment_terms"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Subscription Search View -->
+    <record id="view_brightloop_subscription_search" model="ir.ui.view">
+        <field name="name">brightloop.subscription.search</field>
+        <field name="model">brightloop.subscription</field>
+        <field name="arch" type="xml">
+            <search string="Search Subscriptions">
+                <field name="subscription_number"/>
+                <field name="partner_id"/>
+                <field name="plan_id"/>
+                <filter string="Draft" name="filter_draft" domain="[('status', '=', 'draft')]"/>
+                <filter string="Quotations" name="filter_quotation" domain="[('status', '=', 'quotation')]"/>
+                <filter string="Confirmed" name="filter_confirmed" domain="[('status', '=', 'confirmed')]"/>
+                <filter string="Active" name="filter_active" domain="[('status', '=', 'active')]"/>
+                <filter string="Currently Paused" name="filter_paused" domain="[('is_paused', '=', True)]"/>
+                <filter string="Closed" name="filter_closed" domain="[('status', '=', 'closed')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    <filter string="Customer" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Plan" name="group_plan" context="{'group_by': 'plan_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Window Action: All Subscriptions -->
+    <record id="action_brightloop_subscription" model="ir.actions.act_window">
+        <field name="name">Subscriptions</field>
+        <field name="res_model">brightloop.subscription</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_brightloop_subscription_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Manage commercial subscriptions!
+            </p>
+            <p>
+                Track the full subscription lifecycle: Draft -> Quotation -> Confirmed -> Active -> Closed.
+            </p>
+        </field>
+    </record>
+
+    <!-- Window Action: Customer Quotations -->
+    <record id="action_brightloop_quotations" model="ir.actions.act_window">
+        <field name="name">Quotations</field>
+        <field name="res_model">brightloop.subscription</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_brightloop_subscription_search"/>
+        <field name="domain">[('status', 'in', ('draft', 'quotation'))]</field>
+        <field name="context">{'default_status': 'draft'}</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_brightloop_quotation_action"
+              name="Quotations"
+              parent="menu_brightloop_subscriptions"
+              action="action_brightloop_quotations"
+              sequence="10"/>
+
+    <menuitem id="menu_brightloop_subscription_action"
+              name="All Subscriptions"
+              parent="menu_brightloop_subscriptions"
+              action="action_brightloop_subscription"
+              sequence="20"/>
+</odoo>
