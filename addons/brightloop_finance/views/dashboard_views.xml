@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- ─── Financial Dashboard View ─────────────────────────────────────── -->
+    <!-- ─── OWL Financial Dashboard Client Action ──────────────────────────── -->
+    <!--
+        The primary dashboard is rendered by the OWL FinanceDashboard component
+        (static/src/dashboard.js) registered as client action
+        "brightloop_finance_dashboard".
+
+        The fallback form-based view (view_finance_dashboard_form) is kept for
+        non-JS contexts (e.g., direct model access from the shell, tests).
+    -->
+
+    <!-- OWL Client Action (primary — shown in the menu) -->
+    <record id="action_finance_dashboard_owl" model="ir.actions.client">
+        <field name="name">Financial Dashboard</field>
+        <field name="tag">brightloop_finance_dashboard</field>
+        <field name="target">main</field>
+    </record>
+
+    <!-- ─── Fallback Server-rendered Form Dashboard ────────────────────────── -->
     <record id="view_finance_dashboard_form" model="ir.ui.view">
         <field name="name">brightloop.finance.dashboard.form</field>
         <field name="model">brightloop.finance.dashboard</field>
@@ -82,19 +99,20 @@
         </field>
     </record>
 
+    <!-- Fallback act_window (kept for admin/developer use) -->
     <record id="action_finance_dashboard" model="ir.actions.act_window">
-        <field name="name">Financial Dashboard</field>
+        <field name="name">Financial Dashboard (Form)</field>
         <field name="res_model">brightloop.finance.dashboard</field>
         <field name="view_mode">form</field>
         <field name="target">inline</field>
         <field name="context">{'form_view_initial_mode': 'edit'}</field>
     </record>
 
+    <!-- Menu entry — primary action is the OWL client action -->
     <menuitem id="menu_brightloop_dashboard"
               name="Dashboard"
               parent="menu_brightloop_finance_root"
-              action="action_finance_dashboard"
+              action="action_finance_dashboard_owl"
               sequence="1"/>
 
 </odoo>
-

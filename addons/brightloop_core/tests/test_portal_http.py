@@ -365,31 +365,28 @@ class TestCustomerPortalAndProfileHttp(TestPortalHttpBase):
         self.assertIn("My Payments", res.text)
 
     def test_portal_integration_placeholder_routes(self):
-        """Customer can access integration placeholders with clear workstream attribution."""
+        """Customer can access all four Brightloop portal routes (Phase 6 live pages)."""
         self.authenticate('existing_cust@brightloop.test', 'CustSecureP@ss1!')
 
-        # 1. Subscriptions placeholder (Member 2)
+        # 1. /my/subscriptions — live subscriptions list
         res_sub = self.url_open('/my/subscriptions')
-        self.assertEqual(res_sub.status_code, 200)
-        self.assertIn("brightloop_subscription", res_sub.text)
-        self.assertIn("Member 2", res_sub.text)
+        self.assertEqual(res_sub.status_code, 200,
+                         "Subscriptions portal must return HTTP 200")
 
-        # 2. Quotations placeholder (Member 2)
+        # 2. /my/quotations — live quotations list
         res_quote = self.url_open('/my/quotations')
-        self.assertEqual(res_quote.status_code, 200)
-        self.assertIn("brightloop_subscription", res_quote.text)
+        self.assertEqual(res_quote.status_code, 200,
+                         "Quotations portal must return HTTP 200")
 
-        # 3. Invoices placeholder (Member 3)
+        # 3. /my/invoices — live invoices (account.move; may be unavailable in isolated tests)
         res_inv = self.url_open('/my/invoices')
-        self.assertEqual(res_inv.status_code, 200)
-        self.assertIn("brightloop_billing", res_inv.text)
-        self.assertIn("Member 3", res_inv.text)
+        self.assertEqual(res_inv.status_code, 200,
+                         "Invoices portal must return HTTP 200 (empty state if account module absent)")
 
-        # 4. Payments placeholder (Member 4)
+        # 4. /my/payments — live payments (brightloop.payment; may be unavailable in isolated tests)
         res_pay = self.url_open('/my/payments')
-        self.assertEqual(res_pay.status_code, 200)
-        self.assertIn("brightloop_finance", res_pay.text)
-        self.assertIn("Member 4", res_pay.text)
+        self.assertEqual(res_pay.status_code, 200,
+                         "Payments portal must return HTTP 200 (empty state if finance module absent)")
 
     def test_customer_profile_view_and_permitted_update(self):
         """Customer can view /my/account and update permitted personal details."""

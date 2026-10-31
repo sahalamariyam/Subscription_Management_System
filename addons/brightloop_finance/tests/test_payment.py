@@ -17,6 +17,12 @@ Run with:
 from odoo.tests.common import TransactionCase, tagged
 from odoo.exceptions import ValidationError, UserError
 from datetime import date
+import uuid
+
+
+def _uniq(prefix=''):
+    """Return a unique string for use as a test reference/code."""
+    return (prefix + uuid.uuid4().hex[:8]).upper()
 
 
 @tagged('brightloop', 'brightloop_payment', 'post_install', '-at_install')
@@ -33,15 +39,16 @@ class TestBrightloopPayment(TransactionCase):
             'customer_rank': 1,
         })
 
-        # Create payment methods
+        # Create payment methods with unique codes to avoid cross-run collisions
+        _sfx = uuid.uuid4().hex[:6]
         cls.method_cash = cls.env['brightloop.payment.method'].create({
             'name': 'Cash Test',
-            'code': 'cash_test',
+            'code': f'cash_test_{_sfx}',
             'requires_reference': False,
         })
         cls.method_bank = cls.env['brightloop.payment.method'].create({
             'name': 'Bank Transfer Test',
-            'code': 'bank_test',
+            'code': f'bank_test_{_sfx}',
             'requires_reference': True,
         })
 
@@ -119,14 +126,16 @@ class TestBrightloopPayment(TransactionCase):
     # ─── Duplicate prevention ─────────────────────────────────────────────────
     def test_10_duplicate_reference_rejected(self):
         """Two payments with same method + reference should fail unique constraint."""
-        self._make_payment(method=self.method_bank, reference='TXN-DUPE-001')
+        unique_ref = _uniq('TXN-DUPE-')
+        self._make_payment(method=self.method_bank, reference=unique_ref)
         with self.assertRaises(Exception):
-            self._make_payment(method=self.method_bank, reference='TXN-DUPE-001')
+            self._make_payment(method=self.method_bank, reference=unique_ref)
 
     def test_11_same_reference_different_method_ok(self):
         """Same reference on different payment methods is allowed."""
-        p1 = self._make_payment(method=self.method_bank, reference='REF-MULTI')
-        p2 = self._make_payment(method=self.method_cash, reference='REF-MULTI')
+        ref = _uniq('REF-MULTI-')
+        p1 = self._make_payment(method=self.method_bank, reference=ref)
+        p2 = self._make_payment(method=self.method_cash, reference=ref)
         self.assertTrue(p1.id and p2.id)
 
 
@@ -141,9 +150,10 @@ class TestBrightloopAllocation(TransactionCase):
             'name': 'Test Customer Alloc',
             'customer_rank': 1,
         })
+        _sfx = uuid.uuid4().hex[:6]
         cls.method_cash = cls.env['brightloop.payment.method'].create({
             'name': 'Cash Alloc',
-            'code': 'cash_alloc',
+            'code': f'cash_alloc_{_sfx}',
         })
 
         # Note: invoice allocation tests require account.move (Member 3 confirmed,

@@ -1,3 +1,248 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
+
+    <!-- ─── Brightloop Finance OWL Dashboard ──────────────────────────────── -->
+    <t t-name="brightloop_finance.FinanceDashboard">
+        <div class="bl-finance-dashboard o_view_controller">
+
+            <!-- Header Bar -->
+            <div class="bl-dash-header d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="fa fa-chart-line fa-lg text-primary"/>
+                    <h4 class="mb-0 fw-bold text-dark">Brightloop Financial Dashboard</h4>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <!-- Date range filters -->
+                    <label class="form-label mb-0 text-muted small">From</label>
+                    <input type="date" class="form-control form-control-sm bl-date-from"
+                           t-att-value="state.dateFrom"
+                           t-on-change="onDateFromChange"/>
+                    <label class="form-label mb-0 text-muted small">To</label>
+                    <input type="date" class="form-control form-control-sm bl-date-to"
+                           t-att-value="state.dateTo"
+                           t-on-change="onDateToChange"/>
+                    <button class="btn btn-sm btn-primary" t-on-click="loadKPIs">
+                        <i class="fa fa-refresh me-1"/>Apply
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" t-on-click="resetDates">
+                        <i class="fa fa-times me-1"/>Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div t-if="state.loading" class="d-flex justify-content-center align-items-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading…</span>
+                </div>
+                <span class="ms-3 text-muted">Loading financial data…</span>
+            </div>
+
+            <!-- Error Alert -->
+            <div t-if="state.error" class="alert alert-danger mx-4 mt-3">
+                <i class="fa fa-exclamation-circle me-2"/>
+                <t t-esc="state.error"/>
+            </div>
+
+            <div t-if="!state.loading" class="bl-dash-body px-4 py-3">
+
+                <!-- ── KPI Cards Row ──────────────────────────────────────── -->
+                <div class="row g-3 mb-4">
+
+                    <div class="col-xl-2 col-lg-4 col-sm-6">
+                        <div class="card border-0 shadow-sm h-100 bl-kpi-card bl-kpi-active">
+                            <div class="card-body text-center py-4">
+                                <div class="bl-kpi-icon mb-2">
+                                    <i class="fa fa-check-circle fa-2x text-success"/>
+                                </div>
+                                <div class="bl-kpi-value fw-bold fs-2 text-success">
+                                    <t t-esc="state.kpis.active_subscription_count"/>
+                                </div>
+                                <div class="bl-kpi-label text-muted small mt-1">Active Subscriptions</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-4 col-sm-6">
+                        <div class="card border-0 shadow-sm h-100 bl-kpi-card bl-kpi-paused">
+                            <div class="card-body text-center py-4">
+                                <div class="bl-kpi-icon mb-2">
+                                    <i class="fa fa-pause-circle fa-2x text-info"/>
+                                </div>
+                                <div class="bl-kpi-value fw-bold fs-2 text-info">
+                                    <t t-esc="state.kpis.paused_subscription_count"/>
+                                </div>
+                                <div class="bl-kpi-label text-muted small mt-1">Paused Subscriptions</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-4 col-sm-6">
+                        <div class="card border-0 shadow-sm h-100 bl-kpi-card bl-kpi-revenue">
+                            <div class="card-body text-center py-4">
+                                <div class="bl-kpi-icon mb-2">
+                                    <i class="fa fa-dollar fa-2x text-primary"/>
+                                </div>
+                                <div class="bl-kpi-value fw-bold fs-3 text-primary">
+                                    <t t-esc="formatCurrency(state.kpis.revenue_received)"/>
+                                </div>
+                                <div class="bl-kpi-label text-muted small mt-1">Revenue Received</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-4 col-sm-6">
+                        <div class="card border-0 shadow-sm h-100 bl-kpi-card">
+                            <div class="card-body text-center py-4">
+                                <div class="bl-kpi-icon mb-2">
+                                    <i class="fa fa-file-text-o fa-2x text-secondary"/>
+                                </div>
+                                <div class="bl-kpi-value fw-bold fs-3 text-dark">
+                                    <t t-esc="formatCurrency(state.kpis.total_invoice_value)"/>
+                                </div>
+                                <div class="bl-kpi-label text-muted small mt-1">Total Invoiced</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-4 col-sm-6">
+                        <div class="card border-0 shadow-sm h-100 bl-kpi-card bl-kpi-outstanding">
+                            <div class="card-body text-center py-4">
+                                <div class="bl-kpi-icon mb-2">
+                                    <i class="fa fa-clock-o fa-2x text-warning"/>
+                                </div>
+                                <div class="bl-kpi-value fw-bold fs-3 text-warning">
+                                    <t t-esc="formatCurrency(state.kpis.total_outstanding)"/>
+                                </div>
+                                <div class="bl-kpi-label text-muted small mt-1">Outstanding</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-2 col-lg-4 col-sm-6">
+                        <div class="card border-0 shadow-sm h-100 bl-kpi-card bl-kpi-overdue">
+                            <div class="card-body text-center py-4">
+                                <div class="bl-kpi-icon mb-2">
+                                    <i class="fa fa-exclamation-triangle fa-2x text-danger"/>
+                                </div>
+                                <div class="bl-kpi-value fw-bold fs-2 text-danger">
+                                    <t t-esc="state.kpis.overdue_invoice_count"/>
+                                </div>
+                                <div class="bl-kpi-label text-muted small mt-1">
+                                    Overdue Invoices
+                                    <div class="fw-bold">
+                                        <t t-esc="formatCurrency(state.kpis.overdue_amount)"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- ── End KPI Cards ──────────────────────────────────────── -->
+
+                <!-- ── Collection Rate Progress Bar ─────────────────────── -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="mb-0 fw-semibold">Collection Rate</h6>
+                            <span class="badge bg-primary-subtle text-primary fs-6 px-3">
+                                <t t-esc="collectionRate()"/>%
+                            </span>
+                        </div>
+                        <div class="progress" style="height: 10px;">
+                            <div class="progress-bar bg-primary"
+                                 role="progressbar"
+                                 t-att-style="'width: ' + collectionRate() + '%;'"
+                                 t-att-aria-valuenow="collectionRate()"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100"/>
+                        </div>
+                        <div class="d-flex justify-content-between mt-1">
+                            <small class="text-muted">Received: <t t-esc="formatCurrency(state.kpis.revenue_received)"/></small>
+                            <small class="text-muted">Invoiced: <t t-esc="formatCurrency(state.kpis.total_invoice_value)"/></small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Recent Payments Table ─────────────────────────────── -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-transparent border-0 d-flex justify-content-between align-items-center pt-3 pb-0">
+                        <h6 class="mb-0 fw-semibold">
+                            <i class="fa fa-credit-card me-2 text-primary"/>Recent Payments
+                        </h6>
+                        <span class="badge bg-light text-dark border">
+                            <t t-esc="state.payments.length"/> records
+                        </span>
+                    </div>
+                    <div class="card-body p-0">
+                        <div t-if="state.payments.length === 0" class="text-center text-muted py-4">
+                            <i class="fa fa-inbox fa-2x mb-2 d-block"/>
+                            No payments in the selected date range.
+                        </div>
+                        <div t-else="" class="table-responsive">
+                            <table class="table table-hover table-sm mb-0 align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-3">Reference</th>
+                                        <th>Customer</th>
+                                        <th>Method</th>
+                                        <th class="text-end">Amount</th>
+                                        <th class="text-end">Allocated</th>
+                                        <th class="text-end">Unallocated</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="state.payments" t-as="pmt" t-key="pmt.id">
+                                        <tr>
+                                            <td class="ps-3 fw-semibold text-primary small">
+                                                <t t-esc="pmt.name"/>
+                                            </td>
+                                            <td class="small">
+                                                <t t-esc="pmt.partner_id and pmt.partner_id[1] or '—'"/>
+                                            </td>
+                                            <td class="small">
+                                                <span class="badge bg-secondary-subtle text-secondary">
+                                                    <t t-esc="pmt.payment_method_id and pmt.payment_method_id[1] or '—'"/>
+                                                </span>
+                                            </td>
+                                            <td class="text-end fw-semibold small">
+                                                <t t-esc="formatCurrency(pmt.amount)"/>
+                                            </td>
+                                            <td class="text-end small text-success">
+                                                <t t-esc="formatCurrency(pmt.total_allocated)"/>
+                                            </td>
+                                            <td class="text-end small">
+                                                <span t-att-class="pmt.unallocated_amount > 0 ? 'text-warning fw-semibold' : 'text-muted'">
+                                                    <t t-esc="formatCurrency(pmt.unallocated_amount)"/>
+                                                </span>
+                                            </td>
+                                            <td class="small text-muted">
+                                                <t t-esc="pmt.payment_date"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Export Button ─────────────────────────────────────── -->
+                <div class="d-flex justify-content-end gap-2 pb-3">
+                    <button class="btn btn-outline-primary btn-sm" t-on-click="exportXLSX">
+                        <i class="fa fa-file-excel-o me-2"/>Export to XLSX
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" t-on-click="loadKPIs">
+                        <i class="fa fa-refresh me-1"/>Refresh
+                    </button>
+                </div>
+
+            </div>
+            <!-- end bl-dash-body -->
+
+        </div>
+    </t>
+
 </templates>

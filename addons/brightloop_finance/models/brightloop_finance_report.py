@@ -318,6 +318,46 @@ class BrightloopFinanceDashboard(models.TransientModel):
             'total_allocated', 'unallocated_amount',
         ])
 
+    @api.model
+    def get_dashboard_kpis(self, date_from=None, date_to=None):
+        """
+        RPC endpoint called by the OWL FinanceDashboard component.
+
+        Returns a dict with:
+          - kpis:     dict of KPI values (matching TransientModel field names)
+          - payments: list of recent payment dicts (last 20, posted, in range)
+
+        Args:
+            date_from (str|None): ISO date string 'YYYY-MM-DD', defaults to first of month.
+            date_to   (str|None): ISO date string 'YYYY-MM-DD', defaults to today.
+        """
+        today = date.today()
+        df = fields.Date.from_string(date_from) if date_from else today.replace(day=1)
+        dt = fields.Date.from_string(date_to) if date_to else today
+
+        # Create a transient record with the given date range
+        rec = self.create({'date_from': df, 'date_to': dt})
+
+        # Force compute
+        rec._compute_kpis()
+
+        kpis = {
+            'active_subscription_count': rec.active_subscription_count,
+            'paused_subscription_count': rec.paused_subscription_count,
+            'revenue_received': rec.revenue_received,
+            'total_invoice_value': rec.total_invoice_value,
+            'total_outstanding': rec.total_outstanding,
+            'overdue_invoice_count': rec.overdue_invoice_count,
+            'overdue_amount': rec.overdue_amount,
+        }
+
+        payments = rec.get_recent_payments(limit=20)
+
+        return {
+            'kpis': kpis,
+            'payments': payments,
+        }
+
 
 class BrightloopFinanceReport(models.AbstractModel):
     """

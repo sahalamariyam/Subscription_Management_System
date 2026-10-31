@@ -1,1 +1,107 @@
-/* Brightloop Finance Dashboard Styles */
+/* ─────────────────────────────────────────────────────────────────────────
+   Brightloop Finance Dashboard Styles
+   Member 4 — brightloop_finance
+   Odoo 18 Community
+   ───────────────────────────────────────────────────────────────────────── */
+
+.bl-finance-dashboard {
+    min-height: 100%;
+    background: #f8f9fa;
+    font-family: var(--body-font-family, system-ui, sans-serif);
+}
+
+/* ── Header ── */
+.bl-dash-header {
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+    h4 {
+        letter-spacing: -0.3px;
+    }
+
+    input[type="date"] {
+        min-width: 140px;
+    }
+}
+
+/* ── KPI Cards ── */
+.bl-kpi-card {
+    border-radius: 12px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    background: #fff;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .bl-kpi-icon {
+        opacity: 0.85;
+    }
+
+    .bl-kpi-value {
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .bl-kpi-label {
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+        font-size: 0.7rem !important;
+    }
+}
+
+/* Accent left borders for key cards */
+.bl-kpi-active   { border-left: 4px solid #198754 !important; }
+.bl-kpi-paused   { border-left: 4px solid #0dcaf0 !important; }
+.bl-kpi-revenue  { border-left: 4px solid #0d6efd !important; }
+.bl-kpi-outstanding { border-left: 4px solid #ffc107 !important; }
+.bl-kpi-overdue  { border-left: 4px solid #dc3545 !important; }
+
+/* ── Collection Rate progress bar ── */
+.progress {
+    background: #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .progress-bar {
+        border-radius: 8px;
+        transition: width 0.6s ease;
+    }
+}
+
+/* ── Payments Table ── */
+.bl-finance-dashboard .table {
+    font-size: 0.85rem;
+
+    thead th {
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #6c757d;
+        border-bottom: 1px solid #dee2e6;
+        white-space: nowrap;
+    }
+
+    tbody tr:hover {
+        background: #f0f4ff;
+    }
+}
+
+/* ── General card improvements ── */
+.bl-finance-dashboard .card {
+    border-radius: 12px;
+}
+
+.bl-finance-dashboard .card-header {
+    border-radius: 12px 12px 0 0;
+}
+
+/* ── Export / Refresh buttons ── */
+.bl-finance-dashboard .btn-outline-primary {
+    border-width: 1.5px;
+}
