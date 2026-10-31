@@ -28,7 +28,7 @@ wheels/
 *.egg
 
 # Odoo & PostgreSQL Local Run Data
-data/
+/data/
 odoo_data/
 postgres_data/
 *.log
