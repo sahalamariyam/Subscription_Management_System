@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ─── Security Groups ──────────────────────────────────────────── -->
+        <record id="module_brightloop_finance" model="ir.module.category">
+            <field name="name">Brightloop Finance</field>
+            <field name="description">Manage payment recording, financial dashboards and reporting.</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- Finance Manager: full CRUD on all finance models, can export, configure methods -->
+        <record id="group_brightloop_finance_manager" model="res.groups">
+            <field name="name">Finance Manager</field>
+            <field name="category_id" ref="module_brightloop_finance"/>
+            <field name="implied_ids" eval="[(4, ref('group_brightloop_finance_user'))]"/>
+            <field name="comment">Can configure payment methods, access all customer data, and run all reports/exports.</field>
+        </record>
+
+        <!-- Finance User: can record payments and view dashboard, but not configure methods -->
+        <record id="group_brightloop_finance_user" model="res.groups">
+            <field name="name">Finance User</field>
+            <field name="category_id" ref="module_brightloop_finance"/>
+            <field name="comment">Can record payments, view invoices and dashboard. Cannot configure payment methods.</field>
+        </record>
+
+    </data>
+</odoo>

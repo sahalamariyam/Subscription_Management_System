@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Payment sequence: PAY/2024/00001 format -->
+        <record id="seq_brightloop_payment" model="ir.sequence">
+            <field name="name">Brightloop Payment</field>
+            <field name="code">brightloop.payment</field>
+            <field name="prefix">PAY/%(year)s/</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+</odoo>

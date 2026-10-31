@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default payment methods — noupdate so admin can rename without being overwritten -->
+
+        <record id="payment_method_cash" model="brightloop.payment.method">
+            <field name="name">Cash</field>
+            <field name="code">cash</field>
+            <field name="sequence">10</field>
+            <field name="requires_reference">0</field>
+        </record>
+
+        <record id="payment_method_bank_transfer" model="brightloop.payment.method">
+            <field name="name">Bank Transfer</field>
+            <field name="code">bank_transfer</field>
+            <field name="sequence">20</field>
+            <field name="requires_reference">1</field>
+            <field name="notes">Requires UTR / transaction reference from the bank statement.</field>
+        </record>
+
+        <record id="payment_method_card" model="brightloop.payment.method">
+            <field name="name">Credit / Debit Card</field>
+            <field name="code">card</field>
+            <field name="sequence">30</field>
+            <field name="requires_reference">0</field>
+        </record>
+
+        <record id="payment_method_cheque" model="brightloop.payment.method">
+            <field name="name">Cheque</field>
+            <field name="code">cheque</field>
+            <field name="sequence">40</field>
+            <field name="requires_reference">1</field>
+            <field name="notes">Record the cheque number as the reference.</field>
+        </record>
+
+        <record id="payment_method_online_gateway" model="brightloop.payment.method">
+            <field name="name">Online Gateway</field>
+            <field name="code">gateway</field>
+            <field name="sequence">50</field>
+            <field name="requires_reference">1</field>
+            <field name="notes">Use the gateway transaction ID as the reference.</field>
+        </record>
+
+        <record id="payment_method_upi" model="brightloop.payment.method">
+            <field name="name">UPI</field>
+            <field name="code">upi</field>
+            <field name="sequence">60</field>
+            <field name="requires_reference">0</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_finance_export_form" model="ir.ui.view">
+        <field name="name">brightloop.finance.export.configure</field>
+        <field name="model">brightloop.finance.export</field>
+        <field name="arch" type="xml">
+            <form string="Export Financial Report">
+                <sheet>
+                    <h2>Export Financial Report (XLSX)</h2>
+
+                    <!-- Configure state -->
+                    <group invisible="state == 'done'">
+                        <group string="Date Range">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                        <group string="Filters">
+                            <field name="partner_id" options="{'no_create': True}"/>
+                            <field name="export_type"/>
+                        </group>
+                    </group>
+
+                    <!-- Download state -->
+                    <group invisible="state != 'done'">
+                        <div class="alert alert-success" role="alert">
+                            ✅ Your report is ready. Click the button below to download.
+                        </div>
+                        <field name="file_data" filename="file_name" widget="binary"
+                               string="Download XLSX"/>
+                        <field name="file_name" string="File Name"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_generate" string="Generate Report"
+                            type="object" class="btn-primary"
+                            invisible="state == 'done'"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_finance_export" model="ir.actions.act_window">
+        <field name="name">Export Financial Report</field>
+        <field name="res_model">brightloop.finance.export</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_brightloop_export"
+              name="Export Report"
+              parent="menu_brightloop_finance_root"
+              action="action_finance_export"
+              sequence="40"
+              groups="brightloop_finance.group_brightloop_finance_user"/>
+
+</odoo>
