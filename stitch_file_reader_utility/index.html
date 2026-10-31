@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Brightloop Enterprise UI Suite - Design System &amp; Screen Catalog</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed": "#6ffbbe",
+            "on-secondary-container": "#006172",
+            "tertiary-container": "#006e4b",
+            "secondary": "#00687a",
+            "surface-bright": "#faf8ff",
+            "primary-fixed": "#e2dfff",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#001f26",
+            "tertiary-fixed-dim": "#4edea3",
+            "background": "#faf8ff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#4cd7f6",
+            "surface-container-high": "#e2e7ff",
+            "on-primary-container": "#dad7ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#464555",
+            "on-secondary-fixed-variant": "#004e5c",
+            "tertiary": "#005338",
+            "error-container": "#ffdad6",
+            "surface-container": "#eaedff",
+            "outline-variant": "#c7c4d8",
+            "primary": "#3525cd",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#acedff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-fixed": "#002113",
+            "surface-variant": "#dae2fd",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-tertiary-container": "#67f4b7",
+            "secondary-container": "#57dffe",
+            "primary-container": "#4f46e5",
+            "error": "#ba1a1a",
+            "inverse-surface": "#283044",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#131b2e",
+            "surface-tint": "#4d44e3",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eef0ff",
+            "outline": "#777587",
+            "on-background": "#131b2e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased p-6 lg:p-12">
+  <div class="max-w-6xl mx-auto flex flex-col gap-10">
+    
+    <!-- Top Hero -->
+    <div class="bg-surface-container-lowest rounded-3xl p-8 lg:p-12 shadow-sm border border-outline-variant/30 relative overflow-hidden">
+      <div class="absolute -right-20 -top-20 w-80 h-80 rounded-full bg-gradient-to-br from-primary-fixed/40 to-secondary-fixed/30 blur-3xl pointer-events-none"></div>
+      
+      <div class="relative z-10 flex flex-col gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-on-primary shadow-md">
+            <span class="material-symbols-outlined text-[28px]">all_inclusive</span>
+          </div>
+          <div>
+            <h1 class="text-2xl lg:text-3xl font-bold text-on-surface tracking-tight">Brightloop Enterprise UI Suite</h1>
+            <p class="text-xs text-on-surface-variant font-medium">Kinetic Ledger Design System • Complete Frontend Screen Catalog</p>
+          </div>
+        </div>
+
+        <p class="text-sm text-on-surface-variant max-w-2xl leading-relaxed mt-2">
+          This comprehensive interactive screen catalog contains all cleaned and newly created pages for the Brightloop Subscription &amp; Billing Management application. All mock AI filler data has been stripped and strictly mapped to authentic Odoo models (<code>brightloop.subscription</code>, <code>brightloop.plan</code>, <code>account.move</code>, <code>brightloop.payment</code>, <code>brightloop.billing.job</code>).
+        </p>
+
+        <div class="flex flex-wrap items-center gap-2 pt-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-xs font-bold shadow-sm">
+            <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span> Odoo 18 Ready
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface text-xs font-semibold">
+            12 Primary Screens
+          </span>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-on-surface text-xs font-semibold">
+            Zero Mock Data / Authentic Contracts
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group 1: Core Cleaned Stitch Templates -->
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center gap-2 pb-2 border-b border-outline-variant/30">
+        <span class="material-symbols-outlined text-primary text-xl">palette</span>
+        <h2 class="text-lg font-bold text-on-surface">1. Core Stitch Application Templates (Cleaned &amp; Aligned)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- 1. Auth -->
+        <a href="enterprise_dual_pane_authentication/code.html" class="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+                <span class="material-symbols-outlined text-[20px]">lock</span>
+              </span>
+              <span class="text-xs font-mono font-bold text-primary">/login</span>
+            </div>
+            <h3 class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">Enterprise Dual-Pane Authentication</h3>
+            <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
+              Customer &amp; staff sign in, customer registration, live 12-char password policy checker, anti-enumeration reset defense.
+            </p>
+          </div>
+          <div class="pt-4 mt-2 flex items-center text-xs font-semibold text-primary">
+            <span>Launch Screen →</span>
+          </div>
+        </a>
+
+        <!-- 2. Customer Portal Hub -->
+        <a href="customer_portal_self_service_hub/code.html" class="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-10 h-10 rounded-xl bg-secondary/10 text-secondary flex items-center justify-center font-bold">
+                <span class="material-symbols-outlined text-[20px]">dashboard</span>
+              </span>
+              <span class="text-xs font-mono font-bold text-secondary">/my/home</span>
+            </div>
+            <h3 class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">Customer Self-Service Hub</h3>
+            <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
+              Customer dashboard with active plan spotlights, outstanding invoice summaries, quick actions, and contract metadata.
+            </p>
+          </div>
+          <div class="pt-4 mt-2 flex items-center text-xs font-semibold text-primary">
+            <span>Launch Screen →</span>
+          </div>
+        </a>
+
+        <!-- 3. Financial Dashboard -->
+        <a href="executive_financial_dashboard_owl_spa/code.html" class="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-10 h-10 rounded-xl bg-tertiary/10 text-tertiary flex items-center justify-center font-bold">
+                <span class="material-symbols-outlined text-[20px]">monitoring</span>
+              </span>
+              <span class="text-xs font-mono font-bold text-tertiary">/finance/dashboard</span>
+            </div>
+            <h3 class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">Executive Financial Dashboard</h3>
+            <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
+              6 canonical financial KPIs (active, paused, revenue received, invoiced, outstanding, overdue), collection performance bar, recent payments ledger with allocation modal.
+            </p>
+          </div>
+          <div class="pt-4 mt-2 flex items-center text-xs font-semibold text-primary">
+            <span>Launch Screen →</span>
+          </div>
+        </a>
+
+        <!-- 4. Commercial Studio -->
+        <a href="subscription_lifecycle_commercial_studio/code.html" class="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
+                <span class="material-symbols-outlined text-[20px]">tune</span>
+              </span>
+              <span class="text-xs font-mono font-bold text-primary">/subscriptions/studio</span>
+            </div>
+            <h3 class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">Subscription Lifecycle Studio</h3>
+            <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
+              Form view with 8 canonical state actions (Draft, Quotation, Confirmed, Active, Paused, Closed), product lines, governance terms, and linked account.move invoices.
+            </p>
+          </div>
+          <div class="pt-4 mt-2 flex items-center text-xs font-semibold text-primary">
+            <span>Launch Screen →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Group 2: Customer Portal Sub-Pages -->
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center gap-2 pb-2 border-b border-outline-variant/30">
+        <span class="material-symbols-outlined text-secondary text-xl">account_circle</span>
+        <h2 class="text-lg font-bold text-on-surface">2. Customer Portal Sub-Pages (Newly Created)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Subscriptions List -->
+        <a href="customer_portal_pages/portal_subscriptions_list.html" class="p-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group">
+          <div class="text-xs font-mono font-bold text-primary mb-1">/my/subscriptions</div>
+          <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Portal Subscriptions List</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Multi-record customer subscriptions table with status filters (All, Active, Paused).</p>
+        </a>
+
+        <!-- Subscription Detail -->
+        <a href="customer_portal_pages/portal_subscription_detail.html" class="p-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group">
+          <div class="text-xs font-mono font-bold text-primary mb-1">/my/subscriptions/88</div>
+          <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Portal Subscription Detail</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Single subscription customer view with itemized product lines, billing dates, and pause requests.</p>
+        </a>
+
+        <!-- Invoices List -->
+        <a href="customer_portal_pages/portal_invoices_list.html" class="p-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group">
+          <div class="text-xs font-mono font-bold text-primary mb-1">/my/invoices</div>
+          <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Portal Invoices Ledger</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Paginated list of customer invoices with status badges (Paid, Unpaid, Overdue) and pay actions.</p>
+        </a>
+
+        <!-- Invoice Detail -->
+        <a href="customer_portal_pages/portal_invoice_detail.html" class="p-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group">
+          <div class="text-xs font-mono font-bold text-primary mb-1">/my/invoices/120</div>
+          <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Portal Invoice Statement Detail</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Formal tax invoice document with VAT rates, customer billing address, and online settlement card.</p>
+        </a>
+
+        <!-- Payments List -->
+        <a href="customer_portal_pages/portal_payments_list.html" class="p-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group">
+          <div class="text-xs font-mono font-bold text-primary mb-1">/my/payments</div>
+          <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Portal Payments &amp; Receipts</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Historical list of customer payments, methods (card, wire), and receipt PDF downloaders.</p>
+        </a>
+
+        <!-- Quotations -->
+        <a href="customer_portal_pages/portal_quotations_list.html" class="p-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group">
+          <div class="text-xs font-mono font-bold text-primary mb-1">/my/quotations</div>
+          <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Portal Quotations &amp; Proposals</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Review pending subscription proposals, terms, discounts, and one-click "Accept &amp; Confirm" action.</p>
+        </a>
+
+        <!-- Profile & Security -->
+        <a href="customer_portal_pages/portal_profile_security.html" class="p-5 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group md:col-span-3">
+          <div class="text-xs font-mono font-bold text-primary mb-1">/my/account &amp; /my/security</div>
+          <h3 class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">Customer Account Profile &amp; Password Security</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Edit partner legal name, tax ID, billing address, and change password with live password policy checking.</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- Group 3: Backend Staff Management Views -->
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center gap-2 pb-2 border-b border-outline-variant/30">
+        <span class="material-symbols-outlined text-tertiary text-xl">admin_panel_settings</span>
+        <h2 class="text-lg font-bold text-on-surface">3. Backend Staff Management Views (Newly Created)</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Subscriptions Registry -->
+        <a href="backend_management_pages/subscriptions_list_view.html" class="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group">
+          <div class="text-xs font-mono font-bold text-primary mb-1">brightloop.subscription (tree)</div>
+          <h3 class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">Staff Subscriptions Registry</h3>
+          <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
+            Multi-record list view with state filtering pills (Draft, Quotation, Confirmed, Active, Paused, Closed), recurring MRR calculations, and links to studio.
+          </p>
+        </a>
+
+        <!-- Catalog & Plans -->
+        <a href="backend_management_pages/catalog_and_plans_view.html" class="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group">
+          <div class="text-xs font-mono font-bold text-secondary mb-1">brightloop.plan &amp; product.template</div>
+          <h3 class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">Subscription Plans &amp; Products Catalog</h3>
+          <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
+            Configure subscription cadences, intervals, trial periods, governance toggles (allow_pause, allow_renewal, auto_close), and product pricing templates.
+          </p>
+        </a>
+
+        <!-- Payments & Allocations -->
+        <a href="backend_management_pages/payments_and_allocations_view.html" class="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group">
+          <div class="text-xs font-mono font-bold text-tertiary mb-1">brightloop.payment &amp; allocation</div>
+          <h3 class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">Payments &amp; Allocation Studio</h3>
+          <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
+            Payment receipt ledger, unallocated surplus tracking, and the interactive "Record Customer Payment" modal wizard with FIFO account.move allocation.
+          </p>
+        </a>
+
+        <!-- Billing Jobs Audit -->
+        <a href="backend_management_pages/billing_jobs_audit_view.html" class="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group">
+          <div class="text-xs font-mono font-bold text-primary mb-1">brightloop.billing.job</div>
+          <h3 class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">Billing Jobs &amp; Automation Audit Ledger</h3>
+          <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
+            Recurring cron execution history, idempotency keys, records evaluated, invoice creation logs, and manual engine trigger.
+          </p>
+        </a>
+
+        <!-- Financial Export Wizard -->
+        <a href="backend_management_pages/financial_export_wizard.html" class="p-6 rounded-2xl bg-surface-container-lowest border border-outline-variant/30 shadow-sm hover:border-primary/50 hover:shadow-md transition-all group md:col-span-2">
+          <div class="text-xs font-mono font-bold text-tertiary mb-1">Python xlsxwriter Engine</div>
+          <h3 class="text-base font-bold text-on-surface group-hover:text-primary transition-colors">6-Sheet Financial XLSX Export Wizard</h3>
+          <p class="text-xs text-on-surface-variant mt-1.5 leading-relaxed">
+            Customizable financial package compiler: MRR Waterfall, Invoiced vs Collected, Aging Delinquency, Tax Breakdown, Payment Allocations, and Churn Analysis.
+          </p>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
+

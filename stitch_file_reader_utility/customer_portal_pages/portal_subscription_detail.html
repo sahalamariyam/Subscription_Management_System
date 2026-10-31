@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_standard" name="shell-type"/>
+  <title>Subscription SUB/2026/00088 - Brightloop Portal</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed": "#6ffbbe",
+            "on-secondary-container": "#006172",
+            "tertiary-container": "#006e4b",
+            "secondary": "#00687a",
+            "surface-bright": "#faf8ff",
+            "primary-fixed": "#e2dfff",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#001f26",
+            "tertiary-fixed-dim": "#4edea3",
+            "background": "#faf8ff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#4cd7f6",
+            "surface-container-high": "#e2e7ff",
+            "on-primary-container": "#dad7ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#464555",
+            "on-secondary-fixed-variant": "#004e5c",
+            "tertiary": "#005338",
+            "error-container": "#ffdad6",
+            "surface-container": "#eaedff",
+            "outline-variant": "#c7c4d8",
+            "primary": "#3525cd",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#acedff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-fixed": "#002113",
+            "surface-variant": "#dae2fd",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-tertiary-container": "#67f4b7",
+            "secondary-container": "#57dffe",
+            "primary-container": "#4f46e5",
+            "error": "#ba1a1a",
+            "inverse-surface": "#283044",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#131b2e",
+            "surface-tint": "#4d44e3",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eef0ff",
+            "outline": "#777587",
+            "on-background": "#131b2e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased">
+  <!-- Top Navigation Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+    <div class="w-full max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-8">
+        <a href="../customer_portal_self_service_hub/code.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">all_inclusive</span>
+          </div>
+          <span class="text-base font-bold text-on-surface tracking-tight">Brightloop Portal</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../customer_portal_self_service_hub/code.html">Dashboard</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-high text-primary" href="portal_subscriptions_list.html">My Subscriptions</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_quotations_list.html">Quotations</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_invoices_list.html">Invoices</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_payments_list.html">Payments</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="w-9 h-9 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-xs shadow-sm">
+          AC
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="w-full pt-16 min-h-screen bg-surface">
+    <div class="w-full max-w-7xl mx-auto px-6 py-8 flex flex-col gap-6">
+      
+      <!-- Breadcrumb & Back -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2 text-xs text-on-surface-variant">
+          <a class="hover:text-primary transition-colors" href="../customer_portal_self_service_hub/code.html">Portal Home</a>
+          <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          <a class="hover:text-primary transition-colors" href="portal_subscriptions_list.html">My Subscriptions</a>
+          <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          <span class="font-semibold text-on-surface font-mono">SUB/2026/00088</span>
+        </div>
+        <a href="portal_subscriptions_list.html" class="inline-flex items-center gap-1.5 text-xs text-primary font-semibold hover:underline">
+          <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+          <span>Back to Subscriptions</span>
+        </a>
+      </div>
+
+      <!-- Detail Card Header -->
+      <div class="bg-surface-container-lowest rounded-2xl p-6 lg:p-8 shadow-sm border border-outline-variant/30 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="flex flex-col gap-2">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="font-mono text-xl lg:text-2xl font-bold text-on-surface">SUB/2026/00088</span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-tertiary-fixed text-on-tertiary-fixed">
+              <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span> Active &amp; Renewing
+            </span>
+            <span class="text-xs px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-medium">
+              Anchor: Day 30
+            </span>
+          </div>
+          <h1 class="text-lg font-bold text-on-surface">Enterprise Cloud Tier - Annual Contract</h1>
+          <p class="text-xs text-on-surface-variant">Contract ID: PR-994 • Managed via Brightloop Automated Billing Engine</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button class="px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-xs font-semibold transition-colors flex items-center gap-1.5" onclick="alert('Pause request dispatched to account team.')">
+            <span class="material-symbols-outlined text-[16px]">pause_circle</span>
+            <span>Request Pause</span>
+          </button>
+          <a href="portal_invoices_list.html" class="px-4 py-2 rounded-xl bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container shadow-sm transition-all flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">receipt_long</span>
+            <span>View Statements</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Schedule & Details Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+          <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Contract Horizon</span>
+          <div class="text-sm font-bold text-on-surface font-mono mt-1">2025-11-30 thru 2027-11-30</div>
+          <span class="text-[11px] text-on-surface-variant mt-1">2 Year Guarantee</span>
+        </div>
+        <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+          <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Next Invoicing Date</span>
+          <div class="text-sm font-bold text-primary font-mono mt-1">Nov 30, 2026</div>
+          <span class="text-[11px] text-tertiary mt-1 font-semibold">Scheduled run</span>
+        </div>
+        <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+          <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Billing Cadence</span>
+          <div class="text-sm font-bold text-on-surface mt-1">Annual (1 Interval)</div>
+          <span class="text-[11px] text-on-surface-variant mt-1">2 Past renewals</span>
+        </div>
+        <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/30 flex flex-col justify-between">
+          <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Recurring Annual Amount</span>
+          <div class="text-lg font-bold text-on-surface font-mono mt-1">$14,256.00</div>
+          <span class="text-[11px] text-on-surface-variant mt-1">Taxes included (10% VAT)</span>
+        </div>
+      </div>
+
+      <!-- Contract Line Items Table -->
+      <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col">
+        <div class="p-6 border-b border-outline-variant/20 flex items-center justify-between">
+          <div>
+            <h2 class="text-base font-bold text-on-surface">Included Services &amp; Line Items</h2>
+            <p class="text-xs text-on-surface-variant mt-0.5">Products and active components billed on this subscription</p>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant">3 Items</span>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="bg-surface-container-low text-on-surface-variant uppercase tracking-wider font-semibold">
+                <th class="py-3 px-6">Product Item</th>
+                <th class="py-3 px-4">Variant / Scope</th>
+                <th class="py-3 px-4 text-right">Qty</th>
+                <th class="py-3 px-4 text-right">Unit Price</th>
+                <th class="py-3 px-4 text-center">Discount</th>
+                <th class="py-3 px-4 text-center">Tax</th>
+                <th class="py-3 px-6 text-right">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-surface-container font-sans text-on-surface">
+              <tr class="hover:bg-surface-container-low/50">
+                <td class="py-3.5 px-6 font-bold text-on-surface">Cloud Platform Core</td>
+                <td class="py-3.5 px-4 text-on-surface-variant">Multi-Region Enterprise Tier</td>
+                <td class="py-3.5 px-4 text-right font-mono">50 seats</td>
+                <td class="py-3.5 px-4 text-right font-mono">$240.00</td>
+                <td class="py-3.5 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-surface-container text-primary font-semibold">10%</span>
+                </td>
+                <td class="py-3.5 px-4 text-center">VAT 10%</td>
+                <td class="py-3.5 px-6 text-right font-mono font-bold">$10,800.00</td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/50">
+                <td class="py-3.5 px-6 font-bold text-on-surface">Dedicated Support Add-on</td>
+                <td class="py-3.5 px-4 text-on-surface-variant">24/7 Priority Support Routing</td>
+                <td class="py-3.5 px-4 text-right font-mono">1 pkg</td>
+                <td class="py-3.5 px-4 text-right font-mono">$2,400.00</td>
+                <td class="py-3.5 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-surface-container text-primary font-semibold">10%</span>
+                </td>
+                <td class="py-3.5 px-4 text-center">VAT 10%</td>
+                <td class="py-3.5 px-6 text-right font-mono font-bold">$2,160.00</td>
+              </tr>
+              <tr class="hover:bg-surface-container-low/50">
+                <td class="py-3.5 px-6 font-bold text-on-surface">API Volume Booster</td>
+                <td class="py-3.5 px-4 text-on-surface-variant">Up to 2.5M Monthly Ingestion Events</td>
+                <td class="py-3.5 px-4 text-right font-mono">1 pool</td>
+                <td class="py-3.5 px-4 text-right font-mono">$0.00</td>
+                <td class="py-3.5 px-4 text-center text-on-surface-variant">—</td>
+                <td class="py-3.5 px-4 text-center">Included</td>
+                <td class="py-3.5 px-6 text-right font-mono font-bold">$0.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Totals Summary -->
+        <div class="p-6 bg-surface-container-low/50 border-t border-outline-variant/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-xs">
+          <div class="text-on-surface-variant">
+            <span>Payment Method: <strong>Mastercard ending •••• 4902</strong> (Auto-Debit active)</span>
+          </div>
+          <div class="flex items-center gap-6">
+            <div class="text-right">
+              <span class="text-on-surface-variant block">Untaxed Base: <strong class="text-on-surface font-mono">$12,960.00</strong></span>
+              <span class="text-on-surface-variant block">VAT Taxes (10%): <strong class="text-on-surface font-mono">$1,296.00</strong></span>
+            </div>
+            <div class="pl-6 border-l border-outline-variant/30 text-right">
+              <span class="text-[11px] text-on-surface-variant uppercase font-semibold">Annual Total</span>
+              <span class="text-xl font-bold font-mono text-primary block">$14,256.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</body>
+</html>
+

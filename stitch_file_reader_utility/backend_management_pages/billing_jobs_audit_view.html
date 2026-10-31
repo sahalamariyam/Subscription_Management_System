@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_dashboard" name="shell-type"/>
+  <title>Billing Jobs Audit - Brightloop Staff</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed": "#6ffbbe",
+            "on-secondary-container": "#006172",
+            "tertiary-container": "#006e4b",
+            "secondary": "#00687a",
+            "surface-bright": "#faf8ff",
+            "primary-fixed": "#e2dfff",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#001f26",
+            "tertiary-fixed-dim": "#4edea3",
+            "background": "#faf8ff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#4cd7f6",
+            "surface-container-high": "#e2e7ff",
+            "on-primary-container": "#dad7ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#464555",
+            "on-secondary-fixed-variant": "#004e5c",
+            "tertiary": "#005338",
+            "error-container": "#ffdad6",
+            "surface-container": "#eaedff",
+            "outline-variant": "#c7c4d8",
+            "primary": "#3525cd",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#acedff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-fixed": "#002113",
+            "surface-variant": "#dae2fd",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-tertiary-container": "#67f4b7",
+            "secondary-container": "#57dffe",
+            "primary-container": "#4f46e5",
+            "error": "#ba1a1a",
+            "inverse-surface": "#283044",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#131b2e",
+            "surface-tint": "#4d44e3",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eef0ff",
+            "outline": "#777587",
+            "on-background": "#131b2e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased">
+  <!-- Top Global Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+    <div class="w-full h-16 px-6 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-6">
+        <a href="../executive_financial_dashboard_owl_spa/code.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">all_inclusive</span>
+          </div>
+          <span class="text-base font-bold text-on-surface tracking-tight">Brightloop</span>
+        </a>
+        <div class="h-6 w-px bg-surface-container-high hidden md:block"></div>
+        <nav class="hidden xl:flex items-center gap-1">
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../executive_financial_dashboard_owl_spa/code.html">Finance Dashboard</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="subscriptions_list_view.html">Subscriptions</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="payments_and_allocations_view.html">Payments &amp; Ledger</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="catalog_and_plans_view.html">Catalog &amp; Plans</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container text-primary" href="billing_jobs_audit_view.html">Billing Jobs</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../customer_portal_self_service_hub/code.html">Customer Portal</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary text-on-primary text-xs font-semibold hover:bg-primary-container shadow-sm transition-all" onclick="alert('Manual cron trigger executed! Running recurring billing evaluation...')">
+          <span class="material-symbols-outlined text-[16px]">sync</span>
+          <span>Run Billing Engine Now</span>
+        </button>
+        <div class="w-8 h-8 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center font-bold text-xs shadow-sm">
+          FO
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="fixed left-0 top-16 bottom-0 w-64 bg-surface-container-low/70 backdrop-blur-xl z-40 flex flex-col p-4 border-r border-outline-variant/30">
+    <div class="mb-4 px-2">
+      <span class="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant">Automation Telemetry</span>
+    </div>
+    <nav class="flex-1 flex flex-col gap-1">
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="../executive_financial_dashboard_owl_spa/code.html">
+        <span class="material-symbols-outlined text-[18px]">monitoring</span> Dashboard
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="subscriptions_list_view.html">
+        <span class="material-symbols-outlined text-[18px]">autorenew</span> Subscriptions
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="payments_and_allocations_view.html">
+        <span class="material-symbols-outlined text-[18px]">payments</span> Payments &amp; Ledger
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="catalog_and_plans_view.html">
+        <span class="material-symbols-outlined text-[18px]">inventory_2</span> Catalog &amp; Plans
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-surface-container-lowest text-primary shadow-sm font-semibold text-xs transition-all" href="billing_jobs_audit_view.html">
+        <span class="material-symbols-outlined text-[18px]">schedule</span> Billing Jobs
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="financial_export_wizard.html">
+        <span class="material-symbols-outlined text-[18px]">table_view</span> Financial Reports
+      </a>
+      <div class="h-px bg-outline-variant/30 my-2"></div>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all" href="../customer_portal_self_service_hub/code.html">
+        <span class="material-symbols-outlined text-[18px]">open_in_new</span> Customer Portal View
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Body Content Area -->
+  <div class="pl-64">
+    <main class="relative pt-16 min-h-screen bg-surface">
+      <div class="p-6 lg:p-8 flex flex-col gap-6 max-w-[1600px] mx-auto w-full">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-xl font-bold text-on-surface tracking-tight">Recurring Billing Jobs &amp; Audit Trail</h1>
+              <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-surface-container text-on-surface-variant font-mono">brightloop.billing.job</span>
+            </div>
+            <p class="text-xs text-on-surface-variant mt-0.5">Immutable execution logs for automated subscription invoice generation with idempotency keys.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-tertiary-fixed text-on-tertiary-fixed">
+              <span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span> Cron Scheduled Daily (02:00 UTC)
+            </span>
+          </div>
+        </div>
+
+        <!-- Telemetry Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/30">
+            <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Total Runs Executed</span>
+            <div class="text-2xl font-bold text-on-surface font-mono mt-1">42</div>
+            <span class="text-[11px] text-on-surface-variant">Lifetime audit records</span>
+          </div>
+          <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/30">
+            <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Successful Invoices</span>
+            <div class="text-2xl font-bold text-emerald-600 font-mono mt-1">41</div>
+            <span class="text-[11px] text-emerald-700 font-medium">97.6% Success Rate</span>
+          </div>
+          <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/30">
+            <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Failed Runs</span>
+            <div class="text-2xl font-bold text-rose-600 font-mono mt-1">1</div>
+            <span class="text-[11px] text-rose-600 font-medium">Payment token expired</span>
+          </div>
+          <div class="bg-surface-container-lowest rounded-2xl p-4 shadow-sm border border-outline-variant/30">
+            <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold">Idempotency Protection</span>
+            <div class="text-sm font-bold text-primary font-mono mt-2">Active &amp; Enforced</div>
+            <span class="text-[11px] text-on-surface-variant">Zero duplicate charges</span>
+          </div>
+        </div>
+
+        <!-- Jobs Table -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden flex flex-col">
+          <div class="p-6 border-b border-outline-variant/20 flex items-center justify-between">
+            <h2 class="text-base font-bold text-on-surface">Execution Ledger History</h2>
+            <span class="text-xs text-on-surface-variant font-mono">Latest 50 runs</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead>
+                <tr class="bg-surface-container-low text-on-surface-variant uppercase tracking-wider font-semibold">
+                  <th class="py-3 px-6">Job Ref</th>
+                  <th class="py-3 px-4">Execution Timestamp</th>
+                  <th class="py-3 px-4">Idempotency Key</th>
+                  <th class="py-3 px-4 text-center">Subscriptions Evaluated</th>
+                  <th class="py-3 px-4 text-center">Invoices Generated</th>
+                  <th class="py-3 px-4 text-right">Total Invoiced</th>
+                  <th class="py-3 px-4 text-center">Status</th>
+                  <th class="py-3 px-6 text-center">Log Trace</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-surface-container font-sans text-on-surface">
+                <tr class="hover:bg-surface-container-low/50">
+                  <td class="py-3.5 px-6 font-mono font-bold text-primary">JOB/2026/00042</td>
+                  <td class="py-3.5 px-4 font-mono text-on-surface-variant">2026-10-31 02:00:14</td>
+                  <td class="py-3.5 px-4 font-mono text-on-surface-variant">cron_daily_20261031_0200</td>
+                  <td class="py-3.5 px-4 text-center font-bold">14</td>
+                  <td class="py-3.5 px-4 text-center font-bold text-emerald-600">3</td>
+                  <td class="py-3.5 px-4 text-right font-mono font-bold">$16,750.00</td>
+                  <td class="py-3.5 px-4 text-center">
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">Success</span>
+                  </td>
+                  <td class="py-3.5 px-6 text-center">
+                    <button class="px-2.5 py-1 rounded-md bg-surface-container hover:bg-surface-container-high text-primary font-semibold" onclick="alert('Job execution log:\n[02:00:14] Started recurring billing worker\n[02:00:15] Idempotency lock acquired\n[02:00:16] Generated INV/2026/00120 ($1,250.00)\n[02:00:18] Job completed successfully.')">
+                      Inspect Trace
+                    </button>
+                  </td>
+                </tr>
+                <tr class="hover:bg-surface-container-low/50">
+                  <td class="py-3.5 px-6 font-mono font-bold text-primary">JOB/2026/00041</td>
+                  <td class="py-3.5 px-4 font-mono text-on-surface-variant">2026-10-30 02:00:08</td>
+                  <td class="py-3.5 px-4 font-mono text-on-surface-variant">cron_daily_20261030_0200</td>
+                  <td class="py-3.5 px-4 text-center font-bold">14</td>
+                  <td class="py-3.5 px-4 text-center font-bold text-emerald-600">1</td>
+                  <td class="py-3.5 px-4 text-right font-mono font-bold">$14,256.00</td>
+                  <td class="py-3.5 px-4 text-center">
+                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold text-[11px]">Success</span>
+                  </td>
+                  <td class="py-3.5 px-6 text-center">
+                    <button class="px-2.5 py-1 rounded-md bg-surface-container hover:bg-surface-container-high text-primary font-semibold" onclick="alert('Job completed successfully without warnings.')">
+                      Inspect Trace
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>
+

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="web_standard" name="shell-type"/>
+  <title>Invoice INV/2026/00120 - Brightloop Customer Portal</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-dim": "#d2d9f4",
+            "tertiary-fixed": "#6ffbbe",
+            "on-secondary-container": "#006172",
+            "tertiary-container": "#006e4b",
+            "secondary": "#00687a",
+            "surface-bright": "#faf8ff",
+            "primary-fixed": "#e2dfff",
+            "inverse-primary": "#c3c0ff",
+            "on-secondary-fixed": "#001f26",
+            "tertiary-fixed-dim": "#4edea3",
+            "background": "#faf8ff",
+            "surface": "#faf8ff",
+            "surface-container-low": "#f2f3ff",
+            "secondary-fixed-dim": "#4cd7f6",
+            "surface-container-high": "#e2e7ff",
+            "on-primary-container": "#dad7ff",
+            "on-primary-fixed": "#0f0069",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#464555",
+            "on-secondary-fixed-variant": "#004e5c",
+            "tertiary": "#005338",
+            "error-container": "#ffdad6",
+            "surface-container": "#eaedff",
+            "outline-variant": "#c7c4d8",
+            "primary": "#3525cd",
+            "on-primary": "#ffffff",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#acedff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-tertiary-fixed": "#002113",
+            "surface-variant": "#dae2fd",
+            "primary-fixed-dim": "#c3c0ff",
+            "on-tertiary-container": "#67f4b7",
+            "secondary-container": "#57dffe",
+            "primary-container": "#4f46e5",
+            "error": "#ba1a1a",
+            "inverse-surface": "#283044",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-tertiary": "#ffffff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#131b2e",
+            "surface-tint": "#4d44e3",
+            "on-error-container": "#93000a",
+            "inverse-on-surface": "#eef0ff",
+            "outline": "#777587",
+            "on-background": "#131b2e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased">
+  <!-- Top Navigation Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+    <div class="w-full max-w-7xl mx-auto px-6 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-8">
+        <a href="../customer_portal_self_service_hub/code.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">all_inclusive</span>
+          </div>
+          <span class="text-base font-bold text-on-surface tracking-tight">Brightloop Portal</span>
+        </a>
+        <nav class="hidden md:flex items-center gap-1">
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="../customer_portal_self_service_hub/code.html">Dashboard</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_subscriptions_list.html">My Subscriptions</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_quotations_list.html">Quotations</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-surface-container-high text-primary" href="portal_invoices_list.html">Invoices</a>
+          <a class="px-3 py-1.5 rounded-lg text-xs font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors" href="portal_payments_list.html">Payments</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="w-9 h-9 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-bold text-xs shadow-sm">
+          AC
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="w-full pt-16 min-h-screen bg-surface">
+    <div class="w-full max-w-4xl mx-auto px-6 py-8 flex flex-col gap-6">
+      
+      <!-- Breadcrumb & Back -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2 text-xs text-on-surface-variant">
+          <a class="hover:text-primary transition-colors" href="../customer_portal_self_service_hub/code.html">Portal Home</a>
+          <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          <a class="hover:text-primary transition-colors" href="portal_invoices_list.html">Invoices</a>
+          <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          <span class="font-semibold text-on-surface font-mono">INV/2026/00120</span>
+        </div>
+        <a href="portal_invoices_list.html" class="inline-flex items-center gap-1.5 text-xs text-primary font-semibold hover:underline">
+          <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+          <span>Back to Invoices</span>
+        </a>
+      </div>
+
+      <!-- Action Card -->
+      <div class="bg-surface-container-lowest rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="p-2.5 rounded-xl bg-rose-50 text-rose-600">
+            <span class="material-symbols-outlined text-2xl">error</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-base font-bold text-on-surface">Payment Overdue: $1,250.00</h2>
+              <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-100 text-rose-800">Due Oct 15, 2026</span>
+            </div>
+            <p class="text-xs text-on-surface-variant mt-0.5">Please settle this balance to maintain uninterrupted subscription service.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high text-xs font-semibold transition-colors flex items-center gap-1.5" onclick="alert('Downloading official statement PDF...')">
+            <span class="material-symbols-outlined text-[16px]">download</span>
+            <span>Download PDF</span>
+          </button>
+          <button class="px-4 py-2 rounded-xl bg-primary text-on-primary hover:bg-primary-container text-xs font-semibold shadow-sm transition-all flex items-center gap-1.5" onclick="alert('Opening secure credit card / ACH payment modal...')">
+            <span class="material-symbols-outlined text-[16px]">credit_card</span>
+            <span>Pay $1,250.00</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Formal Tax Invoice Statement Container -->
+      <div class="bg-surface-container-lowest rounded-2xl shadow-md border border-outline-variant/30 p-8 lg:p-12 flex flex-col gap-8">
+        
+        <!-- Document Top -->
+        <div class="flex flex-col sm:flex-row justify-between items-start gap-6 border-b border-outline-variant/30 pb-8">
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-2 text-primary font-bold text-xl">
+              <span class="material-symbols-outlined text-2xl">all_inclusive</span>
+              <span>Brightloop Technologies Inc.</span>
+            </div>
+            <p class="text-xs text-on-surface-variant">500 Howard Street, Suite 1200<br/>San Francisco, CA 94105, USA<br/>Tax ID: US-DE-9102844</p>
+          </div>
+          <div class="flex flex-col sm:text-right">
+            <span class="text-2xl font-bold font-mono text-on-surface">TAX INVOICE</span>
+            <span class="font-mono text-xs font-bold text-primary mt-1">INV/2026/00120</span>
+            <span class="text-xs text-on-surface-variant mt-1">Invoice Date: <strong>2026-10-01</strong></span>
+            <span class="text-xs text-rose-600 font-semibold">Payment Due: <strong>2026-10-15</strong></span>
+          </div>
+        </div>
+
+        <!-- Bill To & Subscription Cross Reference -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+          <div class="flex flex-col gap-1">
+            <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-bold">Billed To</span>
+            <p class="text-sm font-bold text-on-surface mt-1">Acme Corporation</p>
+            <p class="text-on-surface-variant">Attn: Sarah Jenkins</p>
+            <p class="text-on-surface-variant">100 Innovation Way, Suite 400</p>
+            <p class="text-on-surface-variant">San Francisco, CA 94107, USA</p>
+            <p class="text-on-surface-variant mt-1">VAT ID: US94830219</p>
+          </div>
+          <div class="flex flex-col gap-1 sm:text-right">
+            <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-bold">Subscription Reference</span>
+            <p class="text-sm font-mono font-bold text-primary mt-1">
+              <a href="portal_subscription_detail.html" class="hover:underline">SUB/2026/00072</a>
+            </p>
+            <p class="text-on-surface-variant">Plan: Pro Growth Tier</p>
+            <p class="text-on-surface-variant">Billing Period: Oct 01 - Oct 31, 2026</p>
+            <p class="text-on-surface-variant">Odoo account.move ID: 4108</p>
+          </div>
+        </div>
+
+        <!-- Line Items -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-outline-variant/30 text-on-surface-variant uppercase tracking-wider font-semibold">
+                <th class="py-3 px-2">Description</th>
+                <th class="py-3 px-2 text-right">Quantity</th>
+                <th class="py-3 px-2 text-right">Unit Price</th>
+                <th class="py-3 px-2 text-center">Taxes</th>
+                <th class="py-3 px-2 text-right">Amount (USD)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-surface-container font-sans text-on-surface">
+              <tr>
+                <td class="py-3.5 px-2">
+                  <span class="font-bold text-on-surface block">Pro Growth Tier - Monthly Recurring</span>
+                  <span class="text-on-surface-variant text-[11px]">Includes 10 user seats &amp; core telemetry engine</span>
+                </td>
+                <td class="py-3.5 px-2 text-right font-mono">1 mo</td>
+                <td class="py-3.5 px-2 text-right font-mono">$400.00</td>
+                <td class="py-3.5 px-2 text-center">VAT 10%</td>
+                <td class="py-3.5 px-2 text-right font-mono font-bold">$400.00</td>
+              </tr>
+              <tr>
+                <td class="py-3.5 px-2">
+                  <span class="font-bold text-on-surface block">High-Frequency Data Connector Booster</span>
+                  <span class="text-on-surface-variant text-[11px]">500,000 ad-hoc pipeline events</span>
+                </td>
+                <td class="py-3.5 px-2 text-right font-mono">1 unit</td>
+                <td class="py-3.5 px-2 text-right font-mono">$736.36</td>
+                <td class="py-3.5 px-2 text-center">VAT 10%</td>
+                <td class="py-3.5 px-2 text-right font-mono font-bold">$736.36</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Calculation Subtotals -->
+        <div class="flex justify-end pt-4 border-t border-outline-variant/30 text-xs">
+          <div class="w-full sm:w-72 flex flex-col gap-2">
+            <div class="flex justify-between text-on-surface-variant">
+              <span>Untaxed Base Amount:</span>
+              <span class="font-mono font-bold text-on-surface">$1,136.36</span>
+            </div>
+            <div class="flex justify-between text-on-surface-variant">
+              <span>VAT 10%:</span>
+              <span class="font-mono font-bold text-on-surface">$113.64</span>
+            </div>
+            <div class="h-px bg-outline-variant/30 my-1"></div>
+            <div class="flex justify-between text-sm font-bold text-on-surface">
+              <span>Total Invoice Amount:</span>
+              <span class="font-mono text-primary">$1,250.00</span>
+            </div>
+            <div class="flex justify-between text-xs text-on-surface-variant">
+              <span>Paid / Allocated:</span>
+              <span class="font-mono font-semibold text-emerald-600">$0.00</span>
+            </div>
+            <div class="flex justify-between text-sm font-bold text-rose-600 pt-1 border-t border-outline-variant/20">
+              <span>Amount Residual Due:</span>
+              <span class="font-mono">$1,250.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Allocation History Notice -->
+        <div class="p-4 rounded-xl bg-surface-container-low text-xs flex flex-col gap-2">
+          <span class="font-bold text-on-surface uppercase tracking-wider text-[11px]">Settlement Notes &amp; Allocation</span>
+          <p class="text-on-surface-variant leading-relaxed">
+            No payments have been allocated to this invoice yet. Payments made via card or wire transfer will automatically settle this account.move balance in real time.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</body>
+</html>
+
