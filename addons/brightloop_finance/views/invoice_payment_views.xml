@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ─── Invoice Payment Allocation Views ─────────────────────────────── -->
+    <record id="view_invoice_payment_tree" model="ir.ui.view">
+        <field name="name">brightloop.invoice.payment.tree</field>
+        <field name="model">brightloop.invoice.payment</field>
+        <field name="arch" type="xml">
+            <list string="Invoice Payment Allocations">
+                <field name="invoice_id" string="Invoice"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="payment_id" string="Payment"/>
+                <field name="invoice_total" optional="show"/>
+                <field name="allocated_amount" sum="Total Allocated"/>
+                <field name="allocation_date"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_invoice_payment_form" model="ir.ui.view">
+        <field name="name">brightloop.invoice.payment.form</field>
+        <field name="model">brightloop.invoice.payment</field>
+        <field name="arch" type="xml">
+            <form string="Invoice Payment Allocation">
+                <sheet>
+                    <group>
+                        <group string="Invoice">
+                            <field name="invoice_id"
+                                   options="{'no_create': True}"/>
+                            <field name="invoice_total"/>
+                        </group>
+                        <group string="Payment">
+                            <field name="payment_id"
+                                   options="{'no_create': True}"/>
+                            <field name="allocated_amount"/>
+                            <field name="allocation_date"/>
+                            <field name="currency_id"
+                                   groups="base.group_multi_currency"/>
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Notes about this allocation..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_invoice_payment_search" model="ir.ui.view">
+        <field name="name">brightloop.invoice.payment.search</field>
+        <field name="model">brightloop.invoice.payment</field>
+        <field name="arch" type="xml">
+            <search string="Search Allocations">
+                <field name="invoice_id" string="Invoice"/>
+                <field name="payment_id" string="Payment"/>
+                <field name="partner_id" string="Customer"/>
+
+                <group expand="0" string="Group By">
+                    <filter name="group_invoice" string="Invoice"
+                            context="{'group_by': 'invoice_id'}"/>
+                    <filter name="group_partner" string="Customer"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_date" string="Allocation Date"
+                            context="{'group_by': 'allocation_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_invoice_payment" model="ir.actions.act_window">
+        <field name="name">Payment Allocations</field>
+        <field name="res_model">brightloop.invoice.payment</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_invoice_payment_search"/>
+    </record>
+
+    <menuitem id="menu_brightloop_invoice_payment"
+              name="Payment Allocations"
+              parent="menu_brightloop_finance_root"
+              action="action_invoice_payment"
+              sequence="20"/>
+
+</odoo>
+
