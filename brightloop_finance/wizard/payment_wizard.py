@@ -188,3 +188,4 @@ class PaymentWizard(models.TransientModel):
             'view_mode': 'form',
             'target': 'current',
         }
+

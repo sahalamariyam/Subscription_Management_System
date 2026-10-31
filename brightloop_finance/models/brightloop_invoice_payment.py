@@ -246,3 +246,4 @@ class BrightloopInvoicePayment(models.Model):
         # Trigger Member 3's recompute hook if it exists
         if hasattr(invoice, '_recompute_payment_state'):
             invoice._recompute_payment_state()
+

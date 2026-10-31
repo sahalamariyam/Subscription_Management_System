@@ -33,7 +33,13 @@ except ImportError:
     _logger.warning('xlsxwriter not installed. XLSX export will be unavailable.')
 
 INVOICE_MODEL = 'brightloop.invoice'
+# Confirmed with Member 2 — 2026-10-31
 SUBSCRIPTION_MODEL = 'brightloop.subscription'
+
+# Confirmed subscription status values (Member 2, 2026-10-31)
+# draft | quotation | confirmed | active | closed
+# Paused subscriptions: status='active', is_paused=True
+SUB_ACTIVE_STATUS = 'active'
 
 
 class BrightloopFinanceExport(models.TransientModel):
@@ -330,12 +336,20 @@ class BrightloopFinanceExport(models.TransientModel):
         ws = workbook.add_worksheet('Subscriptions')
         ws.set_column('A:B', 20)
         ws.set_column('C:C', 22)
-        ws.set_column('D:F', 14)
-        ws.set_column('G:G', 16)
+        ws.set_column('D:E', 12)
+        ws.set_column('F:H', 14)
 
-        headers = ['Subscription #', 'Plan', 'Customer', 'Status',
-                   'Start Date', 'Expiry Date', 'Next Billing']
-        row = self._write_sheet_title(ws, fmt, 'Subscriptions', self.date_from, self.date_to, len(headers))
+        # Confirmed fields (Member 2, 2026-10-31):
+        # subscription_number, plan_id, partner_id/customer_id (alias),
+        # status, is_paused, start_date, expiry_date, next_billing_date
+        headers = [
+            'Subscription #', 'Plan', 'Customer',
+            'Status', 'Paused',
+            'Start Date', 'Expiry Date', 'Next Billing',
+        ]
+        row = self._write_sheet_title(
+            ws, fmt, 'Subscriptions', self.date_from, self.date_to, len(headers)
+        )
         for col, h in enumerate(headers):
             ws.write(row, col, h, fmt['header'])
         row += 1
@@ -344,17 +358,54 @@ class BrightloopFinanceExport(models.TransientModel):
             ws.write(row, 0, 'Subscription model not yet available.', fmt['text'])
             return
 
-        domain = []
+        # Filter by partner_id (primary Odoo field);
+        # customer_id is a confirmed alias — both work.
+        domain = [('status', 'not in', ['draft'])]
         if partner_id:
-            domain.append(('customer_id', '=', partner_id))
+            domain.append(('partner_id', '=', partner_id))
 
         subs = self.env[SUBSCRIPTION_MODEL].search(domain, order='start_date desc')
+
+        # Human-readable status label map (confirmed values)
+        STATUS_LABELS = {
+            'draft':     'Draft',
+            'quotation': 'Quotation',
+            'confirmed': 'Confirmed',
+            'active':    'Active',
+            'closed':    'Closed',
+        }
+
         for s in subs:
+            # Use partner_id (Odoo standard); fall back to customer_id alias
+            customer = (
+                s.partner_id.display_name
+                if hasattr(s, 'partner_id') and s.partner_id
+                else (s.customer_id.display_name if hasattr(s, 'customer_id') and s.customer_id else '')
+            )
+            status_label = STATUS_LABELS.get(s.status, s.status or '')
+            # is_paused confirmed field (Member 2); guard with hasattr for safety
+            is_paused = getattr(s, 'is_paused', False)
+
             ws.write(row, 0, s.subscription_number or '', fmt['text'])
             ws.write(row, 1, s.plan_id.display_name if s.plan_id else '', fmt['text'])
-            ws.write(row, 2, s.customer_id.display_name if s.customer_id else '', fmt['text'])
-            ws.write(row, 3, s.status or '', fmt['text'])
-            ws.write_datetime(row, 4, s.start_date, fmt['date']) if s.start_date else ws.write(row, 4, '', fmt['text'])
-            ws.write_datetime(row, 5, s.expiry_date, fmt['date']) if s.expiry_date else ws.write(row, 5, '', fmt['text'])
-            ws.write_datetime(row, 6, s.next_billing_date, fmt['date']) if s.next_billing_date else ws.write(row, 6, '', fmt['text'])
+            ws.write(row, 2, customer, fmt['text'])
+            ws.write(row, 3, status_label, fmt['text'])
+            ws.write(row, 4, 'Yes' if is_paused else 'No', fmt['text'])
+
+            if s.start_date:
+                ws.write_datetime(row, 5, s.start_date, fmt['date'])
+            else:
+                ws.write(row, 5, '', fmt['text'])
+
+            if s.expiry_date:
+                ws.write_datetime(row, 6, s.expiry_date, fmt['date'])
+            else:
+                ws.write(row, 6, '', fmt['text'])
+
+            if s.next_billing_date:
+                ws.write_datetime(row, 7, s.next_billing_date, fmt['date'])
+            else:
+                ws.write(row, 7, '', fmt['text'])
+
             row += 1
+

@@ -18,3 +18,4 @@ access_finance_dashboard_user,brightloop.finance.dashboard user,model_brightloop
 # Finance Report (abstract — internal use only)
 access_finance_report_manager,brightloop.finance.report manager,model_brightloop_finance_report,brightloop_finance.group_brightloop_finance_manager,1,1,1,1
 access_finance_report_user,brightloop.finance.report user,model_brightloop_finance_report,brightloop_finance.group_brightloop_finance_user,1,0,0,0
+

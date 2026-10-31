@@ -16,19 +16,39 @@ Performance:
 - Uses database-level aggregation (read_group) to avoid loading all records
 - All filter fields are indexed
 - Pagination supported via limit/offset on list methods
+
+Integration contracts (confirmed):
+  Member 2 (brightloop.subscription):
+    _name       = 'brightloop.subscription'   ✅ confirmed
+    customer_id = Many2one('res.partner')     ✅ confirmed (alias for partner_id)
+    status      = Selection([
+                    'draft', 'quotation', 'confirmed', 'active', 'closed'
+                  ])                          ✅ confirmed
+    is_paused   = Boolean                     ✅ confirmed (paused stay 'active')
+    pause_date  = Date                        ✅ confirmed
+    next_billing_date = Date                  ✅ confirmed, indexed
+
+  Member 3 (brightloop.invoice):
+    _name       = 'brightloop.invoice'        ⏳ pending confirmation
 """
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
-from datetime import date, timedelta
+from datetime import date
 import logging
 
 _logger = logging.getLogger(__name__)
 
-# Coordinate with Member 3 — update if model name differs
+# ── Integration constants — confirmed with Member 2 on 2026-10-31 ────────────
 INVOICE_MODEL = 'brightloop.invoice'
-# Coordinate with Member 1/2 — update if subscription model name differs
-SUBSCRIPTION_MODEL = 'brightloop.subscription'
+SUBSCRIPTION_MODEL = 'brightloop.subscription'   # confirmed ✅
+
+# Canonical subscription status values (Member 2 confirmed 2026-10-31)
+SUB_STATUS_ACTIVE    = 'active'
+SUB_STATUS_CLOSED    = 'closed'
+SUB_STATUS_DRAFT     = 'draft'
+SUB_STATUS_QUOTATION = 'quotation'
+SUB_STATUS_CONFIRMED = 'confirmed'
 
 
 class BrightloopFinanceDashboard(models.TransientModel):
@@ -50,6 +70,12 @@ class BrightloopFinanceDashboard(models.TransientModel):
     active_subscription_count = fields.Integer(
         string='Active Subscriptions',
         compute='_compute_kpis',
+        help='Active and not paused (status=active, is_paused=False).',
+    )
+    paused_subscription_count = fields.Integer(
+        string='Paused Subscriptions',
+        compute='_compute_kpis',
+        help='Subscriptions with status=active but is_paused=True.',
     )
     revenue_received = fields.Float(
         string='Revenue Received',
@@ -81,7 +107,9 @@ class BrightloopFinanceDashboard(models.TransientModel):
     @api.depends('date_from', 'date_to')
     def _compute_kpis(self):
         for rec in self:
-            rec.active_subscription_count = rec._get_active_subscription_count()
+            active, paused = rec._get_subscription_counts()
+            rec.active_subscription_count = active
+            rec.paused_subscription_count = paused
             revenue, total_outstanding, overdue_count, overdue_amount, total_invoice = (
                 rec._get_financial_kpis()
             )
@@ -91,20 +119,39 @@ class BrightloopFinanceDashboard(models.TransientModel):
             rec.overdue_amount = overdue_amount
             rec.total_invoice_value = total_invoice
 
-    def _get_active_subscription_count(self):
-        """Count active subscriptions via Member 1/2's model."""
+    def _get_subscription_counts(self):
+        """
+        Return (active_count, paused_count) from brightloop.subscription.
+
+        Confirmed contract (Member 2, 2026-10-31):
+        - Paused subscriptions retain status='active' with is_paused=True.
+        - Active (running) = status='active' AND is_paused=False.
+        - Paused            = status='active' AND is_paused=True.
+        """
         if SUBSCRIPTION_MODEL not in self.env:
             _logger.warning('Subscription model %s not yet available.', SUBSCRIPTION_MODEL)
-            return 0
-        return self.env[SUBSCRIPTION_MODEL].search_count([
-            ('status', '=', 'active'),
+            return 0, 0
+
+        Sub = self.env[SUBSCRIPTION_MODEL]
+        active_count = Sub.search_count([
+            ('status', '=', SUB_STATUS_ACTIVE),
+            ('is_paused', '=', False),
         ])
+        paused_count = Sub.search_count([
+            ('status', '=', SUB_STATUS_ACTIVE),
+            ('is_paused', '=', True),
+        ])
+        return active_count, paused_count
 
     def _get_financial_kpis(self):
         """
         Aggregate financial KPIs using database-level queries.
         Returns: (revenue_received, total_outstanding, overdue_count,
                   overdue_amount, total_invoice_value)
+
+        Invoice status values: pending confirmation from Member 3.
+        Using defensive 'not in cancelled/draft' until Member 3 confirms
+        the full selection set.
         """
         today = date.today()
         date_from = self.date_from or date.today().replace(day=1)
@@ -131,7 +178,8 @@ class BrightloopFinanceDashboard(models.TransientModel):
         overdue_amount = 0.0
 
         if INVOICE_MODEL in self.env:
-            # Total invoice value (all non-cancelled invoices in period)
+            # Total invoice value (all confirmed/posted invoices in period)
+            # TODO: update excluded statuses once Member 3 confirms selection values
             inv_domain = [
                 ('status', 'not in', ['cancelled', 'draft']),
                 ('invoice_date', '>=', str(date_from)),
@@ -154,8 +202,10 @@ class BrightloopFinanceDashboard(models.TransientModel):
             total_outstanding = out_data[0]['balance_due'] if out_data else 0.0
 
             # Overdue: due_date < today AND balance_due > 0
+            # Not filtering by status='paid' since Member 3 hasn't confirmed
+            # that 'paid' is a valid status — relying on balance_due > 0 instead.
             overdue_domain = [
-                ('status', 'not in', ['cancelled', 'draft', 'paid']),
+                ('status', 'not in', ['cancelled', 'draft']),
                 ('due_date', '<', str(today)),
                 ('balance_due', '>', 0),
             ]
@@ -303,3 +353,4 @@ class BrightloopFinanceReport(models.AbstractModel):
             raise AccessError(
                 _('Please specify a customer to access financial reports.')
             )
+

@@ -265,3 +265,4 @@ class BrightloopPayment(models.Model):
             if rec.state != 'cancelled':
                 raise UserError(_('Only cancelled payments can be reset to draft.'))
             rec.state = 'draft'
+

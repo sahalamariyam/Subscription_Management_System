@@ -165,3 +165,4 @@ class TestBrightloopAllocation(TransactionCase):
     def test_04_dashboard_model_exists(self):
         """Dashboard model is registered."""
         self.assertIn('brightloop.finance.dashboard', self.env)
+
