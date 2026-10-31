@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_brightloop_billing_job_system,brightloop.billing.job system,model_brightloop_billing_job,base.group_system,1,1,1,0
+access_brightloop_billing_job_admin,brightloop.billing.job admin,model_brightloop_billing_job,brightloop_core.group_brightloop_admin,1,1,1,0
+access_brightloop_billing_engine_system,brightloop.billing.engine system,model_brightloop_billing_engine,base.group_system,1,1,1,1
+access_brightloop_billing_engine_admin,brightloop.billing.engine admin,model_brightloop_billing_engine,brightloop_core.group_brightloop_admin,1,1,1,1
