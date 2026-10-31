@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Ensure base template portal user has the canonical Brightloop Customer group -->
+        <record id="base.template_portal_user_id" model="res.users">
+            <field name="groups_id" eval="[(4, ref('brightloop_core.group_brightloop_customer'))]"/>
+        </record>
+    </data>
+</odoo>

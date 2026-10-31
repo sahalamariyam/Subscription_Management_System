@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Module Security Category -->
+        <record id="module_category_brightloop" model="ir.module.category">
+            <field name="name">Brightloop</field>
+            <field name="description">Access management and security roles for Brightloop Subscription Management System</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Role 1: Customer (Portal User) -->
+        <record id="group_brightloop_customer" model="res.groups">
+            <field name="name">Customer</field>
+            <field name="category_id" ref="module_category_brightloop"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_portal'))]"/>
+            <field name="comment">External customer portal user. Access is restricted exclusively to their own records, subscriptions, and invoices.</field>
+        </record>
+
+        <!-- Role 2: Staff (Internal User) -->
+        <record id="group_brightloop_staff" model="res.groups">
+            <field name="name">Staff</field>
+            <field name="category_id" ref="module_category_brightloop"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">Internal operational staff. Operational access to subscriptions, invoices, and customer management. Cannot create staff accounts or modify security settings.</field>
+        </record>
+
+        <!-- Role 3: Administrator (Platform Admin) -->
+        <record id="group_brightloop_admin" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="module_category_brightloop"/>
+            <!--
+                Finding 3.2 remediation: Previously implied base.group_erp_manager,
+                which grants full Odoo Settings access (module install, system config,
+                user management across the entire Odoo instance). That is excessive for
+                a Brightloop business administrator.
+
+                Revised: implies only group_brightloop_staff (which implies base.group_user).
+                Any additional model-level access for Admin is granted explicitly via
+                ir.model.access.csv ACL records.
+
+                IMPORTANT: Uses Command 6 (SET / replace-all) not Command 4 (LINK/add).
+                Command 4 only adds — it would not remove the previously-linked
+                group_erp_manager from existing deployments. Command 6 replaces the
+                entire implied_ids set, ensuring upgrades correctly remove the old link.
+            -->
+            <field name="implied_ids" eval="[(6, 0, [ref('group_brightloop_staff')])]"/>
+            <field name="comment">Platform administrator with full Brightloop application access: staff account creation, customer management, shared configuration, and security management. Does NOT grant Odoo-wide system settings access.</field>
+        </record>
+    </data>
+</odoo>
+
