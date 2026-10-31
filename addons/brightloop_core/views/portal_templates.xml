@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- ─── Portal Header Logo & Branding ─────────────────────────────────── -->
+    <template id="portal_frontend_layout_brightloop" name="Brightloop Portal Header Brand"
+              inherit_id="portal.frontend_layout" priority="20">
+        <xpath expr="//a[hasclass('navbar-brand')]" position="replace">
+            <a href="/my/home" class="navbar-brand logo d-flex align-items-center gap-2">
+                <img src="/brightloop_core/static/img/brightloop_logo.svg" alt="Brightloop" style="height:36px;width:auto;"/>
+            </a>
+        </xpath>
+    </template>
+
     <!-- ─── Portal Home Dashboard Extensions ─────────────────────────────── -->
     <template id="portal_my_home_brightloop" name="Brightloop Portal Navigation"
               inherit_id="portal.portal_my_home" priority="30">
@@ -8,6 +18,17 @@
             <t t-set="portal_client_category_enable" t-value="True"/>
         </xpath>
         <div id="portal_client_category" position="inside">
+            <!-- Brightloop section heading -->
+            <div class="w-100 mb-3 mt-2">
+                <div class="d-flex align-items-center gap-2">
+                    <img src="/brightloop_core/static/img/brightloop_logo.svg"
+                         alt="Brightloop" style="height:32px;width:auto;"/>
+                    <span class="text-muted small fw-semibold" style="letter-spacing:.5px;text-transform:uppercase;">
+                        Subscription Management
+                    </span>
+                </div>
+                <hr class="mt-2 mb-3" style="border-color:#e2e8f0;"/>
+            </div>
             <!-- 1. My Subscriptions (Member 2) -->
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">My Subscriptions</t>

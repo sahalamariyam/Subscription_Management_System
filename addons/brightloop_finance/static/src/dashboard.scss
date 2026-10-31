@@ -1,107 +1,209 @@
 /* ─────────────────────────────────────────────────────────────────────────
    Brightloop Finance Dashboard Styles
-   Member 4 — brightloop_finance
-   Odoo 18 Community
+   Member 4 — brightloop_finance | Odoo 18 Community
    ───────────────────────────────────────────────────────────────────────── */
 
+/* ── Brand tokens ────────────────────────────────────────── */
+$bl-primary:        #3B6EF8;
+$bl-primary-dark:   #2a55d6;
+$bl-primary-light:  #eef2ff;
+$bl-success:        #10b981;
+$bl-warning:        #f59e0b;
+$bl-danger:         #ef4444;
+$bl-info:           #0ea5e9;
+$bl-text:           #1a2540;
+$bl-muted:          #6c757d;
+$bl-border:         #e2e8f0;
+$bl-bg:             #f6f8fc;
+$bl-card-radius:    12px;
+$bl-shadow-sm:      0 1px 4px rgba(0,0,0,.07);
+$bl-shadow-md:      0 4px 18px rgba(0,0,0,.11);
+
+/* ── Dashboard shell ─────────────────────────────────────── */
 .bl-finance-dashboard {
     min-height: 100%;
-    background: #f8f9fa;
-    font-family: var(--body-font-family, system-ui, sans-serif);
+    background: $bl-bg;
+    font-family: var(--body-font-family, 'Segoe UI', system-ui, sans-serif);
+    color: $bl-text;
 }
 
-/* ── Header ── */
+/* ── Header bar ──────────────────────────────────────────── */
 .bl-dash-header {
     background: #fff;
     position: sticky;
     top: 0;
     z-index: 10;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    border-bottom: 2px solid $bl-primary-light !important;
 
     h4 {
-        letter-spacing: -0.3px;
+        letter-spacing: -0.4px;
+        color: $bl-text;
+
+        /* Bright / loop colour split in title */
+        .bl-brand-bright { color: $bl-text; }
+        .bl-brand-loop   { color: $bl-primary; }
     }
 
+    /* Date inputs */
     input[type="date"] {
         min-width: 140px;
+        border-radius: 8px;
+        border: 1px solid $bl-border;
+        font-size: .85rem;
+        padding: 4px 8px;
+
+        &:focus {
+            border-color: $bl-primary;
+            box-shadow: 0 0 0 3px rgba($bl-primary, .15);
+            outline: none;
+        }
+    }
+
+    /* Header action buttons */
+    .btn-primary {
+        background: $bl-primary !important;
+        border-color: $bl-primary !important;
+        border-radius: 8px !important;
+        font-weight: 600;
+        font-size: .82rem;
+        transition: background .15s, box-shadow .15s;
+
+        &:hover {
+            background: $bl-primary-dark !important;
+            box-shadow: 0 2px 8px rgba($bl-primary, .35) !important;
+        }
+    }
+
+    .btn-outline-secondary {
+        border-radius: 8px !important;
+        font-size: .82rem;
     }
 }
 
-/* ── KPI Cards ── */
+/* ── Logo row inside header ──────────────────────────────── */
+.bl-dash-logo {
+    height: 28px;
+    width: auto;
+    margin-right: 8px;
+}
+
+/* ── KPI Cards ───────────────────────────────────────────── */
 .bl-kpi-card {
-    border-radius: 12px;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    border-radius: $bl-card-radius;
     background: #fff;
+    border: 1px solid $bl-border;
+    transition: transform .15s ease, box-shadow .15s ease;
 
     &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1) !important;
+        transform: translateY(-3px);
+        box-shadow: $bl-shadow-md !important;
     }
 
-    .bl-kpi-icon {
-        opacity: 0.85;
-    }
-
-    .bl-kpi-value {
-        line-height: 1.1;
-        font-variant-numeric: tabular-nums;
-    }
-
-    .bl-kpi-label {
-        letter-spacing: 0.2px;
+    .bl-kpi-icon   { opacity: .85; }
+    .bl-kpi-value  { line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .bl-kpi-label  {
         text-transform: uppercase;
-        font-size: 0.7rem !important;
+        font-size: .68rem !important;
+        letter-spacing: .5px;
     }
 }
 
-/* Accent left borders for key cards */
-.bl-kpi-active   { border-left: 4px solid #198754 !important; }
-.bl-kpi-paused   { border-left: 4px solid #0dcaf0 !important; }
-.bl-kpi-revenue  { border-left: 4px solid #0d6efd !important; }
-.bl-kpi-outstanding { border-left: 4px solid #ffc107 !important; }
-.bl-kpi-overdue  { border-left: 4px solid #dc3545 !important; }
+/* Accent left borders */
+.bl-kpi-active      { border-left: 4px solid $bl-success !important; }
+.bl-kpi-paused      { border-left: 4px solid $bl-info    !important; }
+.bl-kpi-revenue     { border-left: 4px solid $bl-primary !important; }
+.bl-kpi-outstanding { border-left: 4px solid $bl-warning !important; }
+.bl-kpi-overdue     { border-left: 4px solid $bl-danger  !important; }
 
-/* ── Collection Rate progress bar ── */
+/* ── Collection Rate card ────────────────────────────────── */
+.bl-finance-dashboard > .bl-dash-body > .card {
+    border-radius: $bl-card-radius;
+    border: 1px solid $bl-border;
+    box-shadow: $bl-shadow-sm;
+}
+
 .progress {
     background: #e9ecef;
     border-radius: 8px;
     overflow: hidden;
 
     .progress-bar {
+        background: linear-gradient(90deg, $bl-primary, lighten($bl-primary, 10%));
         border-radius: 8px;
-        transition: width 0.6s ease;
+        transition: width .6s ease;
     }
 }
 
-/* ── Payments Table ── */
+/* ── Payments table ──────────────────────────────────────── */
 .bl-finance-dashboard .table {
-    font-size: 0.85rem;
+    font-size: .84rem;
 
     thead th {
-        font-weight: 600;
-        font-size: 0.75rem;
+        font-weight: 700;
+        font-size: .72rem;
         text-transform: uppercase;
-        letter-spacing: 0.4px;
-        color: #6c757d;
-        border-bottom: 1px solid #dee2e6;
+        letter-spacing: .5px;
+        color: $bl-muted;
+        border-bottom: 2px solid $bl-border;
+        background: #f8f9fb;
         white-space: nowrap;
     }
 
-    tbody tr:hover {
-        background: #f0f4ff;
+    tbody tr {
+        transition: background .1s;
+
+        &:hover { background: $bl-primary-light; }
     }
 }
 
-/* ── General card improvements ── */
+/* ── Card generic ────────────────────────────────────────── */
 .bl-finance-dashboard .card {
-    border-radius: 12px;
+    border-radius: $bl-card-radius;
+    border: 1px solid $bl-border;
+    box-shadow: $bl-shadow-sm;
 }
 
 .bl-finance-dashboard .card-header {
-    border-radius: 12px 12px 0 0;
+    border-radius: $bl-card-radius $bl-card-radius 0 0;
+    border-bottom: 1px solid $bl-border;
+    background: #fff;
 }
 
-/* ── Export / Refresh buttons ── */
+/* ── Export / Refresh buttons ────────────────────────────── */
 .bl-finance-dashboard .btn-outline-primary {
     border-width: 1.5px;
+    border-radius: 8px !important;
+    font-weight: 600;
+    font-size: .82rem;
+    transition: all .15s;
+
+    &:hover {
+        background: $bl-primary !important;
+        color: #fff !important;
+        box-shadow: 0 2px 8px rgba($bl-primary, .30) !important;
+    }
+}
+
+.bl-finance-dashboard .btn-outline-secondary {
+    border-radius: 8px !important;
+    font-size: .82rem;
+}
+
+/* ── Spinner ─────────────────────────────────────────────── */
+.bl-finance-dashboard .spinner-border {
+    color: $bl-primary !important;
+}
+
+/* ── Responsive tweaks ───────────────────────────────────── */
+@media (max-width: 768px) {
+    .bl-dash-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: .75rem;
+
+        .d-flex.align-items-center.gap-2 {
+            flex-wrap: wrap;
+        }
+    }
 }

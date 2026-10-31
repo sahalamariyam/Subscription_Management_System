@@ -34,4 +34,14 @@ Workstream Ownership: Member 1 (Platform Foundation, Authentication & Security L
     'application': False,
     'auto_install': False,
     'post_init_hook': 'post_init_hook',
+    'assets': {
+        # Backend UI polish
+        'web.assets_backend': [
+            'brightloop_core/static/src/brightloop_backend.css',
+        ],
+        # Portal / website UI polish
+        'web.assets_frontend': [
+            'brightloop_core/static/src/brightloop_portal.css',
+        ],
+    },
 }

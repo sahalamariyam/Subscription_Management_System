@@ -1,0 +1,165 @@
+/* ============================================================
+   Brightloop — Backend UI Polish
+   Injected into web.assets_backend via brightloop_core manifest
+   ============================================================ */
+
+/* ── Brand colour tokens ─────────────────────────────────── */
+:root {
+    --bl-primary:       #3B6EF8;
+    --bl-primary-dark:  #2a55d6;
+    --bl-primary-light: #eef2ff;
+    --bl-accent:        #10b981;
+    --bl-danger:        #ef4444;
+    --bl-warning:       #f59e0b;
+    --bl-sidebar-bg:    #1a2540;
+    --bl-sidebar-text:  #c9d4f0;
+    --bl-card-radius:   10px;
+    --bl-shadow-sm:     0 1px 4px rgba(0,0,0,.08);
+    --bl-shadow-md:     0 4px 16px rgba(0,0,0,.12);
+}
+
+/* ── App-switcher / home brand pill ─────────────────────────
+   Odoo 18 top bar: inject Brightloop brand next to app name  */
+.o_main_navbar .o_menu_brand {
+    font-weight: 700 !important;
+    color: var(--bl-primary) !important;
+    letter-spacing: -0.3px;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+.o_main_navbar .o_menu_brand::before {
+    content: "";
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    background: url("/brightloop_core/static/img/brightloop_logo.svg") no-repeat 0 50% / contain;
+}
+
+/* ── Action buttons — primary ───────────────────────────── */
+.o_form_view .btn-primary,
+.o_list_view .btn-primary,
+.btn-primary {
+    background-color: var(--bl-primary) !important;
+    border-color: var(--bl-primary) !important;
+    border-radius: 6px !important;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--bl-primary-dark) !important;
+    border-color: var(--bl-primary-dark) !important;
+    box-shadow: 0 2px 8px rgba(59,110,248,.35) !important;
+}
+
+/* ── Cards / sheet panels ───────────────────────────────── */
+.o_form_view .o_form_sheet {
+    border-radius: var(--bl-card-radius) !important;
+    box-shadow: var(--bl-shadow-sm) !important;
+}
+
+/* ── Status badges in list views ───────────────────────── */
+.o_list_view .badge {
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+}
+
+/* ── List view header ───────────────────────────────────── */
+.o_list_view thead th {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    background: #f8f9fa;
+}
+
+/* ── Kanban cards ───────────────────────────────────────── */
+.o_kanban_record {
+    border-radius: var(--bl-card-radius) !important;
+    box-shadow: var(--bl-shadow-sm) !important;
+    transition: box-shadow 0.15s ease, transform 0.1s ease;
+}
+
+.o_kanban_record:hover {
+    box-shadow: var(--bl-shadow-md) !important;
+    transform: translateY(-1px);
+}
+
+/* ── Notebook / tab strip ───────────────────────────────── */
+.o_notebook .nav-link.active {
+    color: var(--bl-primary) !important;
+    border-bottom-color: var(--bl-primary) !important;
+    font-weight: 600;
+}
+
+/* ── Stat buttons (KPI row above form) ───────────────────── */
+.o_stat_button .o_stat_value {
+    color: var(--bl-primary);
+    font-weight: 700;
+}
+
+/* ── Breadcrumb ──────────────────────────────────────────── */
+.o_breadcrumb .o_back_button,
+.o_breadcrumb .active {
+    font-weight: 600;
+}
+
+/* ── Field focus ring ────────────────────────────────────── */
+.o_field_widget input:focus,
+.o_field_widget textarea:focus,
+.o_field_widget select:focus {
+    border-color: var(--bl-primary) !important;
+    box-shadow: 0 0 0 3px rgba(59,110,248,.15) !important;
+}
+
+/* ── Chatter / messaging area ────────────────────────────── */
+.o_thread_message_core {
+    border-radius: 8px;
+}
+
+/* ── Alert / info box refinements ───────────────────────── */
+.alert-info {
+    border-left: 4px solid var(--bl-primary) !important;
+    background: var(--bl-primary-light) !important;
+    color: #1a2540 !important;
+}
+
+.alert-success {
+    border-left: 4px solid var(--bl-accent) !important;
+}
+
+.alert-danger {
+    border-left: 4px solid var(--bl-danger) !important;
+}
+
+.alert-warning {
+    border-left: 4px solid var(--bl-warning) !important;
+}
+
+/* ── Top navbar height + separator ──────────────────────── */
+.o_main_navbar {
+    border-bottom: 2px solid var(--bl-primary-light) !important;
+}
+
+/* ── Search bar pill ─────────────────────────────────────── */
+.o_searchview .o_facet_values {
+    background: var(--bl-primary-light);
+    color: var(--bl-primary);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* ── Pagination ─────────────────────────────────────────── */
+.o_pager .o_pager_value {
+    font-weight: 700;
+    color: var(--bl-primary);
+}
+

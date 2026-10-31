@@ -1,0 +1,225 @@
+/* ============================================================
+   Brightloop — Website / Portal UI Polish
+   Injected into web.assets_frontend via brightloop_core manifest
+   ============================================================ */
+
+/* ── Brand tokens ────────────────────────────────────────── */
+:root {
+    --bl-primary:       #3B6EF8;
+    --bl-primary-dark:  #2a55d6;
+    --bl-primary-light: #eef2ff;
+    --bl-text-dark:     #1a2540;
+    --bl-card-radius:   12px;
+}
+
+/* ── Portal navbar branding ─────────────────────────────── */
+.navbar-brand .logo {
+    height: 36px;
+    width: auto;
+}
+
+/* Make portal nav slightly taller and give it a subtle shadow */
+.o_portal .navbar,
+.website_portal .navbar {
+    min-height: 60px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.06) !important;
+}
+
+/* ── Portal home — document entry cards ────────────────── */
+.o_portal_docs .o_portal_doc_entry {
+    border-radius: var(--bl-card-radius) !important;
+    border: 1px solid #e2e8f0 !important;
+    transition: box-shadow 0.15s ease, transform 0.1s ease;
+    overflow: hidden;
+}
+
+.o_portal_docs .o_portal_doc_entry:hover {
+    box-shadow: 0 6px 20px rgba(59,110,248,.12) !important;
+    transform: translateY(-2px);
+    border-color: var(--bl-primary) !important;
+}
+
+/* ── Tables ─────────────────────────────────────────────── */
+.o_portal_wrap .table thead th {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    background: #f8f9fb;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.o_portal_wrap .table-hover tbody tr:hover {
+    background: var(--bl-primary-light);
+}
+
+.o_portal_wrap .table td {
+    vertical-align: middle;
+    font-size: 0.875rem;
+}
+
+/* ── Badges (status) ─────────────────────────────────────── */
+.o_portal_wrap .badge {
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    letter-spacing: 0.2px;
+}
+
+/* ── Buttons ─────────────────────────────────────────────── */
+.o_portal_wrap .btn-primary,
+.o_portal_wrap .btn-outline-primary {
+    border-radius: 8px !important;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: all 0.15s ease;
+}
+
+.o_portal_wrap .btn-primary {
+    background-color: var(--bl-primary) !important;
+    border-color: var(--bl-primary) !important;
+}
+
+.o_portal_wrap .btn-primary:hover {
+    background-color: var(--bl-primary-dark) !important;
+    border-color: var(--bl-primary-dark) !important;
+    box-shadow: 0 2px 8px rgba(59,110,248,.30) !important;
+}
+
+.o_portal_wrap .btn-outline-primary:hover {
+    background-color: var(--bl-primary) !important;
+    color: #fff !important;
+}
+
+.o_portal_wrap .btn-sm {
+    padding: 5px 12px;
+    font-size: 0.78rem;
+}
+
+/* ── Cards ───────────────────────────────────────────────── */
+.o_portal_wrap .card {
+    border-radius: var(--bl-card-radius) !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+.o_portal_wrap .card-header {
+    border-radius: var(--bl-card-radius) var(--bl-card-radius) 0 0 !important;
+    padding: 1rem 1.25rem;
+}
+
+/* ── Breadcrumbs ─────────────────────────────────────────── */
+.o_portal_wrap .breadcrumb {
+    font-size: 0.82rem;
+    background: transparent;
+    padding: 0;
+    margin-bottom: 1rem;
+}
+
+.o_portal_wrap .breadcrumb-item a {
+    color: var(--bl-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.o_portal_wrap .breadcrumb-item.active {
+    color: #6c757d;
+    font-weight: 600;
+}
+
+/* ── Filter tab buttons ─────────────────────────────────── */
+.o_portal_wrap .btn-sm.btn-primary,
+.o_portal_wrap .btn-sm.btn-secondary {
+    border-radius: 20px !important;
+    padding: 4px 14px;
+    font-size: 0.78rem;
+}
+
+/* ── Pager ───────────────────────────────────────────────── */
+.o_portal_wrap .o_portal_pager {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+/* ── Section headings ────────────────────────────────────── */
+.o_portal_wrap h5.fw-bold,
+.o_portal_wrap h6.fw-semibold {
+    color: var(--bl-text-dark);
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.o_portal_wrap .fa-inbox,
+.o_portal_wrap .fa-file-text-o,
+.o_portal_wrap .fa-credit-card {
+    color: #cbd5e1;
+}
+
+/* ── Alert banners ───────────────────────────────────────── */
+.o_portal_wrap .alert-info {
+    border-left: 4px solid var(--bl-primary) !important;
+    background: var(--bl-primary-light) !important;
+    color: var(--bl-text-dark) !important;
+    border-radius: 8px;
+}
+
+/* ── Progress bar ────────────────────────────────────────── */
+.o_portal_wrap .progress {
+    border-radius: 8px;
+    background: #e9ecef;
+    height: 8px;
+}
+
+.o_portal_wrap .progress-bar {
+    background-color: var(--bl-primary) !important;
+    border-radius: 8px;
+}
+
+/* ── Input focus ring ────────────────────────────────────── */
+.o_portal_wrap input:focus,
+.o_portal_wrap select:focus,
+.o_portal_wrap textarea:focus {
+    border-color: var(--bl-primary) !important;
+    box-shadow: 0 0 0 3px rgba(59,110,248,.15) !important;
+    outline: none;
+}
+
+/* ── Portal submenu / filter row ─────────────────────────── */
+.o_portal_submenu {
+    font-size: 0.82rem;
+}
+
+/* ── Page background ─────────────────────────────────────── */
+.o_portal_wrap {
+    background: #f6f8fc;
+    min-height: 100vh;
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+.o_footer {
+    border-top: 1px solid #e2e8f0 !important;
+}
+
+/* ── Login / Signup Polish ───────────────────────────────── */
+.oe_login_form,
+.oe_signup_form {
+    border-radius: var(--bl-card-radius);
+}
+
+.oe_login_form .btn-primary,
+.oe_signup_form .btn-primary {
+    background-color: var(--bl-primary) !important;
+    border-color: var(--bl-primary) !important;
+    border-radius: 8px !important;
+    padding: 8px 16px;
+    font-weight: 600;
+}
+
+.card.border-0.mx-auto,
+.oe_website_login_container .card {
+    border-radius: 14px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+    border: 1px solid #e2e8f0 !important;
+}
+

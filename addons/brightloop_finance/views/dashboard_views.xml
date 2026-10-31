@@ -25,7 +25,10 @@
         <field name="arch" type="xml">
             <form string="Financial Dashboard" create="false" edit="true">
                 <sheet>
-                    <h1>Financial Dashboard</h1>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img src="/brightloop_core/static/img/brightloop_logo.svg" alt="Brightloop" style="height:36px;width:auto;"/>
+                        <h1 class="mb-0">Financial Dashboard</h1>
+                    </div>
 
                     <!-- Date filters -->
                     <group string="Date Range">

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 44" fill="none">
+  <!-- Loop / orbit ring -->
+  <ellipse cx="22" cy="22" rx="18" ry="10" stroke="#3B6EF8" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Bright dot / spark -->
+  <circle cx="22" cy="12" r="4.5" fill="#3B6EF8"/>
+  <circle cx="22" cy="12" r="2.5" fill="#FFFFFF"/>
+  <!-- Wordmark -->
+  <text x="50" y="16" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="700" fill="#1a2540" letter-spacing="-0.3">Bright</text>
+  <text x="50" y="32" font-family="'Segoe UI', Arial, sans-serif" font-size="13" font-weight="700" fill="#3B6EF8" letter-spacing="-0.3">loop</text>
+  <text x="98" y="16" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" fill="#6c757d" letter-spacing="0.5">SUBSCRIPTION</text>
+  <text x="98" y="28" font-family="'Segoe UI', Arial, sans-serif" font-size="8" font-weight="400" fill="#6c757d" letter-spacing="0.5">MANAGEMENT</text>
+</svg>
+
