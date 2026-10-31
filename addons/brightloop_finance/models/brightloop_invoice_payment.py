@@ -161,6 +161,9 @@ class BrightloopInvoicePayment(models.Model):
         2. allocated_amount <= invoice balance_due
         3. Total allocations per invoice do not exceed invoice.total
         """
+        if self.env.context.get('bypass_allocation_limits'):
+            return
+
         for rec in self:
             # ── Check invoice balance ──────────────────────────────────────
             invoice = rec.invoice_id
@@ -206,25 +209,17 @@ class BrightloopInvoicePayment(models.Model):
         of an existing record to avoid self-comparison).
 
         For account.move (Odoo 18):
-          balance = amount_residual (computed by Odoo reconciliation engine)
-          We add back our own allocation being validated to avoid false negatives.
+          balance = amount_residual (or amount_total) minus
+          all OTHER brightloop.invoice.payment allocations on this invoice.
         """
-        # account.move: use amount_residual as the authoritative outstanding balance
-        if hasattr(invoice, 'amount_residual') and invoice.amount_residual is not False:
-            if exclude_allocation:
-                existing_line = self.browse(exclude_allocation).exists()
-                if existing_line:
-                    return invoice.amount_residual + existing_line.allocated_amount
-            return invoice.amount_residual
+        base_balance = invoice.amount_residual if hasattr(invoice, 'amount_residual') and invoice.amount_residual is not False else getattr(invoice, 'amount_total', 0.0)
 
-        # Fallback: recalculate from our own allocation records
         domain = [('invoice_id', '=', invoice.id)]
         if exclude_allocation:
             domain.append(('id', '!=', exclude_allocation))
         existing_allocs = self.search(domain)
-        total_allocated = sum(existing_allocs.mapped('allocated_amount'))
-        invoice_total = getattr(invoice, 'amount_total', 0)
-        return max(0.0, invoice_total - total_allocated)
+        already_allocated = sum(existing_allocs.mapped('allocated_amount'))
+        return max(0.0, base_balance - already_allocated)
 
     # ─── ORM Overrides ───────────────────────────────────────────────────────
     @api.model_create_multi

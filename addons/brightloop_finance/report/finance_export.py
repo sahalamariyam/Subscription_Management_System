@@ -409,7 +409,7 @@ class BrightloopFinanceExport(models.TransientModel):
 
         revenue_data = self.env['brightloop.invoice.payment'].read_group(
             domain=payment_domain,
-            fields=['allocated_amount:sum', 'allocation_date:month'],
+            fields=['allocated_amount:sum'],
             groupby=['allocation_date:month'],
             orderby='allocation_date asc',
         )
@@ -436,7 +436,7 @@ class BrightloopFinanceExport(models.TransientModel):
             # Total invoiced per month (amount_total)
             inv_data = self.env[INVOICE_MODEL].read_group(
                 domain=inv_base_domain,
-                fields=['amount_total:sum', 'invoice_date:month'],
+                fields=['amount_total:sum'],
                 groupby=['invoice_date:month'],
                 orderby='invoice_date asc',
             )
@@ -447,7 +447,7 @@ class BrightloopFinanceExport(models.TransientModel):
             # Outstanding per month (amount_residual, only where > 0)
             out_data = self.env[INVOICE_MODEL].read_group(
                 domain=inv_base_domain + [('amount_residual', '>', 0)],
-                fields=['amount_residual:sum', 'invoice_date:month'],
+                fields=['amount_residual:sum'],
                 groupby=['invoice_date:month'],
                 orderby='invoice_date asc',
             )

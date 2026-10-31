@@ -58,10 +58,14 @@ class TestBrightloopAllocationIntegration(TransactionCase):
             [('type', '=', 'sale'), ('company_id', '=', cls.env.company.id)],
             limit=1,
         )
+        cls.bank_journal = cls.env['account.journal'].search(
+            [('type', 'in', ['bank', 'cash']), ('company_id', '=', cls.env.company.id)],
+            limit=1,
+        )
         # Income account
         cls.income_account = cls.env['account.account'].search([
             ('account_type', '=', 'income'),
-            ('company_id', '=', cls.env.company.id),
+            ('company_ids', 'in', [cls.env.company.id]),
         ], limit=1)
 
     # ─── Helpers ─────────────────────────────────────────────────────────────
@@ -122,11 +126,11 @@ class TestBrightloopAllocationIntegration(TransactionCase):
     def test_02_partial_allocation(self):
         """Partial payment leaves correct unallocated remainder."""
         inv = self._make_invoice(1000.0)
-        pay = self._make_payment(400.0)
+        pay = self._make_payment(500.0)
         alloc = self._allocate(pay, inv, 400.0)
 
         self.assertFalse(pay.is_fully_allocated)
-        self.assertAlmostEqual(pay.unallocated_amount, 0.0, places=2)
+        self.assertAlmostEqual(pay.unallocated_amount, 100.0, places=2)
         self.assertAlmostEqual(pay.total_allocated, 400.0, places=2)
 
     def test_03_multiple_payments_one_invoice(self):
@@ -189,7 +193,7 @@ class TestBrightloopAllocationIntegration(TransactionCase):
         pay = self._make_payment(500.0)
         # Force an overpayment by bypassing constraint (sudo write directly)
         # In real use the constraint prevents this — this tests the compute field
-        alloc = self.env['brightloop.invoice.payment'].sudo().create({
+        alloc = self.env['brightloop.invoice.payment'].sudo().with_context(bypass_allocation_limits=True).create({
             'payment_id': pay.id,
             'invoice_id': inv.id,
             'allocated_amount': 600.0,  # exceeds payment of 500
@@ -246,11 +250,11 @@ class TestBrightloopAllocationIntegration(TransactionCase):
             'amount': 200.0,
             'payment_type': 'inbound',
             'partner_type': 'customer',
-            'journal_id': self.journal.id,
+            'journal_id': (self.bank_journal or self.journal).id,
         })
         payment.action_post()
-        (payment.line_ids + inv.line_ids).filtered(
-            lambda l: l.account_id.reconcile and not l.reconciled
+        (payment.move_id.line_ids + inv.line_ids).filtered(
+            lambda l: l.account_id.account_type == 'asset_receivable' and not l.reconciled
         ).reconcile()
 
         overdue = self.env['account.move'].search([

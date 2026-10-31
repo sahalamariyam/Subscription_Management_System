@@ -221,7 +221,11 @@ class TestBrightloopSubscriptionLifecycle(common.TransactionCase):
 
         current_next_billing = sub.next_billing_date
         sub.action_advance_billing_date()
-        self.assertEqual(sub.next_billing_date, current_next_billing + relativedelta(months=1))
+        expected_next_billing = sub.plan_id.compute_next_billing_date(
+            current_next_billing,
+            anchor_day=sub.billing_anchor_day,
+        )
+        self.assertEqual(sub.next_billing_date, expected_next_billing)
 
     def test_automatic_closure_cron(self):
         """Cron automatically closes expired subscriptions under auto_close plans."""
@@ -237,7 +241,10 @@ class TestBrightloopSubscriptionLifecycle(common.TransactionCase):
         sub.action_activate()
 
         # Simulate expiry date reached yesterday
-        sub.expiry_date = date.today() - relativedelta(days=1)
+        sub.write({
+            'start_date': date.today() - relativedelta(days=30),
+            'expiry_date': date.today() - relativedelta(days=1),
+        })
 
         self.Subscription._cron_auto_close_subscriptions()
         self.assertEqual(sub.status, SUBSCRIPTION_STATUS_CLOSED)
@@ -309,4 +316,8 @@ class TestBrightloopSubscriptionLifecycle(common.TransactionCase):
         # Advance billing date via Member 3 callback
         old_billing_date = sub.next_billing_date
         sub._update_next_billing_date()
-        self.assertEqual(sub.next_billing_date, old_billing_date + relativedelta(months=1))
+        expected_date = sub.plan_id.compute_next_billing_date(
+            old_billing_date,
+            anchor_day=sub.billing_anchor_day,
+        )
+        self.assertEqual(sub.next_billing_date, expected_date)

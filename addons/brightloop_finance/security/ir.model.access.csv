@@ -1,21 +1,17 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-# Payment Method — only managers configure
 access_payment_method_manager,brightloop.payment.method manager,model_brightloop_payment_method,brightloop_finance.group_brightloop_finance_manager,1,1,1,1
 access_payment_method_user,brightloop.payment.method user,model_brightloop_payment_method,brightloop_finance.group_brightloop_finance_user,1,0,0,0
-
-# Payment — users can create/edit/read; only managers can delete
 access_payment_manager,brightloop.payment manager,model_brightloop_payment,brightloop_finance.group_brightloop_finance_manager,1,1,1,1
 access_payment_user,brightloop.payment user,model_brightloop_payment,brightloop_finance.group_brightloop_finance_user,1,1,1,0
-
-# Invoice Payment Allocation
 access_invoice_payment_manager,brightloop.invoice.payment manager,model_brightloop_invoice_payment,brightloop_finance.group_brightloop_finance_manager,1,1,1,1
 access_invoice_payment_user,brightloop.invoice.payment user,model_brightloop_invoice_payment,brightloop_finance.group_brightloop_finance_user,1,1,1,0
-
-# Dashboard (transient — only finance users+)
 access_finance_dashboard_manager,brightloop.finance.dashboard manager,model_brightloop_finance_dashboard,brightloop_finance.group_brightloop_finance_manager,1,1,1,1
 access_finance_dashboard_user,brightloop.finance.dashboard user,model_brightloop_finance_dashboard,brightloop_finance.group_brightloop_finance_user,1,1,1,0
-
-# Finance Report (abstract — internal use only)
 access_finance_report_manager,brightloop.finance.report manager,model_brightloop_finance_report,brightloop_finance.group_brightloop_finance_manager,1,1,1,1
 access_finance_report_user,brightloop.finance.report user,model_brightloop_finance_report,brightloop_finance.group_brightloop_finance_user,1,0,0,0
-
+access_payment_wizard_manager,brightloop.payment.wizard manager,model_brightloop_payment_wizard,brightloop_finance.group_brightloop_finance_manager,1,1,1,1
+access_payment_wizard_user,brightloop.payment.wizard user,model_brightloop_payment_wizard,brightloop_finance.group_brightloop_finance_user,1,1,1,1
+access_payment_wizard_line_manager,brightloop.payment.wizard.line manager,model_brightloop_payment_wizard_line,brightloop_finance.group_brightloop_finance_manager,1,1,1,1
+access_payment_wizard_line_user,brightloop.payment.wizard.line user,model_brightloop_payment_wizard_line,brightloop_finance.group_brightloop_finance_user,1,1,1,1
+access_finance_export_manager,brightloop.finance.export manager,model_brightloop_finance_export,brightloop_finance.group_brightloop_finance_manager,1,1,1,1
+access_finance_export_user,brightloop.finance.export user,model_brightloop_finance_export,brightloop_finance.group_brightloop_finance_user,1,1,1,1

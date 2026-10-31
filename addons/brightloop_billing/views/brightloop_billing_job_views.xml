@@ -4,7 +4,7 @@
     <!-- Billing Job List View -->
     <record id="view_brightloop_billing_job_list" model="ir.ui.view">
         <field name="name">brightloop.billing.job.list</field>
-        <field name="res_model">brightloop.billing.job</field>
+        <field name="model">brightloop.billing.job</field>
         <field name="arch" type="xml">
             <list string="Billing Jobs"
                   create="false"
@@ -32,7 +32,7 @@
     <!-- Billing Job Form View -->
     <record id="view_brightloop_billing_job_form" model="ir.ui.view">
         <field name="name">brightloop.billing.job.form</field>
-        <field name="res_model">brightloop.billing.job</field>
+        <field name="model">brightloop.billing.job</field>
         <field name="arch" type="xml">
             <form string="Billing Job" create="false" delete="false">
                 <header>
@@ -93,7 +93,7 @@
     <!-- Billing Job Search View -->
     <record id="view_brightloop_billing_job_search" model="ir.ui.view">
         <field name="name">brightloop.billing.job.search</field>
-        <field name="res_model">brightloop.billing.job</field>
+        <field name="model">brightloop.billing.job</field>
         <field name="arch" type="xml">
             <search string="Search Billing Jobs">
                 <field name="subscription_id"/>

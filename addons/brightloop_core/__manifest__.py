@@ -20,6 +20,7 @@ Workstream Ownership: Member 1 (Platform Foundation, Authentication & Security L
         'base',
         'mail',
         'portal',
+        'auth_signup',
     ],
     'data': [
         'security/brightloop_security.xml',

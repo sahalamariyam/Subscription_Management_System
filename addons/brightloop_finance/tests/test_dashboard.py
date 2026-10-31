@@ -37,7 +37,7 @@ class TestBrightloopDashboard(TransactionCase):
         )
         cls.income_account = cls.env['account.account'].search([
             ('account_type', '=', 'income'),
-            ('company_id', '=', cls.env.company.id),
+            ('company_ids', 'in', [cls.env.company.id]),
         ], limit=1)
 
     def _make_posted_invoice(self, amount, due_date=None):
@@ -140,15 +140,22 @@ class TestBrightloopDashboard(TransactionCase):
             self.skipTest('brightloop.subscription not yet installed')
 
         Sub = self.env['brightloop.subscription']
+        plan = self.env['brightloop.plan'].create({
+            'name': 'Dash Test Plan',
+            'billing_interval': 'monthly',
+            'billing_price': 100.0,
+        })
         # Create one active + one paused subscription
         partner2 = self.env['res.partner'].create({'name': 'Sub Test Partner'})
         active_sub = Sub.create({
             'partner_id': partner2.id,
+            'plan_id': plan.id,
             'status': 'active',
             'is_paused': False,
         })
         paused_sub = Sub.create({
             'partner_id': partner2.id,
+            'plan_id': plan.id,
             'status': 'active',
             'is_paused': True,
         })
