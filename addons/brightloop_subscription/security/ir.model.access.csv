@@ -1,1 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_brightloop_product_admin,brightloop.product.admin,model_brightloop_product,brightloop_core.group_brightloop_admin,1,1,1,1
+access_brightloop_product_staff,brightloop.product.staff,model_brightloop_product,brightloop_core.group_brightloop_staff,1,1,1,0
+access_brightloop_product_customer,brightloop.product.customer,model_brightloop_product,brightloop_core.group_brightloop_customer,1,0,0,0
+access_brightloop_product_variant_admin,brightloop.product.variant.admin,model_brightloop_product_variant,brightloop_core.group_brightloop_admin,1,1,1,1
+access_brightloop_product_variant_staff,brightloop.product.variant.staff,model_brightloop_product_variant,brightloop_core.group_brightloop_staff,1,1,1,0
+access_brightloop_product_variant_customer,brightloop.product.variant.customer,model_brightloop_product_variant,brightloop_core.group_brightloop_customer,1,0,0,0

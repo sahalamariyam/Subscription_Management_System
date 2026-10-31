@@ -31,6 +31,8 @@ Key Features:
         'security/ir.model.access.csv',
         'security/subscription_security.xml',
         'data/sequence_data.xml',
+        'views/menu_views.xml',
+        'views/product_views.xml',
     ],
     'installable': True,
     'application': True,
